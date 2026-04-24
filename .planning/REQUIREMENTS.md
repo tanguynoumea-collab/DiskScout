@@ -120,53 +120,63 @@ Exclusions explicites — documentées pour prévenir la dérive de scope.
 
 ## Traceability
 
-Rempli lors de la création de ROADMAP.md.
+Mapped to ROADMAP.md (8 phases).
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLAT-01 | — | Pending |
-| PLAT-02 | — | Pending |
-| PLAT-03 | — | Pending |
-| PLAT-04 | — | Pending |
-| SCAN-01 | — | Pending |
-| SCAN-02 | — | Pending |
-| SCAN-03 | — | Pending |
-| SCAN-04 | — | Pending |
-| SCAN-05 | — | Pending |
-| SCAN-06 | — | Pending |
-| SCAN-07 | — | Pending |
-| PROG-01 | — | Pending |
-| PROG-02 | — | Pending |
-| PROG-03 | — | Pending |
-| PROG-04 | — | Pending |
-| ORPH-01 | — | Pending |
-| ORPH-02 | — | Pending |
-| ORPH-03 | — | Pending |
-| ORPH-04 | — | Pending |
-| ORPH-05 | — | Pending |
-| ORPH-06 | — | Pending |
-| TREE-01 | — | Pending |
-| TREE-02 | — | Pending |
-| TREE-03 | — | Pending |
-| TREE-04 | — | Pending |
-| TREE-05 | — | Pending |
-| PERS-01 | — | Pending |
-| PERS-02 | — | Pending |
-| PERS-03 | — | Pending |
-| DELT-01 | — | Pending |
-| DELT-02 | — | Pending |
-| DELT-03 | — | Pending |
-| EXPO-01 | — | Pending |
-| EXPO-02 | — | Pending |
-| EXPO-03 | — | Pending |
-| DEPL-01 | — | Pending |
-| DEPL-02 | — | Pending |
+| PLAT-01 | Phase 1 | Pending |
+| PLAT-02 | Phase 1 | Pending |
+| PLAT-03 | Phase 1 | Pending |
+| PLAT-04 | Phase 1 | Pending |
+| SCAN-01 | Phase 4 | Pending |
+| SCAN-02 | Phase 4 | Pending |
+| SCAN-03 | Phase 4 | Pending |
+| SCAN-04 | Phase 4 | Pending |
+| SCAN-05 | Phase 2 | Pending |
+| SCAN-06 | Phase 2 | Pending |
+| SCAN-07 | Phase 4 | Pending |
+| PROG-01 | Phase 3 | Pending |
+| PROG-02 | Phase 5 | Pending |
+| PROG-03 | Phase 5 | Pending |
+| PROG-04 | Phase 5 | Pending |
+| ORPH-01 | Phase 5 | Pending |
+| ORPH-02 | Phase 3 | Pending |
+| ORPH-03 | Phase 3 | Pending |
+| ORPH-04 | Phase 3 | Pending |
+| ORPH-05 | Phase 3 | Pending |
+| ORPH-06 | Phase 5 | Pending |
+| TREE-01 | Phase 5 | Pending |
+| TREE-02 | Phase 5 | Pending |
+| TREE-03 | Phase 5 | Pending |
+| TREE-04 | Phase 5 | Pending |
+| TREE-05 | Phase 5 | Pending |
+| PERS-01 | Phase 6 | Pending |
+| PERS-02 | Phase 6 | Pending |
+| PERS-03 | Phase 6 | Pending |
+| DELT-01 | Phase 7 | Pending |
+| DELT-02 | Phase 7 | Pending |
+| DELT-03 | Phase 7 | Pending |
+| EXPO-01 | Phase 8 | Pending |
+| EXPO-02 | Phase 8 | Pending |
+| EXPO-03 | Phase 8 | Pending |
+| DEPL-01 | Phase 8 | Pending |
+| DEPL-02 | Phase 8 | Pending |
 
 **Coverage:**
 - v1 requirements: 37 total
-- Mapped to phases: 0 (à remplir par roadmapper)
-- Unmapped: 37 ⚠️
+- Mapped to phases: 37
+- Unmapped: 0
+
+**Distribution:**
+- Phase 1 (Foundations & Launchable Shell): 4 requirements
+- Phase 2 (FileSystem Scanner Core): 2 requirements
+- Phase 3 (Registry & Orphan Detection): 5 requirements
+- Phase 4 (UI Shell & Scan Orchestration): 5 requirements
+- Phase 5 (Three Result Panes): 10 requirements
+- Phase 6 (Scan Persistence & History): 3 requirements
+- Phase 7 (Delta Comparison): 3 requirements
+- Phase 8 (Export & Portable Publish): 5 requirements
 
 ---
 *Requirements defined: 2026-04-24*
-*Last updated: 2026-04-24 after initial definition*
+*Last updated: 2026-04-24 after roadmap traceability mapping*
