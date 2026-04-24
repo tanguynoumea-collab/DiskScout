@@ -90,7 +90,20 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         }
     }
 
-    public string DisplayName => Node.Name;
+    public string DisplayName
+    {
+        get
+        {
+            var suffix = IsCloudPath(Node.FullPath) ? "  [OneDrive/SharePoint]"
+                       : Node.IsReparsePoint ? "  [Reparse]"
+                       : string.Empty;
+            return Node.Name + suffix;
+        }
+    }
+
+    private static bool IsCloudPath(string path) =>
+        path.Contains("OneDrive", StringComparison.OrdinalIgnoreCase)
+        || path.Contains("SharePoint", StringComparison.OrdinalIgnoreCase);
 
     public string SizeDisplay
     {

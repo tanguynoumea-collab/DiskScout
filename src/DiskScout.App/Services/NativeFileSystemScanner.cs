@@ -179,11 +179,14 @@ public sealed class NativeFileSystemScanner : IFileSystemScanner
                 var fullPath = CombinePath(parentPath, name);
                 var isDir = findData.IsDirectory;
                 var isReparse = findData.IsReparsePoint;
+                var reparseTag = findData.dwReserved0;
+                var isCloudReparse = isReparse && IsCloudReparseTag(reparseTag);
+                var followReparse = isReparse && isCloudReparse;
                 var size = isDir ? 0 : findData.FileSizeBytes;
                 var kind = DetermineKind(isDir, isReparse);
                 var id = Interlocked.Increment(ref _nextId);
 
-                if (isDir && !isReparse)
+                if (isDir && (!isReparse || followReparse))
                 {
                     long subtreeSize = 0;
                     int subFileCount = 0;
@@ -269,6 +272,16 @@ public sealed class NativeFileSystemScanner : IFileSystemScanner
         isReparsePoint ? FileSystemNodeKind.ReparsePoint
         : isDirectory ? FileSystemNodeKind.Directory
         : FileSystemNodeKind.File;
+
+    private static bool IsCloudReparseTag(uint tag)
+    {
+        // IO_REPARSE_TAG_CLOUD + all 16 sub-tags (0x9000001A to 0x9000F01A) are OneDrive / SharePoint placeholders.
+        // These are storage, not loop-prone links — safe to follow.
+        if (tag == Win32Native.IO_REPARSE_TAG_ONEDRIVE) return true;
+        if ((tag & 0xFFFF00FFu) == 0x9000001Au) return true;
+        if (tag == Win32Native.IO_REPARSE_TAG_APPEXECLINK) return false;
+        return false;
+    }
 
     private static string NormalizeRootPath(string drive)
     {

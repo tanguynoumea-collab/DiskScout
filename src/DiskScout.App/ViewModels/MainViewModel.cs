@@ -1,3 +1,4 @@
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DiskScout.Models;
 using DiskScout.Services;
@@ -47,8 +48,23 @@ public sealed partial class MainViewModel : ObservableObject
 
     private void OnScanCompleted(object? sender, ScanResult result)
     {
-        Programs.Load(result.Programs);
-        Orphans.Load(result.Orphans);
-        Tree.Load(result.Nodes);
+        void DoLoad()
+        {
+            Programs.Load(result.Programs);
+            Orphans.Load(result.Orphans);
+            Tree.Load(result.Nodes);
+            _logger.Information("UI loaded: {Programs} programs, {Orphans} orphans, {Roots} tree roots",
+                Programs.Count, Orphans.Count, Tree.Roots.Count);
+        }
+
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher is null || dispatcher.CheckAccess())
+        {
+            DoLoad();
+        }
+        else
+        {
+            dispatcher.Invoke(DoLoad);
+        }
     }
 }

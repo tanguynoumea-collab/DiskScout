@@ -109,13 +109,13 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
         {
             _logger.Information("Starting scan on {Drives}", string.Join(", ", selected));
 
-            var nodes = await _fileSystemScanner.ScanAsync(selected, progress, _cts.Token).ConfigureAwait(false);
+            var nodes = await _fileSystemScanner.ScanAsync(selected, progress, _cts.Token);
 
             progress.Report(new ScanProgress(FilesProcessed, BytesScanned, "Lecture du registre...", null, ScanPhase.ReadingRegistry));
-            var programs = await _installedProgramsScanner.ScanAsync(nodes, _cts.Token).ConfigureAwait(false);
+            var programs = await _installedProgramsScanner.ScanAsync(nodes, _cts.Token);
 
             progress.Report(new ScanProgress(FilesProcessed, BytesScanned, "Détection des rémanents...", null, ScanPhase.DetectingOrphans));
-            var orphans = await _orphanDetectorService.DetectAsync(nodes, programs, _cts.Token).ConfigureAwait(false);
+            var orphans = await _orphanDetectorService.DetectAsync(nodes, programs, _cts.Token);
 
             stopwatch.Stop();
 
@@ -131,7 +131,7 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
 
             try
             {
-                var savePath = await _persistenceService.SaveAsync(result, _cts.Token).ConfigureAwait(false);
+                var savePath = await _persistenceService.SaveAsync(result, _cts.Token);
                 _logger.Information("Scan saved to {Path}", savePath);
             }
             catch (NotImplementedException)
@@ -143,13 +143,10 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
                 _logger.Warning(ex, "Persistence failed.");
             }
 
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ScanCompleted?.Invoke(this, result);
-                StatusMessage = $"Scan terminé en {stopwatch.Elapsed:mm\\:ss} — {nodes.Count:n0} nœuds, {programs.Count:n0} programmes, {orphans.Count:n0} rémanents.";
-                ProgressText = "Terminé.";
-                ProgressPercent = 100;
-            });
+            ScanCompleted?.Invoke(this, result);
+            StatusMessage = $"Scan terminé en {stopwatch.Elapsed:mm\\:ss} — {nodes.Count:n0} nœuds, {programs.Count:n0} programmes, {orphans.Count:n0} rémanents.";
+            ProgressText = "Terminé.";
+            ProgressPercent = 100;
         }
         catch (OperationCanceledException)
         {
