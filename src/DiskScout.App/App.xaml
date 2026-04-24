@@ -10,6 +10,13 @@
             <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
             <helpers:BytesFormatConverter x:Key="BytesFormatConverter" />
+            <helpers:PercentToStarGridLengthConverter x:Key="PercentToStarGridLengthConverter" />
+            <!-- Document type palette -->
+            <SolidColorBrush x:Key="DocPdfBrush" Color="#FFE74C3C" />
+            <SolidColorBrush x:Key="DocXlsxBrush" Color="#FF27AE60" />
+            <SolidColorBrush x:Key="DocRvtBrush" Color="#FF3498DB" />
+            <SolidColorBrush x:Key="DocTxtBrush" Color="#FFF1C40F" />
+            <SolidColorBrush x:Key="DocOtherBrush" Color="#FF7F8C8D" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>

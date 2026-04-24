@@ -1,5 +1,8 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using DiskScout.Helpers;
 using DiskScout.Models;
 
 namespace DiskScout.ViewModels;
@@ -10,6 +13,7 @@ public sealed partial class TreeViewModel : ObservableObject
 
     private Dictionary<long, List<FileSystemNode>> _childrenByParent = new();
     private IReadOnlyList<FileSystemNode> _rootNodes = Array.Empty<FileSystemNode>();
+    private Dictionary<long, DocumentTypeBreakdown> _breakdownByNode = new();
 
     [ObservableProperty]
     private string _emptyStateMessage =
@@ -24,6 +28,12 @@ public sealed partial class TreeViewModel : ObservableObject
     [ObservableProperty]
     private int _visibleRootCount;
 
+    [ObservableProperty]
+    private bool _isDocumentAnalysisEnabled;
+
+    [ObservableProperty]
+    private DocumentTypeBreakdown _globalBreakdown = DocumentTypeBreakdown.Empty;
+
     public ObservableCollection<TreeNodeViewModel> Roots { get; } = new();
 
     public long MinSizeBytes => (long)Math.Max(0, MinSizeGb * BytesPerGb);
@@ -33,6 +43,10 @@ public sealed partial class TreeViewModel : ObservableObject
     public void Load(IReadOnlyList<FileSystemNode> nodes)
     {
         Roots.Clear();
+        _breakdownByNode = new Dictionary<long, DocumentTypeBreakdown>();
+        GlobalBreakdown = DocumentTypeBreakdown.Empty;
+        IsDocumentAnalysisEnabled = false;
+
         if (nodes.Count == 0)
         {
             _childrenByParent = new();
@@ -64,6 +78,27 @@ public sealed partial class TreeViewModel : ObservableObject
         RebuildRoots();
     }
 
+    [RelayCommand]
+    private void AnalyzeDocumentTypes()
+    {
+        if (_rootNodes.Count == 0) return;
+        var allNodes = _childrenByParent.Values.SelectMany(list => list).Concat(_rootNodes).ToList();
+        var (perNode, global) = DocumentTypeAnalyzer.Analyze(allNodes);
+        _breakdownByNode = perNode;
+        GlobalBreakdown = global;
+        IsDocumentAnalysisEnabled = true;
+        RebuildRoots();
+    }
+
+    [RelayCommand]
+    private void ClearDocumentAnalysis()
+    {
+        IsDocumentAnalysisEnabled = false;
+        _breakdownByNode = new Dictionary<long, DocumentTypeBreakdown>();
+        GlobalBreakdown = DocumentTypeBreakdown.Empty;
+        RebuildRoots();
+    }
+
     private void RebuildRoots()
     {
         Roots.Clear();
@@ -77,9 +112,9 @@ public sealed partial class TreeViewModel : ObservableObject
         var threshold = MinSizeBytes;
         foreach (var root in _rootNodes)
         {
-            // Volume root always shown; children get filtered instead
             var rootSize = root.SizeBytes > 0 ? root.SizeBytes : 1;
-            var vm = new TreeNodeViewModel(root, _childrenByParent, rootSize, threshold);
+            var vm = new TreeNodeViewModel(root, _childrenByParent, rootSize, threshold,
+                _breakdownByNode, IsDocumentAnalysisEnabled);
             Roots.Add(vm);
         }
         HasResults = Roots.Count > 0;
@@ -95,6 +130,8 @@ public sealed partial class TreeNodeViewModel : ObservableObject
     private readonly Dictionary<long, List<FileSystemNode>>? _index;
     private readonly long _rootSize;
     private readonly long _minSizeBytes;
+    private readonly Dictionary<long, DocumentTypeBreakdown>? _breakdownByNode;
+    private readonly bool _docAnalysisEnabled;
     private bool _childrenLoaded;
 
     public FileSystemNode Node { get; }
@@ -109,14 +146,24 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         _index = null;
         _rootSize = 1;
         _minSizeBytes = 0;
+        _breakdownByNode = null;
+        _docAnalysisEnabled = false;
     }
 
-    public TreeNodeViewModel(FileSystemNode node, Dictionary<long, List<FileSystemNode>> index, long rootSize, long minSizeBytes)
+    public TreeNodeViewModel(
+        FileSystemNode node,
+        Dictionary<long, List<FileSystemNode>> index,
+        long rootSize,
+        long minSizeBytes,
+        Dictionary<long, DocumentTypeBreakdown> breakdownByNode,
+        bool docAnalysisEnabled)
     {
         Node = node;
         _index = index;
         _rootSize = rootSize > 0 ? rootSize : 1;
         _minSizeBytes = minSizeBytes;
+        _breakdownByNode = breakdownByNode;
+        _docAnalysisEnabled = docAnalysisEnabled;
 
         if (index.TryGetValue(node.Id, out var kids) && HasVisibleChild(kids, minSizeBytes))
         {
@@ -164,6 +211,34 @@ public sealed partial class TreeNodeViewModel : ObservableObject
 
     public double SharePercent => Math.Min(100.0, Math.Max(0.0, 100.0 * Node.SizeBytes / _rootSize));
 
+    public bool ShowDocumentBreakdown =>
+        _docAnalysisEnabled && _breakdownByNode is not null && _breakdownByNode.TryGetValue(Node.Id, out var b) && b.TotalBytes > 0;
+
+    public DocumentTypeBreakdown Breakdown =>
+        _breakdownByNode is not null && _breakdownByNode.TryGetValue(Node.Id, out var b)
+            ? b
+            : DocumentTypeBreakdown.Empty;
+
+    public double PdfPercent => Breakdown.PdfPercent;
+    public double XlsxPercent => Breakdown.XlsxPercent;
+    public double RvtPercent => Breakdown.RvtPercent;
+    public double TxtPercent => Breakdown.TxtPercent;
+    public double OtherPercent => Breakdown.OtherPercent;
+
+    [RelayCommand]
+    private void CopyPath()
+    {
+        if (string.IsNullOrEmpty(Node.FullPath)) return;
+        try
+        {
+            Clipboard.SetText(Node.FullPath);
+        }
+        catch
+        {
+            // Clipboard occasionally busy; ignore — user can retry
+        }
+    }
+
     partial void OnIsExpandedChanged(bool value)
     {
         if (!value || _childrenLoaded || _index is null) return;
@@ -175,7 +250,9 @@ public sealed partial class TreeNodeViewModel : ObservableObject
             {
                 if (_minSizeBytes > 0 && child.SizeBytes < _minSizeBytes) continue;
                 if (count >= MaxChildrenPerNode) break;
-                Children.Add(new TreeNodeViewModel(child, _index, _rootSize, _minSizeBytes));
+                Children.Add(new TreeNodeViewModel(child, _index, _rootSize, _minSizeBytes,
+                    _breakdownByNode ?? new Dictionary<long, DocumentTypeBreakdown>(),
+                    _docAnalysisEnabled));
                 count++;
             }
         }

@@ -9,7 +9,7 @@
                                   Visibility="{Binding HasResults, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
         <DockPanel Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}">
 
-            <!-- Filter bar -->
+            <!-- Filter + analyze bar -->
             <Border DockPanel.Dock="Top" Padding="14,10" Background="{StaticResource BackgroundAltBrush}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Filtre taille mini (Go) :"
@@ -23,13 +23,63 @@
                              Padding="6,4"
                              VerticalAlignment="Center"
                              ToolTip="Laisser à 0 pour tout afficher. Exemple : 5 = masquer les dossiers &lt; 5 Go." />
-                    <TextBlock Text="Go"
-                               Foreground="{StaticResource ForegroundSubtleBrush}"
-                               VerticalAlignment="Center" Margin="6,0,14,0" />
-                    <TextBlock VerticalAlignment="Center" Foreground="{StaticResource ForegroundSubtleBrush}" FontSize="11">
-                        <Run Text="Astuce :" FontWeight="SemiBold" />
-                        <Run Text=" le filtre masque les nœuds dont la taille totale est sous le seuil." />
-                    </TextBlock>
+                    <TextBlock Text="Go" Foreground="{StaticResource ForegroundSubtleBrush}" VerticalAlignment="Center" Margin="6,0,20,0" />
+
+                    <Button Content="Analyser les types"
+                            Command="{Binding AnalyzeDocumentTypesCommand}"
+                            Visibility="{Binding IsDocumentAnalysisEnabled, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                            Margin="0,0,8,0" />
+                    <Button Content="Réinitialiser l'analyse"
+                            Command="{Binding ClearDocumentAnalysisCommand}"
+                            Visibility="{Binding IsDocumentAnalysisEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Legend -->
+            <Border DockPanel.Dock="Top"
+                    Padding="14,8"
+                    Background="{StaticResource BackgroundAltBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,1,0,1"
+                    Visibility="{Binding IsDocumentAnalysisEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Global disque :" Foreground="{StaticResource ForegroundSubtleBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,14,0" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+                        <Border Width="14" Height="10" Background="{StaticResource DocPdfBrush}" Margin="0,0,6,0" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="PDF " FontWeight="SemiBold" />
+                            <Run Text="{Binding GlobalBreakdown.PdfPercent, StringFormat={}{0:F1}%, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+                        <Border Width="14" Height="10" Background="{StaticResource DocXlsxBrush}" Margin="0,0,6,0" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="XLSX " FontWeight="SemiBold" />
+                            <Run Text="{Binding GlobalBreakdown.XlsxPercent, StringFormat={}{0:F1}%, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+                        <Border Width="14" Height="10" Background="{StaticResource DocRvtBrush}" Margin="0,0,6,0" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="RVT " FontWeight="SemiBold" />
+                            <Run Text="{Binding GlobalBreakdown.RvtPercent, StringFormat={}{0:F1}%, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+                        <Border Width="14" Height="10" Background="{StaticResource DocTxtBrush}" Margin="0,0,6,0" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="TXT " FontWeight="SemiBold" />
+                            <Run Text="{Binding GlobalBreakdown.TxtPercent, StringFormat={}{0:F1}%, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,18,0">
+                        <Border Width="14" Height="10" Background="{StaticResource DocOtherBrush}" Margin="0,0,6,0" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="Autres " FontWeight="SemiBold" />
+                            <Run Text="{Binding GlobalBreakdown.OtherPercent, StringFormat={}{0:F1}%, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 
@@ -39,30 +89,73 @@
                       BorderThickness="0"
                       VirtualizingStackPanel.IsVirtualizing="True"
                       VirtualizingStackPanel.VirtualizationMode="Recycling"
-                      ScrollViewer.CanContentScroll="True">
+                      ScrollViewer.CanContentScroll="True"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="TreeViewItem">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                         <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Header="Copier le chemin"
+                                              Command="{Binding PlacementTarget.DataContext.CopyPathCommand, RelativeSource={RelativeSource Self}}" />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
                     </Style>
                 </TreeView.ItemContainerStyle>
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type vm:TreeNodeViewModel}" ItemsSource="{Binding Children}">
-                        <Grid Margin="0,2">
+                        <Grid Margin="0,2" HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" MinWidth="260" />
+                                <ColumnDefinition Width="Auto" MinWidth="200" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="*" MinWidth="220" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+
+                            <TextBlock Grid.Column="0" Text="{Binding DisplayName}"
+                                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                             <TextBlock Grid.Column="1" Text="{Binding SizeDisplay}"
                                        Foreground="{StaticResource ForegroundSubtleBrush}"
-                                       VerticalAlignment="Center" Margin="12,0,12,0" />
-                            <Border Grid.Column="2" Height="10"
-                                    Background="{StaticResource BackgroundElevatedBrush}" CornerRadius="2" VerticalAlignment="Center">
-                                <Border Background="{StaticResource AccentBrush}" CornerRadius="2"
-                                        HorizontalAlignment="Left" Width="{Binding SharePercent}" />
-                            </Border>
+                                       VerticalAlignment="Center" Margin="12,0,12,0" MinWidth="60" />
+
+                            <!-- Bar: single-color (size share) OR multi-segment (doc types) -->
+                            <Grid Grid.Column="2" Height="14" VerticalAlignment="Center">
+                                <!-- Single-color size-share bar -->
+                                <Border Background="{StaticResource BackgroundElevatedBrush}" CornerRadius="3"
+                                        Visibility="{Binding ShowDocumentBreakdown, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding SharePercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="{StaticResource AccentBrush}" CornerRadius="3,0,0,3" />
+                                    </Grid>
+                                </Border>
+
+                                <!-- Multi-segment doc-type bar -->
+                                <Border CornerRadius="3" ClipToBounds="True"
+                                        Background="{StaticResource BackgroundElevatedBrush}"
+                                        Visibility="{Binding ShowDocumentBreakdown, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        ToolTip="PDF / XLSX / RVT / TXT / Autres (proportion de l'occupation du dossier)">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="{Binding PdfPercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                            <ColumnDefinition Width="{Binding XlsxPercent,  Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                            <ColumnDefinition Width="{Binding RvtPercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                            <ColumnDefinition Width="{Binding TxtPercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                            <ColumnDefinition Width="{Binding OtherPercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="{StaticResource DocPdfBrush}" />
+                                        <Border Grid.Column="1" Background="{StaticResource DocXlsxBrush}" />
+                                        <Border Grid.Column="2" Background="{StaticResource DocRvtBrush}" />
+                                        <Border Grid.Column="3" Background="{StaticResource DocTxtBrush}" />
+                                        <Border Grid.Column="4" Background="{StaticResource DocOtherBrush}" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
                         </Grid>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
