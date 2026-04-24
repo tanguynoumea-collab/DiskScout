@@ -30,16 +30,17 @@ public sealed partial class MainViewModel : ObservableObject
         IOrphanDetectorService orphanDetectorService,
         IPersistenceService persistenceService,
         IDeltaComparator deltaComparator,
-        IExporter exporter)
+        IExporter exporter,
+        IFileDeletionService fileDeletionService)
     {
         _logger = logger;
         _ = deltaComparator;
         _ = exporter;
 
         Programs = new ProgramsViewModel();
-        Orphans = new OrphansViewModel();
-        Tree = new TreeViewModel();
-        LargestFiles = new LargestFilesViewModel();
+        Orphans = new OrphansViewModel(fileDeletionService, logger);
+        Tree = new TreeViewModel(fileDeletionService, logger);
+        LargestFiles = new LargestFilesViewModel(fileDeletionService, logger);
 
         Orchestrator = new ScanOrchestratorViewModel(
             logger, driveService, fileSystemScanner, installedProgramsScanner,

@@ -4,12 +4,17 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DiskScout.Helpers;
 using DiskScout.Models;
+using DiskScout.Services;
+using Serilog;
 
 namespace DiskScout.ViewModels;
 
 public sealed partial class TreeViewModel : ObservableObject
 {
     private const long BytesPerGb = 1024L * 1024L * 1024L;
+
+    private readonly IFileDeletionService _deletion;
+    private readonly ILogger _logger;
 
     private Dictionary<long, List<FileSystemNode>> _childrenByParent = new();
     private IReadOnlyList<FileSystemNode> _rootNodes = Array.Empty<FileSystemNode>();
@@ -37,6 +42,12 @@ public sealed partial class TreeViewModel : ObservableObject
     public ObservableCollection<TreeNodeViewModel> Roots { get; } = new();
 
     public long MinSizeBytes => (long)Math.Max(0, MinSizeGb * BytesPerGb);
+
+    public TreeViewModel(IFileDeletionService deletion, ILogger logger)
+    {
+        _deletion = deletion;
+        _logger = logger;
+    }
 
     partial void OnMinSizeGbChanged(double value) => RebuildRoots();
 
@@ -114,7 +125,7 @@ public sealed partial class TreeViewModel : ObservableObject
         {
             var rootSize = root.SizeBytes > 0 ? root.SizeBytes : 1;
             var vm = new TreeNodeViewModel(root, _childrenByParent, rootSize, threshold,
-                _breakdownByNode, IsDocumentAnalysisEnabled);
+                _breakdownByNode, IsDocumentAnalysisEnabled, _deletion, _logger);
             Roots.Add(vm);
         }
         HasResults = Roots.Count > 0;
@@ -132,6 +143,8 @@ public sealed partial class TreeNodeViewModel : ObservableObject
     private readonly long _minSizeBytes;
     private readonly Dictionary<long, DocumentTypeBreakdown>? _breakdownByNode;
     private readonly bool _docAnalysisEnabled;
+    private readonly IFileDeletionService? _deletion;
+    private readonly ILogger? _logger;
     private bool _childrenLoaded;
 
     public FileSystemNode Node { get; }
@@ -139,6 +152,9 @@ public sealed partial class TreeNodeViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _isExpanded;
+
+    [ObservableProperty]
+    private bool _isDeleted;
 
     private TreeNodeViewModel()
     {
@@ -148,6 +164,8 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         _minSizeBytes = 0;
         _breakdownByNode = null;
         _docAnalysisEnabled = false;
+        _deletion = null;
+        _logger = null;
     }
 
     public TreeNodeViewModel(
@@ -156,7 +174,9 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         long rootSize,
         long minSizeBytes,
         Dictionary<long, DocumentTypeBreakdown> breakdownByNode,
-        bool docAnalysisEnabled)
+        bool docAnalysisEnabled,
+        IFileDeletionService? deletion,
+        ILogger? logger)
     {
         Node = node;
         _index = index;
@@ -164,6 +184,8 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         _minSizeBytes = minSizeBytes;
         _breakdownByNode = breakdownByNode;
         _docAnalysisEnabled = docAnalysisEnabled;
+        _deletion = deletion;
+        _logger = logger;
 
         if (index.TryGetValue(node.Id, out var kids) && HasVisibleChild(kids, minSizeBytes))
         {
@@ -188,7 +210,8 @@ public sealed partial class TreeNodeViewModel : ObservableObject
             var suffix = IsCloudPath(Node.FullPath) ? "  [OneDrive/SharePoint]"
                        : Node.IsReparsePoint ? "  [Reparse]"
                        : string.Empty;
-            return Node.Name + suffix;
+            var deleted = IsDeleted ? "  [supprimé]" : string.Empty;
+            return Node.Name + suffix + deleted;
         }
     }
 
@@ -232,13 +255,44 @@ public sealed partial class TreeNodeViewModel : ObservableObject
     private void CopyPath()
     {
         if (string.IsNullOrEmpty(Node.FullPath)) return;
-        try
+        try { Clipboard.SetText(Node.FullPath); } catch { /* clipboard busy */ }
+    }
+
+    [RelayCommand]
+    private async Task DeleteAsync()
+    {
+        if (_deletion is null || string.IsNullOrEmpty(Node.FullPath) || IsDeleted) return;
+
+        var kindLabel = Node.Kind switch
         {
-            Clipboard.SetText(Node.FullPath);
+            FileSystemNodeKind.Directory => "dossier",
+            FileSystemNodeKind.Volume => "volume",
+            FileSystemNodeKind.ReparsePoint => "point de reparse",
+            _ => "fichier",
+        };
+
+        if (Node.Kind == FileSystemNodeKind.Volume)
+        {
+            MessageBox.Show(
+                "Impossible de supprimer un volume racine.",
+                "DiskScout",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            return;
         }
-        catch
+
+        var summary = $"Supprimer ce {kindLabel} :{Environment.NewLine}{Node.FullPath}{Environment.NewLine}Taille : {DeletePrompt.FormatBytes(Node.SizeBytes)}";
+        var (confirmed, permanent) = DeletePrompt.Ask(summary);
+        if (!confirmed) return;
+
+        var result = await _deletion.DeleteAsync(new[] { Node.FullPath }, sendToRecycleBin: !permanent);
+        DeletePrompt.ShowResult(result);
+
+        if (result.SuccessCount > 0)
         {
-            // Clipboard occasionally busy; ignore — user can retry
+            IsDeleted = true;
+            OnPropertyChanged(nameof(DisplayName));
+            _logger?.Information("Tree node flagged as deleted: {Path}", Node.FullPath);
         }
     }
 
@@ -255,7 +309,7 @@ public sealed partial class TreeNodeViewModel : ObservableObject
                 if (count >= MaxChildrenPerNode) break;
                 Children.Add(new TreeNodeViewModel(child, _index, _rootSize, _minSizeBytes,
                     _breakdownByNode ?? new Dictionary<long, DocumentTypeBreakdown>(),
-                    _docAnalysisEnabled));
+                    _docAnalysisEnabled, _deletion, _logger));
                 count++;
             }
         }

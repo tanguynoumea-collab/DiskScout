@@ -4,13 +4,19 @@ using System.Windows.Data;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DiskScout.Helpers;
 using DiskScout.Models;
+using DiskScout.Services;
+using Serilog;
 
 namespace DiskScout.ViewModels;
 
 public sealed partial class LargestFilesViewModel : ObservableObject
 {
     private const int DefaultTopN = 200;
+
+    private readonly IFileDeletionService _deletion;
+    private readonly ILogger _logger;
 
     [ObservableProperty]
     private string _emptyStateMessage =
@@ -35,8 +41,13 @@ public sealed partial class LargestFilesViewModel : ObservableObject
 
     public ICollectionView View { get; }
 
-    public LargestFilesViewModel()
+    private IReadOnlyList<FileSystemNode>? _lastNodes;
+
+    public LargestFilesViewModel(IFileDeletionService deletion, ILogger logger)
     {
+        _deletion = deletion;
+        _logger = logger;
+
         View = CollectionViewSource.GetDefaultView(Rows);
         View.SortDescriptions.Add(new SortDescription(nameof(LargestFileRow.SizeBytes), ListSortDirection.Descending));
         View.Filter = FilterPredicate;
@@ -48,8 +59,6 @@ public sealed partial class LargestFilesViewModel : ObservableObject
     {
         if (_lastNodes is not null) Load(_lastNodes);
     }
-
-    private IReadOnlyList<FileSystemNode>? _lastNodes;
 
     public void Load(IReadOnlyList<FileSystemNode> nodes)
     {
@@ -79,6 +88,27 @@ public sealed partial class LargestFilesViewModel : ObservableObject
     {
         if (row is null || string.IsNullOrEmpty(row.FullPath)) return;
         try { Clipboard.SetText(row.FullPath); } catch { /* clipboard busy */ }
+    }
+
+    [RelayCommand]
+    private async Task DeleteAsync(LargestFileRow? row)
+    {
+        if (row is null) return;
+        var summary = $"Supprimer :{Environment.NewLine}{row.FullPath}{Environment.NewLine}Taille : {DeletePrompt.FormatBytes(row.SizeBytes)}";
+        var (confirmed, permanent) = DeletePrompt.Ask(summary);
+        if (!confirmed) return;
+
+        var result = await _deletion.DeleteAsync(new[] { row.FullPath }, sendToRecycleBin: !permanent);
+        DeletePrompt.ShowResult(result);
+
+        if (result.SuccessCount > 0)
+        {
+            Rows.Remove(row);
+            Count = Rows.Count;
+            TotalBytes -= result.TotalBytesFreed;
+            HasResults = Rows.Count > 0;
+            View.Refresh();
+        }
     }
 
     private bool FilterPredicate(object obj)

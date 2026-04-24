@@ -6,7 +6,7 @@ Outil Windows desktop (WPF/.NET 8) d'analyse intelligente de l'occupation disque
 
 ## Core Value
 
-Montrer clairement où va l'espace disque et identifier les rémanents — sans jamais rien supprimer. L'utilisateur supprime lui-même ailleurs (Explorateur, PowerShell) après analyse.
+Montrer clairement où va l'espace disque, identifier les rémanents, et permettre la suppression ciblée via corbeille ou, sur confirmation explicite, de manière définitive.
 
 ## Requirements
 
@@ -34,7 +34,7 @@ Montrer clairement où va l'espace disque et identifier les rémanents — sans 
 
 <!-- Explicit boundaries. Includes reasoning to prevent re-adding. -->
 
-- Toute forme de suppression de fichier ou dossier — règle produit absolue : lecture seule
+- ~~Toute forme de suppression de fichier ou dossier~~ — règle levée le 2026-04-24 : suppression possible via clic droit, corbeille par défaut, définitif sur confirmation explicite ; chaque action est loggée dans Serilog
 - Cloud, API externe, télémétrie — 100 % local, pas de dépendance réseau
 - Multi-utilisateur ou mode serveur — usage personnel sur une seule machine
 - Support Linux / macOS — WPF + registre Windows + P/Invoke Win32 = Windows only
@@ -56,7 +56,7 @@ Montrer clairement où va l'espace disque et identifier les rémanents — sans 
 - **Tech stack** : WPF + C# .NET 8 + CommunityToolkit.Mvvm + System.Text.Json — aucune dépendance externe runtime, tout embarqué dans le single-file
 - **Architecture** : MVVM stricte (Models / Views / ViewModels / Services / Helpers), pas de code-behind sauf événements UI purs (drag/drop, resize)
 - **Perf** : scan d'un disque de 500 Go utilisable sous 3 min sur SSD ; UI jamais bloquée (async/await + IProgress partout)
-- **Safety** : aucun appel `File.Delete`, `Directory.Delete`, `FileSystem.Delete*` dans le code — lecture seule absolue
+- **Safety** : suppression autorisée uniquement via `Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile/DeleteDirectory` avec dialog de confirmation et audit Serilog. Corbeille par défaut, définitif sur double-confirmation. Jamais de suppression bulk sans confirmation individuelle.
 - **Robustesse** : `UnauthorizedAccessException`, `DirectoryNotFoundException`, `PathTooLongException`, `IOException` loggés et ignorés, scan continue
 - **Privilèges** : manifest `requireAdministrator` obligatoire
 - **Dépendances** : injection manuelle dans `App.xaml.cs`, pas de conteneur DI externe

@@ -98,6 +98,9 @@
                                 <ContextMenu>
                                     <MenuItem Header="Copier le chemin"
                                               Command="{Binding PlacementTarget.DataContext.CopyPathCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+                                    <Separator />
+                                    <MenuItem Header="Supprimer (corbeille / définitif…)"
+                                              Command="{Binding PlacementTarget.DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
                                 </ContextMenu>
                             </Setter.Value>
                         </Setter>

@@ -48,6 +48,7 @@ public partial class App : Application
         IInstalledProgramsScanner installedProgramsScanner = new RegistryInstalledProgramsScanner(_logger);
         IOrphanDetectorService orphanDetectorService = new OrphanDetectorService(_logger);
         IPersistenceService persistenceService = new JsonPersistenceService(_logger);
+        IFileDeletionService fileDeletionService = new FileDeletionService(_logger);
         IDeltaComparator deltaComparator = new PathKeyedDeltaComparator();
         ScanResult? lastScan = null;
         IExporter exporter = new CsvHtmlExporter(() => lastScan);
@@ -60,7 +61,8 @@ public partial class App : Application
             orphanDetectorService,
             persistenceService,
             deltaComparator,
-            exporter);
+            exporter,
+            fileDeletionService);
 
         var mainWindow = new MainWindow(mainViewModel);
         mainWindow.Show();

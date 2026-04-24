@@ -1,13 +1,21 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using DiskScout.Helpers;
 using DiskScout.Models;
+using DiskScout.Services;
+using Serilog;
 
 namespace DiskScout.ViewModels;
 
 public sealed partial class OrphansViewModel : ObservableObject
 {
+    private readonly IFileDeletionService _deletion;
+    private readonly ILogger _logger;
+
     [ObservableProperty]
     private string _emptyStateMessage =
         "Aucun scan effectué. Lance un scan pour détecter les fichiers rémanents.";
@@ -25,8 +33,11 @@ public sealed partial class OrphansViewModel : ObservableObject
 
     public ICollectionView View { get; }
 
-    public OrphansViewModel()
+    public OrphansViewModel(IFileDeletionService deletion, ILogger logger)
     {
+        _deletion = deletion;
+        _logger = logger;
+
         View = CollectionViewSource.GetDefaultView(Rows);
         View.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OrphanRow.CategoryLabel)));
         View.SortDescriptions.Add(new SortDescription(nameof(OrphanRow.CategoryLabel), ListSortDirection.Ascending));
@@ -46,6 +57,34 @@ public sealed partial class OrphansViewModel : ObservableObject
         TotalBytes = total;
         HasResults = Rows.Count > 0;
         View.Refresh();
+    }
+
+    [RelayCommand]
+    private void CopyPath(OrphanRow? row)
+    {
+        if (row is null || string.IsNullOrEmpty(row.FullPath)) return;
+        try { Clipboard.SetText(row.FullPath); } catch { /* clipboard busy */ }
+    }
+
+    [RelayCommand]
+    private async Task DeleteAsync(OrphanRow? row)
+    {
+        if (row is null) return;
+        var summary = $"Supprimer :{Environment.NewLine}{row.FullPath}{Environment.NewLine}Taille : {DeletePrompt.FormatBytes(row.SizeBytes)}";
+        var (confirmed, permanent) = DeletePrompt.Ask(summary);
+        if (!confirmed) return;
+
+        var result = await _deletion.DeleteAsync(new[] { row.FullPath }, sendToRecycleBin: !permanent);
+        DeletePrompt.ShowResult(result);
+
+        if (result.SuccessCount > 0)
+        {
+            Rows.Remove(row);
+            Count = Rows.Count;
+            TotalBytes -= result.TotalBytesFreed;
+            HasResults = Rows.Count > 0;
+            View.Refresh();
+        }
     }
 }
 
