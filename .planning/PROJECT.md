@@ -63,6 +63,7 @@ Montrer clairement où va l'espace disque et identifier les rémanents — sans 
 - **Déploiement** : `dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true`
 - **Logging** : fichier rotatif 5 Mo max dans `%LocalAppData%\DiskScout\diskscout.log`
 - **Persistance** : JSON versionné (`schemaVersion: 1`) dans `%LocalAppData%\DiskScout\scans\scan_YYYYMMDD_HHmmss.json`
+- **Workflow dev** : après chaque build réussi d'une phase produisant un état lançable, lancer automatiquement le prototype (`dotnet run` ou `./DiskScout.exe`) pour validation visuelle immédiate par l'utilisateur
 
 ## Key Decisions
 
