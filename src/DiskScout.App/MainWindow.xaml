@@ -111,6 +111,9 @@
             <TabItem Header="Arborescence">
                 <tabs:TreeTabView DataContext="{Binding Tree}" />
             </TabItem>
+            <TabItem Header="Gros fichiers">
+                <tabs:LargestFilesTabView DataContext="{Binding LargestFiles}" />
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

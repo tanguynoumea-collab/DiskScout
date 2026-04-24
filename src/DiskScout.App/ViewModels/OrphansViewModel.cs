@@ -70,6 +70,8 @@ public sealed class OrphanRow
         OrphanCategory.EmptyProgramFiles => "Program Files vides",
         OrphanCategory.StaleTemp => "Fichiers Temp anciens",
         OrphanCategory.OrphanInstallerPatch => "Patches MSI orphelins",
+        OrphanCategory.SystemArtifact => "Artefacts système",
+        OrphanCategory.DevCache => "Caches de développement",
         _ => "Autres",
     };
 

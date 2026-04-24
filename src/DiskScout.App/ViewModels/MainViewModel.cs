@@ -13,6 +13,7 @@ public sealed partial class MainViewModel : ObservableObject
     public ProgramsViewModel Programs { get; }
     public OrphansViewModel Orphans { get; }
     public TreeViewModel Tree { get; }
+    public LargestFilesViewModel LargestFiles { get; }
     public ScanOrchestratorViewModel Orchestrator { get; }
 
     [ObservableProperty]
@@ -38,6 +39,7 @@ public sealed partial class MainViewModel : ObservableObject
         Programs = new ProgramsViewModel();
         Orphans = new OrphansViewModel();
         Tree = new TreeViewModel();
+        LargestFiles = new LargestFilesViewModel();
 
         Orchestrator = new ScanOrchestratorViewModel(
             logger, driveService, fileSystemScanner, installedProgramsScanner,
@@ -54,9 +56,10 @@ public sealed partial class MainViewModel : ObservableObject
             Programs.Load(result.Programs);
             Orphans.Load(result.Orphans);
             Tree.Load(result.Nodes);
+            LargestFiles.Load(result.Nodes);
             _logger.Information(
-                "UI loaded: {Programs} programs, {Orphans} orphans, {Roots} tree roots",
-                Programs.Count, Orphans.Count, Tree.Roots.Count);
+                "UI loaded: {Programs} programs, {Orphans} orphans, {Roots} tree roots, {Top} largest files",
+                Programs.Count, Orphans.Count, Tree.Roots.Count, LargestFiles.Count);
         }
 
         var dispatcher = Application.Current?.Dispatcher;

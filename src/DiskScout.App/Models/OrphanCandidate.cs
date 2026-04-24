@@ -6,6 +6,8 @@ public enum OrphanCategory
     EmptyProgramFiles,
     StaleTemp,
     OrphanInstallerPatch,
+    SystemArtifact,
+    DevCache,
 }
 
 public sealed record OrphanCandidate(
