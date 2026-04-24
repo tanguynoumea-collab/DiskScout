@@ -163,10 +163,17 @@ public sealed partial class DuplicatesViewModel : ObservableObject
     [RelayCommand] private void GenerateAiAuditPrompt()
     {
         var items = Groups.SelectMany(g => g.Rows).Where(r => r.IsSelected)
-            .Select(r => new AuditItem(r.FullPath, r.SizeBytes,
-                Reason: $"Doublon — {r.Name} ({r.SizeBytes:n0} octets). Groupe de {GroupSizeFor(r)} copies, {DeletePrompt.FormatBytes(GroupWastedFor(r))} gaspillés si on garde 1 seule copie."))
+            .Select(r =>
+            {
+                var group = Groups.FirstOrDefault(g => g.Rows.Contains(r));
+                var groupSize = group?.Rows.Count ?? 0;
+                var wasted = group?.WastedBytes ?? 0;
+                var verified = group?.HashVerified == true ? " (hash xxHash3 vérifié ✓)" : " (groupage nom+taille seulement, non vérifié par hash)";
+                var reason = $"Groupe de {groupSize} copies, {DeletePrompt.FormatBytes(wasted)} gaspillés si on garde 1 seule copie{verified}";
+                return new AuditItem(r.FullPath, r.SizeBytes, reason);
+            })
             .ToList();
-        AuditPromptBuilder.BuildAndCopy("Doublons", items);
+        AuditPromptBuilder.BuildAndCopy(TabContexts.Duplicates, items);
     }
 
     private int GroupSizeFor(DuplicateRow r) => Groups.FirstOrDefault(g => g.Rows.Contains(r))?.Rows.Count ?? 0;

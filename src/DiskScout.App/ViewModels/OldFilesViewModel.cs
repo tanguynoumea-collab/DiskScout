@@ -147,10 +147,14 @@ public sealed partial class OldFilesViewModel : ObservableObject
     private void GenerateAiAuditPrompt()
     {
         var items = Groups.SelectMany(g => g.Rows).Where(r => r.IsSelected)
-            .Select(r => new AuditItem(r.FullPath, r.SizeBytes,
-                Reason: $"Fichier ancien — non modifié depuis {r.AgeDays} jour(s)."))
+            .Select(r =>
+            {
+                var ageLabel = r.AgeDays < 365 ? $"{r.AgeDays} jour(s)" : $"{r.AgeDays / 365.0:F1} an(s)";
+                var reason = $"Non modifié depuis {ageLabel} (dernière modif {r.LastModifiedDisplay}, extension .{r.Extension})";
+                return new AuditItem(r.FullPath, r.SizeBytes, reason);
+            })
             .ToList();
-        AuditPromptBuilder.BuildAndCopy("Vieux fichiers", items);
+        AuditPromptBuilder.BuildAndCopy(TabContexts.OldFiles, items);
     }
 
     [RelayCommand]

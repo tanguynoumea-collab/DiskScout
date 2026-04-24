@@ -165,10 +165,35 @@ public sealed partial class OrphansViewModel : ObservableObject
     private void GenerateAiAuditPrompt()
     {
         var selected = Groups.SelectMany(g => g.Rows).Where(r => r.IsSelected).ToList();
-        var items = selected.Select(r => new AuditItem(r.FullPath, r.SizeBytes, r.Reason)).ToList();
-        var tabLabel = _acceptedCategories.Contains(OrphanCategory.AppDataOrphan) ? "Rémanents" : "Nettoyage";
-        AuditPromptBuilder.BuildAndCopy(tabLabel, items);
+        // Enrich each item's Reason with its DiskScout category label so the LLM knows
+        // exactly which heuristic triggered.
+        var items = selected.Select(r =>
+        {
+            var categoryLabel = CategoryLabelFor(r.Category);
+            var reason = string.IsNullOrWhiteSpace(r.Reason)
+                ? $"[{categoryLabel}]"
+                : $"[{categoryLabel}] {r.Reason}";
+            return new AuditItem(r.FullPath, r.SizeBytes, reason);
+        }).ToList();
+        var context = _acceptedCategories.Contains(OrphanCategory.AppDataOrphan)
+            ? TabContexts.Remnants
+            : TabContexts.Cleanup;
+        AuditPromptBuilder.BuildAndCopy(context, items);
     }
+
+    private static string CategoryLabelFor(OrphanCategory c) => c switch
+    {
+        OrphanCategory.AppDataOrphan => "AppData orphelin",
+        OrphanCategory.EmptyProgramFiles => "Program Files vide",
+        OrphanCategory.StaleTemp => "Temp ancien",
+        OrphanCategory.OrphanInstallerPatch => "Patch MSI orphelin",
+        OrphanCategory.SystemArtifact => "Artefact système",
+        OrphanCategory.DevCache => "Cache de développement",
+        OrphanCategory.BrowserCache => "Cache de navigateur",
+        OrphanCategory.EmptyFolder => "Dossier vide",
+        OrphanCategory.BrokenShortcut => "Raccourci cassé",
+        _ => "Autre",
+    };
 
     [RelayCommand]
     private void CopyPath(OrphanRow? row)
