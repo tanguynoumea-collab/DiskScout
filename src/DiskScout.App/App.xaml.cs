@@ -22,6 +22,26 @@ public partial class App : Application
 
         _logger.Information("DiskScout starting (version {Version}).", typeof(App).Assembly.GetName().Version);
 
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+        {
+            _logger?.Fatal(args.ExceptionObject as Exception, "Unhandled AppDomain exception. Terminating={Terminating}", args.IsTerminating);
+        };
+        DispatcherUnhandledException += (_, args) =>
+        {
+            _logger?.Error(args.Exception, "Unhandled Dispatcher exception.");
+            MessageBox.Show(
+                args.Exception.Message + "\n\nVoir diskscout.log pour le détail.",
+                "DiskScout — erreur",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            args.Handled = true;
+        };
+        System.Threading.Tasks.TaskScheduler.UnobservedTaskException += (_, args) =>
+        {
+            _logger?.Error(args.Exception, "Unobserved task exception.");
+            args.SetObserved();
+        };
+
         // Composition root — manual DI.
         IDriveService driveService = new DriveService();
         IFileSystemScanner fileSystemScanner = new NativeFileSystemScanner(_logger);
