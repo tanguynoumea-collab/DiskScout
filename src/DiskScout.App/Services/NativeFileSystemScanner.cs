@@ -182,7 +182,9 @@ public sealed class NativeFileSystemScanner : IFileSystemScanner
                 var reparseTag = findData.dwReserved0;
                 var isCloudReparse = isReparse && IsCloudReparseTag(reparseTag);
                 var followReparse = isReparse && isCloudReparse;
-                var size = isDir ? 0 : findData.FileSizeBytes;
+                var isCloudPlaceholder = !isDir && findData.IsCloudPlaceholder;
+                var logicalSize = isDir ? 0 : findData.FileSizeBytes;
+                var physicalSize = isCloudPlaceholder ? 0 : logicalSize;
                 var kind = DetermineKind(isDir, isReparse);
                 var id = Interlocked.Increment(ref _nextId);
 
@@ -224,7 +226,9 @@ public sealed class NativeFileSystemScanner : IFileSystemScanner
                         DirectoryCount: subDirCount,
                         LastModifiedUtc: findData.LastWriteUtc,
                         IsReparsePoint: isReparse,
-                        Depth: depth);
+                        Depth: depth,
+                        LogicalSizeBytes: subtreeSize,
+                        IsCloudPlaceholder: false);
                     nodes.Add(dirNode);
 
                     totalSize += subtreeSize;
@@ -237,17 +241,19 @@ public sealed class NativeFileSystemScanner : IFileSystemScanner
                         Name: name,
                         FullPath: fullPath,
                         Kind: kind,
-                        SizeBytes: size,
+                        SizeBytes: physicalSize,
                         FileCount: 1,
                         DirectoryCount: 0,
                         LastModifiedUtc: findData.LastWriteUtc,
                         IsReparsePoint: isReparse,
-                        Depth: depth);
+                        Depth: depth,
+                        LogicalSizeBytes: logicalSize,
+                        IsCloudPlaceholder: isCloudPlaceholder);
                     nodes.Add(fileNode);
 
-                    totalSize += size;
+                    totalSize += physicalSize;
                     Interlocked.Increment(ref filesCount);
-                    Interlocked.Add(ref bytesScanned, size);
+                    Interlocked.Add(ref bytesScanned, physicalSize);
                 }
 
                 reportProgress(false, ScanPhase.ScanningFilesystem);

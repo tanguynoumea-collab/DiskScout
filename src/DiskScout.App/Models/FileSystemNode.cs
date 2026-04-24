@@ -19,4 +19,6 @@ public sealed record FileSystemNode(
     int DirectoryCount,
     DateTime LastModifiedUtc,
     bool IsReparsePoint,
-    int Depth);
+    int Depth,
+    long LogicalSizeBytes = 0,
+    bool IsCloudPlaceholder = false);

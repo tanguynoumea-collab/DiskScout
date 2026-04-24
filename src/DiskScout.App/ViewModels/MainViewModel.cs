@@ -13,6 +13,7 @@ public sealed partial class MainViewModel : ObservableObject
     public ProgramsViewModel Programs { get; }
     public OrphansViewModel Orphans { get; }
     public TreeViewModel Tree { get; }
+    public CloudViewModel Cloud { get; }
     public ScanOrchestratorViewModel Orchestrator { get; }
 
     [ObservableProperty]
@@ -27,6 +28,7 @@ public sealed partial class MainViewModel : ObservableObject
         IFileSystemScanner fileSystemScanner,
         IInstalledProgramsScanner installedProgramsScanner,
         IOrphanDetectorService orphanDetectorService,
+        ICloudStorageAnalyzer cloudStorageAnalyzer,
         IPersistenceService persistenceService,
         IDeltaComparator deltaComparator,
         IExporter exporter)
@@ -38,23 +40,27 @@ public sealed partial class MainViewModel : ObservableObject
         Programs = new ProgramsViewModel();
         Orphans = new OrphansViewModel();
         Tree = new TreeViewModel();
+        Cloud = new CloudViewModel();
 
         Orchestrator = new ScanOrchestratorViewModel(
-            logger, driveService, fileSystemScanner, installedProgramsScanner, orphanDetectorService, persistenceService);
+            logger, driveService, fileSystemScanner, installedProgramsScanner,
+            orphanDetectorService, cloudStorageAnalyzer, persistenceService);
 
         Orchestrator.ScanCompleted += OnScanCompleted;
         _logger.Information("MainViewModel initialised; services wired via manual DI.");
     }
 
-    private void OnScanCompleted(object? sender, ScanResult result)
+    private void OnScanCompleted(object? sender, ScanCompletedEventArgs e)
     {
         void DoLoad()
         {
-            Programs.Load(result.Programs);
-            Orphans.Load(result.Orphans);
-            Tree.Load(result.Nodes);
-            _logger.Information("UI loaded: {Programs} programs, {Orphans} orphans, {Roots} tree roots",
-                Programs.Count, Orphans.Count, Tree.Roots.Count);
+            Programs.Load(e.Result.Programs);
+            Orphans.Load(e.Result.Orphans);
+            Tree.Load(e.Result.Nodes);
+            Cloud.Load(e.CloudRoots);
+            _logger.Information(
+                "UI loaded: {Programs} programs, {Orphans} orphans, {Roots} tree roots, {Cloud} cloud roots",
+                Programs.Count, Orphans.Count, Tree.Roots.Count, Cloud.Count);
         }
 
         var dispatcher = Application.Current?.Dispatcher;
@@ -67,4 +73,16 @@ public sealed partial class MainViewModel : ObservableObject
             dispatcher.Invoke(DoLoad);
         }
     }
+}
+
+public sealed class ScanCompletedEventArgs : EventArgs
+{
+    public ScanCompletedEventArgs(ScanResult result, IReadOnlyList<CloudSyncRoot> cloudRoots)
+    {
+        Result = result;
+        CloudRoots = cloudRoots;
+    }
+
+    public ScanResult Result { get; }
+    public IReadOnlyList<CloudSyncRoot> CloudRoots { get; }
 }

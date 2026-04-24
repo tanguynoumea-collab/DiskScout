@@ -16,11 +16,12 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
     private readonly IFileSystemScanner _fileSystemScanner;
     private readonly IInstalledProgramsScanner _installedProgramsScanner;
     private readonly IOrphanDetectorService _orphanDetectorService;
+    private readonly ICloudStorageAnalyzer _cloudStorageAnalyzer;
     private readonly IPersistenceService _persistenceService;
 
     private CancellationTokenSource? _cts;
 
-    public event EventHandler<ScanResult>? ScanCompleted;
+    public event EventHandler<ScanCompletedEventArgs>? ScanCompleted;
 
     public ObservableCollection<DriveSelectionItemViewModel> Drives { get; } = new();
 
@@ -54,6 +55,7 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
         IFileSystemScanner fileSystemScanner,
         IInstalledProgramsScanner installedProgramsScanner,
         IOrphanDetectorService orphanDetectorService,
+        ICloudStorageAnalyzer cloudStorageAnalyzer,
         IPersistenceService persistenceService)
     {
         _logger = logger;
@@ -61,6 +63,7 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
         _fileSystemScanner = fileSystemScanner;
         _installedProgramsScanner = installedProgramsScanner;
         _orphanDetectorService = orphanDetectorService;
+        _cloudStorageAnalyzer = cloudStorageAnalyzer;
         _persistenceService = persistenceService;
 
         RefreshDrives();
@@ -117,6 +120,9 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
             progress.Report(new ScanProgress(FilesProcessed, BytesScanned, "Détection des rémanents...", null, ScanPhase.DetectingOrphans));
             var orphans = await _orphanDetectorService.DetectAsync(nodes, programs, _cts.Token);
 
+            progress.Report(new ScanProgress(FilesProcessed, BytesScanned, "Analyse cloud (OneDrive / SharePoint)...", null, ScanPhase.Finalizing));
+            var cloudRoots = await _cloudStorageAnalyzer.AnalyzeAsync(nodes, _cts.Token);
+
             stopwatch.Stop();
 
             var result = new ScanResult(
@@ -143,8 +149,8 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
                 _logger.Warning(ex, "Persistence failed.");
             }
 
-            ScanCompleted?.Invoke(this, result);
-            StatusMessage = $"Scan terminé en {stopwatch.Elapsed:mm\\:ss} — {nodes.Count:n0} nœuds, {programs.Count:n0} programmes, {orphans.Count:n0} rémanents.";
+            ScanCompleted?.Invoke(this, new ScanCompletedEventArgs(result, cloudRoots));
+            StatusMessage = $"Scan terminé en {stopwatch.Elapsed:mm\\:ss} — {nodes.Count:n0} nœuds, {programs.Count:n0} programmes, {orphans.Count:n0} rémanents, {cloudRoots.Count} racines cloud.";
             ProgressText = "Terminé.";
             ProgressPercent = 100;
         }

@@ -15,6 +15,9 @@ internal static partial class Win32Native
     public const int FILE_ATTRIBUTE_REPARSE_POINT = 0x400;
     public const int FILE_ATTRIBUTE_HIDDEN = 0x2;
     public const int FILE_ATTRIBUTE_SYSTEM = 0x4;
+    public const uint FILE_ATTRIBUTE_OFFLINE = 0x1000;
+    public const uint FILE_ATTRIBUTE_RECALL_ON_OPEN = 0x40000;
+    public const uint FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS = 0x400000;
 
     public const int FIND_FIRST_EX_LARGE_FETCH = 0x2;
 
@@ -52,6 +55,9 @@ internal static partial class Win32Native
 
         public readonly bool IsReparsePoint =>
             (dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0;
+
+        public readonly bool IsCloudPlaceholder =>
+            (dwFileAttributes & (FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS | FILE_ATTRIBUTE_RECALL_ON_OPEN | FILE_ATTRIBUTE_OFFLINE)) != 0;
 
         public readonly DateTime LastWriteUtc =>
             FileTimeToDateTimeUtc(ftLastWriteTime);

@@ -9,6 +9,7 @@
             </ResourceDictionary.MergedDictionaries>
             <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+            <helpers:BytesFormatConverter x:Key="BytesFormatConverter" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
