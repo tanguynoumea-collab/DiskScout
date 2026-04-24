@@ -7,40 +7,66 @@
     <Grid>
         <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}"
                                   Visibility="{Binding HasResults, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
-        <TreeView ItemsSource="{Binding Roots}"
-                  Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}"
-                  Background="{StaticResource BackgroundBrush}"
-                  Foreground="{StaticResource ForegroundBrush}"
-                  BorderThickness="0"
-                  VirtualizingStackPanel.IsVirtualizing="True"
-                  VirtualizingStackPanel.VirtualizationMode="Recycling"
-                  ScrollViewer.CanContentScroll="True">
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="TreeViewItem">
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                    <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
-                </Style>
-            </TreeView.ItemContainerStyle>
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type vm:TreeNodeViewModel}" ItemsSource="{Binding Children}">
-                    <Grid Margin="0,2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" MinWidth="260" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="140" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                        <TextBlock Grid.Column="1" Text="{Binding SizeDisplay}"
-                                   Foreground="{StaticResource ForegroundSubtleBrush}"
-                                   VerticalAlignment="Center" Margin="12,0,12,0" />
-                        <Border Grid.Column="2" Height="10"
-                                Background="{StaticResource BackgroundElevatedBrush}" CornerRadius="2" VerticalAlignment="Center">
-                            <Border Background="{StaticResource AccentBrush}" CornerRadius="2"
-                                    HorizontalAlignment="Left" Width="{Binding SharePercent}" />
-                        </Border>
-                    </Grid>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
+        <DockPanel Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+            <!-- Filter bar -->
+            <Border DockPanel.Dock="Top" Padding="14,10" Background="{StaticResource BackgroundAltBrush}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Filtre taille mini (Go) :"
+                               Foreground="{StaticResource ForegroundSubtleBrush}"
+                               VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBox Width="80"
+                             Text="{Binding MinSizeGb, UpdateSourceTrigger=PropertyChanged, StringFormat=F2}"
+                             Background="{StaticResource BackgroundElevatedBrush}"
+                             Foreground="{StaticResource ForegroundBrush}"
+                             BorderBrush="{StaticResource BorderBrush}"
+                             Padding="6,4"
+                             VerticalAlignment="Center"
+                             ToolTip="Laisser à 0 pour tout afficher. Exemple : 5 = masquer les dossiers &lt; 5 Go." />
+                    <TextBlock Text="Go"
+                               Foreground="{StaticResource ForegroundSubtleBrush}"
+                               VerticalAlignment="Center" Margin="6,0,14,0" />
+                    <TextBlock VerticalAlignment="Center" Foreground="{StaticResource ForegroundSubtleBrush}" FontSize="11">
+                        <Run Text="Astuce :" FontWeight="SemiBold" />
+                        <Run Text=" le filtre masque les nœuds dont la taille totale est sous le seuil." />
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <TreeView ItemsSource="{Binding Roots}"
+                      Background="{StaticResource BackgroundBrush}"
+                      Foreground="{StaticResource ForegroundBrush}"
+                      BorderThickness="0"
+                      VirtualizingStackPanel.IsVirtualizing="True"
+                      VirtualizingStackPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.CanContentScroll="True">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type vm:TreeNodeViewModel}" ItemsSource="{Binding Children}">
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" MinWidth="260" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="140" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding SizeDisplay}"
+                                       Foreground="{StaticResource ForegroundSubtleBrush}"
+                                       VerticalAlignment="Center" Margin="12,0,12,0" />
+                            <Border Grid.Column="2" Height="10"
+                                    Background="{StaticResource BackgroundElevatedBrush}" CornerRadius="2" VerticalAlignment="Center">
+                                <Border Background="{StaticResource AccentBrush}" CornerRadius="2"
+                                        HorizontalAlignment="Left" Width="{Binding SharePercent}" />
+                            </Border>
+                        </Grid>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </DockPanel>
     </Grid>
 </UserControl>

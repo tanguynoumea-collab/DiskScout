@@ -111,9 +111,6 @@
             <TabItem Header="Arborescence">
                 <tabs:TreeTabView DataContext="{Binding Tree}" />
             </TabItem>
-            <TabItem Header="Cloud">
-                <tabs:CloudTabView DataContext="{Binding Cloud}" />
-            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

@@ -47,7 +47,6 @@ public partial class App : Application
         IFileSystemScanner fileSystemScanner = new NativeFileSystemScanner(_logger);
         IInstalledProgramsScanner installedProgramsScanner = new RegistryInstalledProgramsScanner(_logger);
         IOrphanDetectorService orphanDetectorService = new OrphanDetectorService(_logger);
-        ICloudStorageAnalyzer cloudStorageAnalyzer = new CloudStorageAnalyzer(_logger);
         IPersistenceService persistenceService = new JsonPersistenceService(_logger);
         IDeltaComparator deltaComparator = new PathKeyedDeltaComparator();
         ScanResult? lastScan = null;
@@ -59,7 +58,6 @@ public partial class App : Application
             fileSystemScanner,
             installedProgramsScanner,
             orphanDetectorService,
-            cloudStorageAnalyzer,
             persistenceService,
             deltaComparator,
             exporter);

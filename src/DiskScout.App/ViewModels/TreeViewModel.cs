@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using DiskScout.Models;
 
@@ -7,7 +6,10 @@ namespace DiskScout.ViewModels;
 
 public sealed partial class TreeViewModel : ObservableObject
 {
-    private const int MaxChildrenPerNode = 500;
+    private const long BytesPerGb = 1024L * 1024L * 1024L;
+
+    private Dictionary<long, List<FileSystemNode>> _childrenByParent = new();
+    private IReadOnlyList<FileSystemNode> _rootNodes = Array.Empty<FileSystemNode>();
 
     [ObservableProperty]
     private string _emptyStateMessage =
@@ -16,14 +18,27 @@ public sealed partial class TreeViewModel : ObservableObject
     [ObservableProperty]
     private bool _hasResults;
 
+    [ObservableProperty]
+    private double _minSizeGb;
+
+    [ObservableProperty]
+    private int _visibleRootCount;
+
     public ObservableCollection<TreeNodeViewModel> Roots { get; } = new();
+
+    public long MinSizeBytes => (long)Math.Max(0, MinSizeGb * BytesPerGb);
+
+    partial void OnMinSizeGbChanged(double value) => RebuildRoots();
 
     public void Load(IReadOnlyList<FileSystemNode> nodes)
     {
         Roots.Clear();
         if (nodes.Count == 0)
         {
+            _childrenByParent = new();
+            _rootNodes = Array.Empty<FileSystemNode>();
             HasResults = false;
+            VisibleRootCount = 0;
             return;
         }
 
@@ -43,14 +58,32 @@ public sealed partial class TreeViewModel : ObservableObject
             kv.Value.Sort((a, b) => b.SizeBytes.CompareTo(a.SizeBytes));
         }
 
-        var rootNodes = nodes.Where(n => n.ParentId is null).OrderByDescending(n => n.SizeBytes).ToList();
-        foreach (var root in rootNodes)
+        _childrenByParent = childrenByParent;
+        _rootNodes = nodes.Where(n => n.ParentId is null).OrderByDescending(n => n.SizeBytes).ToList();
+
+        RebuildRoots();
+    }
+
+    private void RebuildRoots()
+    {
+        Roots.Clear();
+        if (_rootNodes.Count == 0)
         {
+            HasResults = false;
+            VisibleRootCount = 0;
+            return;
+        }
+
+        var threshold = MinSizeBytes;
+        foreach (var root in _rootNodes)
+        {
+            // Volume root always shown; children get filtered instead
             var rootSize = root.SizeBytes > 0 ? root.SizeBytes : 1;
-            var vm = new TreeNodeViewModel(root, childrenByParent, rootSize);
+            var vm = new TreeNodeViewModel(root, _childrenByParent, rootSize, threshold);
             Roots.Add(vm);
         }
         HasResults = Roots.Count > 0;
+        VisibleRootCount = Roots.Count;
     }
 }
 
@@ -61,8 +94,8 @@ public sealed partial class TreeNodeViewModel : ObservableObject
 
     private readonly Dictionary<long, List<FileSystemNode>>? _index;
     private readonly long _rootSize;
+    private readonly long _minSizeBytes;
     private bool _childrenLoaded;
-    private bool _hasChildren;
 
     public FileSystemNode Node { get; }
     public ObservableCollection<TreeNodeViewModel> Children { get; } = new();
@@ -75,19 +108,30 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         Node = new FileSystemNode(0, null, "Chargement...", "", FileSystemNodeKind.Directory, 0, 0, 0, DateTime.MinValue, false, 0);
         _index = null;
         _rootSize = 1;
+        _minSizeBytes = 0;
     }
 
-    public TreeNodeViewModel(FileSystemNode node, Dictionary<long, List<FileSystemNode>> index, long rootSize)
+    public TreeNodeViewModel(FileSystemNode node, Dictionary<long, List<FileSystemNode>> index, long rootSize, long minSizeBytes)
     {
         Node = node;
         _index = index;
         _rootSize = rootSize > 0 ? rootSize : 1;
+        _minSizeBytes = minSizeBytes;
 
-        _hasChildren = index.ContainsKey(node.Id);
-        if (_hasChildren)
+        if (index.TryGetValue(node.Id, out var kids) && HasVisibleChild(kids, minSizeBytes))
         {
             Children.Add(LoadingPlaceholder);
         }
+    }
+
+    private static bool HasVisibleChild(List<FileSystemNode> kids, long minSizeBytes)
+    {
+        if (minSizeBytes <= 0) return kids.Count > 0;
+        foreach (var k in kids)
+        {
+            if (k.SizeBytes >= minSizeBytes) return true;
+        }
+        return false;
     }
 
     public string DisplayName
@@ -129,8 +173,9 @@ public sealed partial class TreeNodeViewModel : ObservableObject
             int count = 0;
             foreach (var child in kids)
             {
+                if (_minSizeBytes > 0 && child.SizeBytes < _minSizeBytes) continue;
                 if (count >= MaxChildrenPerNode) break;
-                Children.Add(new TreeNodeViewModel(child, _index, _rootSize));
+                Children.Add(new TreeNodeViewModel(child, _index, _rootSize, _minSizeBytes));
                 count++;
             }
         }
