@@ -54,7 +54,7 @@
                         <Button Content="Purger les sélectionnés"
                                 Command="{Binding PurgeSelectedCommand}"
                                 IsEnabled="{Binding SelectedCount, Converter={StaticResource ZeroToBoolInverseConverter}}"
-                                Background="#FFC0392B" BorderBrush="#FFE74C3C" />
+                                Style="{StaticResource DangerButtonStyle}" />
                     </StackPanel>
                 </Grid>
             </Border>

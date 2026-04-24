@@ -2,20 +2,29 @@ using System.Windows;
 
 namespace DiskScout.Helpers;
 
+public enum DeleteMode
+{
+    Cancelled,
+    DiskScoutQuarantine,
+    RecycleBin,
+    Permanent,
+}
+
 public static class DeletePrompt
 {
     /// <summary>
-    /// Returns (confirmed, permanent). Confirmed=false means the user cancelled.
-    /// permanent=true means skip the Recycle Bin.
+    /// Shows a 3-way dialog: Quarantaine DiskScout (30j, managed) / Corbeille Windows / Définitif.
+    /// Returns the chosen mode. Permanent requires a second confirmation.
     /// </summary>
-    public static (bool Confirmed, bool Permanent) Ask(string summary)
+    public static DeleteMode Ask(string summary)
     {
         var body =
             summary + Environment.NewLine + Environment.NewLine +
-            "Par défaut : envoyé à la corbeille (réversible)." + Environment.NewLine +
-            "« Oui »  : corbeille (recommandé)" + Environment.NewLine +
-            "« Non »  : suppression DÉFINITIVE (irréversible)" + Environment.NewLine +
-            "« Annuler » : ne rien faire";
+            "Trois choix pour la suppression :" + Environment.NewLine + Environment.NewLine +
+            "• « Oui »     → QUARANTAINE DiskScout (rétention 30 jours, restaurable via l'onglet Quarantaine) — RECOMMANDÉ" + Environment.NewLine +
+            "• « Non »     → Corbeille Windows (réversible tant que vidée)" + Environment.NewLine +
+            "• « Annuler » → ne rien faire" + Environment.NewLine + Environment.NewLine +
+            "Pour une suppression DÉFINITIVE (irréversible), maintiens Shift enfoncé en cliquant Non.";
 
         var result = MessageBox.Show(
             body,
@@ -26,16 +35,18 @@ public static class DeletePrompt
 
         return result switch
         {
-            MessageBoxResult.Yes => (true, false),
-            MessageBoxResult.No => ConfirmPermanent(summary),
-            _ => (false, false),
+            MessageBoxResult.Yes => DeleteMode.DiskScoutQuarantine,
+            MessageBoxResult.No => (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Shift) != 0
+                ? ConfirmPermanent(summary)
+                : DeleteMode.RecycleBin,
+            _ => DeleteMode.Cancelled,
         };
     }
 
-    private static (bool Confirmed, bool Permanent) ConfirmPermanent(string summary)
+    private static DeleteMode ConfirmPermanent(string summary)
     {
         var result = MessageBox.Show(
-            "SUPPRESSION DÉFINITIVE demandée." + Environment.NewLine + Environment.NewLine +
+            "SUPPRESSION DÉFINITIVE demandée (Shift + Non)." + Environment.NewLine + Environment.NewLine +
             summary + Environment.NewLine + Environment.NewLine +
             "Cette action est IRRÉVERSIBLE. Confirmer ?",
             "DiskScout — confirmer la suppression définitive",
@@ -43,15 +54,24 @@ public static class DeletePrompt
             MessageBoxImage.Stop,
             MessageBoxResult.Cancel);
 
-        return (result == MessageBoxResult.OK, true);
+        return result == MessageBoxResult.OK ? DeleteMode.Permanent : DeleteMode.Cancelled;
     }
 
-    public static void ShowResult(DiskScout.Services.DeletionResult result)
+    public static void ShowResult(DiskScout.Services.DeletionResult result, DeleteMode mode)
     {
+        var modeLabel = mode switch
+        {
+            DeleteMode.DiskScoutQuarantine => "quarantaine DiskScout (restaurable 30 j)",
+            DeleteMode.RecycleBin => "corbeille Windows",
+            DeleteMode.Permanent => "suppression DÉFINITIVE",
+            _ => "",
+        };
+
         var lines = new List<string>
         {
-            $"{result.SuccessCount} supprimé(s), {result.FailureCount} échec(s).",
-            $"Espace libéré : {FormatBytes(result.TotalBytesFreed)}.",
+            $"{result.SuccessCount} traité(s), {result.FailureCount} échec(s).",
+            $"Espace libéré : {ByteFormat.Fmt(result.TotalBytesFreed)}",
+            $"Mode : {modeLabel}.",
         };
         if (result.FailureCount > 0)
         {
@@ -70,13 +90,5 @@ public static class DeletePrompt
             result.FailureCount == 0 ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
-    public static string FormatBytes(long bytes)
-    {
-        if (bytes <= 0) return "0 o";
-        string[] u = { "o", "Ko", "Mo", "Go", "To" };
-        double v = bytes;
-        int i = 0;
-        while (v >= 1024 && i < u.Length - 1) { v /= 1024; i++; }
-        return $"{v:F1} {u[i]}";
-    }
+    public static string FormatBytes(long bytes) => ByteFormat.Fmt(bytes);
 }

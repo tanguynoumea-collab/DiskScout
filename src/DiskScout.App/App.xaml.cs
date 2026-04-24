@@ -1,8 +1,9 @@
+using System.IO;
+using System.Linq;
 using System.Windows;
 using DiskScout.Helpers;
-using DiskScout.Services;
-using DiskScout.Services.Stubs;
 using DiskScout.Models;
+using DiskScout.Services;
 using DiskScout.ViewModels;
 using Serilog;
 using Serilog.Core;
@@ -48,14 +49,13 @@ public partial class App : Application
         IInstalledProgramsScanner installedProgramsScanner = new RegistryInstalledProgramsScanner(_logger);
         IOrphanDetectorService orphanDetectorService = new OrphanDetectorService(_logger);
         IPersistenceService persistenceService = new JsonPersistenceService(_logger);
-        IFileDeletionService fileDeletionService = new FileDeletionService(_logger);
         IQuarantineService quarantineService = new QuarantineService(_logger);
+        IFileDeletionService fileDeletionService = new FileDeletionService(_logger, quarantineService);
         IPdfReportService pdfReport = new PdfReportService(_logger);
-        // Purge expired quarantine (>30 days) in background at startup
+
+        // Housekeeping at startup: purge expired quarantine + old scan JSONs.
         _ = quarantineService.PurgeAsync(TimeSpan.FromDays(30));
-        IDeltaComparator deltaComparator = new PathKeyedDeltaComparator();
-        ScanResult? lastScan = null;
-        IExporter exporter = new CsvHtmlExporter(() => lastScan);
+        _ = PurgeOldScansAsync(10);
 
         var mainViewModel = new MainViewModel(
             _logger,
@@ -64,8 +64,6 @@ public partial class App : Application
             installedProgramsScanner,
             orphanDetectorService,
             persistenceService,
-            deltaComparator,
-            exporter,
             fileDeletionService,
             quarantineService,
             pdfReport);
@@ -75,6 +73,26 @@ public partial class App : Application
 
         _logger.Information("DiskScout shell shown.");
     }
+
+    private Task PurgeOldScansAsync(int keepMostRecent) => Task.Run(() =>
+    {
+        try
+        {
+            var dir = AppPaths.ScansFolder;
+            if (!Directory.Exists(dir)) return;
+            var files = new DirectoryInfo(dir)
+                .EnumerateFiles("scan_*.json")
+                .OrderByDescending(f => f.LastWriteTimeUtc)
+                .ToList();
+            if (files.Count <= keepMostRecent) return;
+            foreach (var f in files.Skip(keepMostRecent))
+            {
+                try { f.Delete(); _logger?.Information("Purged old scan {File}", f.Name); }
+                catch (Exception ex) { _logger?.Warning(ex, "Failed to purge scan {File}", f.Name); }
+            }
+        }
+        catch (Exception ex) { _logger?.Warning(ex, "Scan purge failed"); }
+    });
 
     protected override void OnExit(ExitEventArgs e)
     {

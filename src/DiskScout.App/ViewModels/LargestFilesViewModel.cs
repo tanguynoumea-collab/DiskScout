@@ -95,11 +95,11 @@ public sealed partial class LargestFilesViewModel : ObservableObject
     {
         if (row is null) return;
         var summary = $"Supprimer :{Environment.NewLine}{row.FullPath}{Environment.NewLine}Taille : {DeletePrompt.FormatBytes(row.SizeBytes)}";
-        var (confirmed, permanent) = DeletePrompt.Ask(summary);
-        if (!confirmed) return;
+        var mode = DeletePrompt.Ask(summary);
+        if (mode == DeleteMode.Cancelled) return;
 
-        var result = await _deletion.DeleteAsync(new[] { row.FullPath }, sendToRecycleBin: !permanent);
-        DeletePrompt.ShowResult(result);
+        var result = await _deletion.DeleteAsync(new[] { row.FullPath }, mode);
+        DeletePrompt.ShowResult(result, mode);
 
         if (result.SuccessCount > 0)
         {

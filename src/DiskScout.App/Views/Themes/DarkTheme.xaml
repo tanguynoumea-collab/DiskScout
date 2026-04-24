@@ -20,6 +20,15 @@
     <SolidColorBrush x:Key="AccentMutedBrush" Color="{StaticResource AccentMuted}" />
     <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource Border}" />
 
+    <!-- Destructive action palette -->
+    <SolidColorBrush x:Key="DangerBrush" Color="#FFC0392B" />
+    <SolidColorBrush x:Key="DangerBorderBrush" Color="#FFE74C3C" />
+
+    <Style x:Key="DangerButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="{StaticResource DangerBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource DangerBorderBrush}" />
+    </Style>
+
     <!-- Default style overrides -->
     <Style TargetType="{x:Type Window}">
         <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />

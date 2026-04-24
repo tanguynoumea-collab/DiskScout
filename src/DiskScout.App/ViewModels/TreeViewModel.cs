@@ -317,11 +317,11 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         }
 
         var summary = $"Supprimer ce {kindLabel} :{Environment.NewLine}{Node.FullPath}{Environment.NewLine}Taille : {DeletePrompt.FormatBytes(Node.SizeBytes)}";
-        var (confirmed, permanent) = DeletePrompt.Ask(summary);
-        if (!confirmed) return;
+        var mode = DeletePrompt.Ask(summary);
+        if (mode == DeleteMode.Cancelled) return;
 
-        var result = await _deletion.DeleteAsync(new[] { Node.FullPath }, sendToRecycleBin: !permanent);
-        DeletePrompt.ShowResult(result);
+        var result = await _deletion.DeleteAsync(new[] { Node.FullPath }, mode);
+        DeletePrompt.ShowResult(result, mode);
 
         if (result.SuccessCount > 0)
         {

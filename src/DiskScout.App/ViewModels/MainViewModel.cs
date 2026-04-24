@@ -41,8 +41,6 @@ public sealed partial class MainViewModel : ObservableObject
         IInstalledProgramsScanner installedProgramsScanner,
         IOrphanDetectorService orphanDetectorService,
         IPersistenceService persistenceService,
-        IDeltaComparator deltaComparator,
-        IExporter exporter,
         IFileDeletionService fileDeletionService,
         IQuarantineService quarantineService,
         IPdfReportService pdfReport)
@@ -50,8 +48,6 @@ public sealed partial class MainViewModel : ObservableObject
         _logger = logger;
         _driveService = driveService;
         _pdfReport = pdfReport;
-        _ = deltaComparator;
-        _ = exporter;
 
         Health = new HealthViewModel();
         Programs = new ProgramsViewModel();

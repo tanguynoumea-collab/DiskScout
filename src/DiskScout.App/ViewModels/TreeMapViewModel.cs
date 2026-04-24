@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DiskScout.Helpers;
 using DiskScout.Models;
 using DiskScout.Services;
 using DiskScout.Views.Controls;
@@ -136,10 +137,10 @@ public sealed partial class TreeMapViewModel : ObservableObject
         if (node.Kind == FileSystemNodeKind.Volume) return;
 
         var summary = $"Supprimer :{Environment.NewLine}{node.FullPath}{Environment.NewLine}Taille : {FormatBytes(node.SizeBytes)}";
-        var (confirmed, permanent) = Helpers.DeletePrompt.Ask(summary);
-        if (!confirmed) return;
-        var result = await _deletion.DeleteAsync(new[] { node.FullPath }, sendToRecycleBin: !permanent);
-        Helpers.DeletePrompt.ShowResult(result);
+        var mode = Helpers.DeletePrompt.Ask(summary);
+        if (mode == DeleteMode.Cancelled) return;
+        var result = await _deletion.DeleteAsync(new[] { node.FullPath }, mode);
+        Helpers.DeletePrompt.ShowResult(result, mode);
     }
 
     public void CopyNodePath(FileSystemNode node)

@@ -193,12 +193,12 @@ public sealed partial class DuplicatesViewModel : ObservableObject
             string.Join(Environment.NewLine, selected.Take(6).Select(r => $"  • {r.FullPath}")) +
             (selected.Count > 6 ? Environment.NewLine + $"  … et {selected.Count - 6} autre(s)" : string.Empty);
 
-        var (confirmed, permanent) = DeletePrompt.Ask(summary);
-        if (!confirmed) return;
+        var mode = DeletePrompt.Ask(summary);
+        if (mode == DeleteMode.Cancelled) return;
 
         var paths = selected.Select(r => r.FullPath).ToArray();
-        var result = await _deletion.DeleteAsync(paths, sendToRecycleBin: !permanent);
-        DeletePrompt.ShowResult(result);
+        var result = await _deletion.DeleteAsync(paths, mode);
+        DeletePrompt.ShowResult(result, mode);
 
         if (result.SuccessCount > 0)
         {

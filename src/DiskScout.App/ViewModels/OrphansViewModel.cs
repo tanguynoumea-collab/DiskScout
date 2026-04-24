@@ -207,11 +207,11 @@ public sealed partial class OrphansViewModel : ObservableObject
     {
         if (row is null) return;
         var summary = $"Supprimer :{Environment.NewLine}{row.FullPath}{Environment.NewLine}Taille : {DeletePrompt.FormatBytes(row.SizeBytes)}";
-        var (confirmed, permanent) = DeletePrompt.Ask(summary);
-        if (!confirmed) return;
+        var mode = DeletePrompt.Ask(summary);
+        if (mode == DeleteMode.Cancelled) return;
 
-        var result = await _deletion.DeleteAsync(new[] { row.FullPath }, sendToRecycleBin: !permanent);
-        DeletePrompt.ShowResult(result);
+        var result = await _deletion.DeleteAsync(new[] { row.FullPath }, mode);
+        DeletePrompt.ShowResult(result, mode);
 
         if (result.SuccessCount > 0) RemoveRow(row);
     }
@@ -223,19 +223,26 @@ public sealed partial class OrphansViewModel : ObservableObject
         if (selected.Count == 0) return;
 
         var totalBytes = selected.Sum(r => r.SizeBytes);
+        var risky = selected.Where(r => FileSafety.Score(r.FullPath) <= 10).ToList();
         var summary =
-            $"{selected.Count} élément(s) sélectionné(s) — {DeletePrompt.FormatBytes(totalBytes)} à libérer." +
+            $"{selected.Count} élément(s) sélectionné(s) — {ByteFormat.Fmt(totalBytes)} à libérer." +
             Environment.NewLine + Environment.NewLine +
             "Premiers éléments :" + Environment.NewLine +
             string.Join(Environment.NewLine, selected.Take(6).Select(r => $"  • {r.FullPath}")) +
-            (selected.Count > 6 ? Environment.NewLine + $"  … et {selected.Count - 6} autre(s)" : string.Empty);
+            (selected.Count > 6 ? Environment.NewLine + $"  … et {selected.Count - 6} autre(s)" : string.Empty) +
+            (risky.Count > 0
+                ? Environment.NewLine + Environment.NewLine +
+                  $"⚠ {risky.Count} élément(s) à risque détecté(s) (projet actif avec .git/package.json/*.sln ou chemin OS-critique) :" +
+                  Environment.NewLine +
+                  string.Join(Environment.NewLine, risky.Take(4).Select(r => $"  ⚠ {r.FullPath}"))
+                : string.Empty);
 
-        var (confirmed, permanent) = DeletePrompt.Ask(summary);
-        if (!confirmed) return;
+        var mode = DeletePrompt.Ask(summary);
+        if (mode == DeleteMode.Cancelled) return;
 
         var paths = selected.Select(r => r.FullPath).ToArray();
-        var result = await _deletion.DeleteAsync(paths, sendToRecycleBin: !permanent);
-        DeletePrompt.ShowResult(result);
+        var result = await _deletion.DeleteAsync(paths, mode);
+        DeletePrompt.ShowResult(result, mode);
 
         if (result.SuccessCount > 0)
         {
