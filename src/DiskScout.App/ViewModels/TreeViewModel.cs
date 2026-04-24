@@ -219,10 +219,13 @@ public sealed partial class TreeNodeViewModel : ObservableObject
             ? b
             : DocumentTypeBreakdown.Empty;
 
-    public double PdfPercent => Breakdown.PdfPercent;
-    public double XlsxPercent => Breakdown.XlsxPercent;
-    public double RvtPercent => Breakdown.RvtPercent;
-    public double TxtPercent => Breakdown.TxtPercent;
+    public double PdfPercent   => Breakdown.PdfPercent;
+    public double XlsxPercent  => Breakdown.XlsxPercent;
+    public double RvtPercent   => Breakdown.RvtPercent;
+    public double TxtPercent   => Breakdown.TxtPercent;
+    public double DllPercent   => Breakdown.DllPercent;
+    public double SysPercent   => Breakdown.SysPercent;
+    public double ExePercent   => Breakdown.ExePercent;
     public double OtherPercent => Breakdown.OtherPercent;
 
     [RelayCommand]

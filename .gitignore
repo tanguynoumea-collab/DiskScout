@@ -12,3 +12,4 @@ x64/
 x86/
 *.swp
 *.DS_Store
+tools/

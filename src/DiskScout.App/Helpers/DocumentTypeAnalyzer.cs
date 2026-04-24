@@ -12,10 +12,13 @@ public static class DocumentTypeAnalyzer
         if (lastDot < 0 || lastDot == fileName.Length - 1) return DocumentCategory.Other;
 
         var ext = fileName.AsSpan(lastDot + 1);
-        if (ext.Equals("pdf", StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Pdf;
+        if (ext.Equals("pdf",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Pdf;
         if (ext.Equals("xlsx", StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Xlsx;
-        if (ext.Equals("rvt", StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Rvt;
-        if (ext.Equals("txt", StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Txt;
+        if (ext.Equals("rvt",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Rvt;
+        if (ext.Equals("txt",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Txt;
+        if (ext.Equals("dll",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Dll;
+        if (ext.Equals("sys",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Sys;
+        if (ext.Equals("exe",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Exe;
         return DocumentCategory.Other;
     }
 
