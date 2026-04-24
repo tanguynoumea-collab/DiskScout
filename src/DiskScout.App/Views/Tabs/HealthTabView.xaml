@@ -9,142 +9,205 @@
         <ScrollViewer Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
-                      Padding="24">
+                      Padding="20,16,20,20">
             <StackPanel>
 
-                <!-- ═══════════  HEADER: grade badge + summary  ═══════════ -->
-                <Grid Margin="0,0,0,24">
+                <!-- ───────  HERO: badge + score + KPIs, one compact row  ─────── -->
+                <Border Background="{StaticResource BackgroundAltBrush}" CornerRadius="6"
+                        Padding="20,16" Margin="0,0,0,14">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Compact grade badge -->
+                        <Grid Grid.Column="0" Width="96" Height="96" VerticalAlignment="Center">
+                            <Ellipse Fill="{StaticResource BackgroundBrush}"
+                                     Stroke="{Binding GradeBrush}" StrokeThickness="5" />
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding HealthGrade}"
+                                           FontSize="32" FontWeight="Bold"
+                                           Foreground="{Binding GradeBrush}"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding HealthLabel}"
+                                           FontSize="10"
+                                           Foreground="{StaticResource ForegroundSubtleBrush}"
+                                           HorizontalAlignment="Center" Margin="0,-3,0,0" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Score + summary -->
+                        <StackPanel Grid.Column="1" Margin="22,0,22,0" VerticalAlignment="Center">
+                            <TextBlock Text="BILAN DE SANTÉ"
+                                       FontSize="11"
+                                       Foreground="{StaticResource ForegroundSubtleBrush}"
+                                       FontWeight="SemiBold" />
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0" VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding HealthScore}"
+                                           FontSize="42" FontWeight="Bold"
+                                           Foreground="{StaticResource ForegroundBrush}" />
+                                <TextBlock Text=" / 100"
+                                           FontSize="16"
+                                           Foreground="{StaticResource ForegroundSubtleBrush}"
+                                           VerticalAlignment="Bottom" Margin="4,0,0,8" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Summary}"
+                                       Foreground="{StaticResource ForegroundBrush}"
+                                       FontSize="13"
+                                       TextWrapping="Wrap" Margin="0,4,0,0" />
+                        </StackPanel>
+
+                        <!-- KPI stack -->
+                        <StackPanel Grid.Column="2" VerticalAlignment="Center" MinWidth="190">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Disques analysés" Foreground="{StaticResource ForegroundSubtleBrush}" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding DriveCountDisplay}" FontWeight="SemiBold" FontSize="11" />
+                            </Grid>
+                            <Grid Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Occupé total" Foreground="{StaticResource ForegroundSubtleBrush}" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding TotalScannedDisplay}" FontWeight="SemiBold" FontSize="11" />
+                            </Grid>
+                            <Grid Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Récupérable" Foreground="{StaticResource ForegroundSubtleBrush}" FontSize="11" />
+                                <TextBlock Grid.Column="1" Text="{Binding PotentialRecoveryBytes, Converter={StaticResource BytesFormatConverter}}" FontWeight="SemiBold" FontSize="11" Foreground="{StaticResource AccentBrush}" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- ───────  ROW : Drive tiles + Recommendations side by side  ─────── -->
+                <Grid Margin="0,0,0,14">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Grade badge -->
-                    <Border Grid.Column="0"
-                            Width="160" Height="160"
-                            Background="{StaticResource BackgroundAltBrush}"
-                            CornerRadius="80"
-                            BorderBrush="{Binding GradeBrush}"
-                            BorderThickness="6">
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock Text="{Binding HealthGrade}"
-                                       FontSize="56" FontWeight="Bold"
-                                       Foreground="{Binding GradeBrush}"
-                                       HorizontalAlignment="Center" />
-                            <TextBlock Text="{Binding HealthLabel}"
-                                       FontSize="13"
-                                       Foreground="{StaticResource ForegroundSubtleBrush}"
-                                       HorizontalAlignment="Center" Margin="0,-8,0,0" />
-                        </StackPanel>
-                    </Border>
+                    <!-- Disks -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="DISQUES"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{StaticResource ForegroundSubtleBrush}" Margin="4,0,0,8" />
+                        <ItemsControl ItemsSource="{Binding Drives}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource BackgroundAltBrush}"
+                                            Padding="14,12" Margin="0,0,10,10"
+                                            CornerRadius="4"
+                                            MinWidth="210" Width="210"
+                                            BorderBrush="{Binding StatusBrush}" BorderThickness="0,0,0,3">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding DisplayName}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           FontWeight="SemiBold" />
+                                                <Border Grid.Column="1"
+                                                        Background="{Binding StatusBrush}"
+                                                        Padding="7,1" CornerRadius="3"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Status}" FontSize="10"
+                                                               FontWeight="SemiBold" Foreground="White" />
+                                                </Border>
+                                            </Grid>
+                                            <TextBlock Text="{Binding UsedPercentDisplay}"
+                                                       FontSize="26" FontWeight="Bold"
+                                                       Foreground="{Binding StatusBrush}"
+                                                       Margin="0,6,0,0" />
+                                            <Border Height="6" Margin="0,4,0,6"
+                                                    Background="{StaticResource BackgroundElevatedBrush}"
+                                                    CornerRadius="3" ClipToBounds="True">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="{Binding UsedPercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                                        <ColumnDefinition Width="{Binding FreePercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" Background="{Binding StatusBrush}" />
+                                                </Grid>
+                                            </Border>
+                                            <TextBlock Text="{Binding FreeDisplay}"
+                                                       FontSize="11"
+                                                       Foreground="{StaticResource ForegroundSubtleBrush}" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
 
-                    <!-- Summary -->
-                    <StackPanel Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="Bilan de santé"
-                                   FontSize="13"
-                                   Foreground="{StaticResource ForegroundSubtleBrush}"
-                                   FontWeight="SemiBold" />
-                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                            <TextBlock Text="{Binding HealthScore}"
-                                       FontSize="52" FontWeight="Bold"
-                                       Foreground="{StaticResource ForegroundBrush}" />
-                            <TextBlock Text=" / 100"
-                                       FontSize="20"
-                                       Foreground="{StaticResource ForegroundSubtleBrush}"
-                                       VerticalAlignment="Bottom" Margin="6,0,0,10" />
-                        </StackPanel>
-                        <TextBlock Text="{Binding Summary}"
-                                   Foreground="{StaticResource ForegroundBrush}"
-                                   TextWrapping="Wrap" Margin="0,6,0,0" />
-                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                            <TextBlock Text="{Binding DriveCountDisplay}"
-                                       Foreground="{StaticResource ForegroundSubtleBrush}" />
-                            <TextBlock Text="  •  " Foreground="{StaticResource ForegroundSubtleBrush}" />
-                            <TextBlock Foreground="{StaticResource ForegroundSubtleBrush}">
-                                <Run Text="Occupé total : " />
-                                <Run Text="{Binding TotalScannedDisplay, Mode=OneWay}" FontWeight="SemiBold" />
-                            </TextBlock>
-                            <TextBlock Text="  •  " Foreground="{StaticResource ForegroundSubtleBrush}" />
-                            <TextBlock Foreground="{StaticResource ForegroundSubtleBrush}">
-                                <Run Text="Potentiel récupérable : " />
-                                <Run Text="{Binding PotentialRecoveryBytes, Converter={StaticResource BytesFormatConverter}, Mode=OneWay}" FontWeight="SemiBold" />
-                            </TextBlock>
-                        </StackPanel>
+                    <!-- Recommendations -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="ACTIONS RECOMMANDÉES"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{StaticResource ForegroundSubtleBrush}" Margin="4,0,0,8" />
+                        <ItemsControl ItemsSource="{Binding Recommendations}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource BackgroundAltBrush}"
+                                            Padding="14,10" Margin="0,0,0,8"
+                                            CornerRadius="4"
+                                            BorderBrush="{Binding PriorityBrush}" BorderThickness="4,0,0,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource ForegroundBrush}" />
+                                                <TextBlock Text="{Binding Hint}"
+                                                           FontSize="11"
+                                                           Foreground="{StaticResource ForegroundSubtleBrush}"
+                                                           TextWrapping="Wrap" Margin="0,2,0,0" />
+                                                <TextBlock Text="{Binding TargetHint}"
+                                                           FontSize="11" FontStyle="Italic"
+                                                           Foreground="{Binding PriorityBrush}"
+                                                           Margin="0,2,0,0" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding PotentialDisplay}"
+                                                       FontWeight="Bold" FontSize="16"
+                                                       Foreground="{Binding PriorityBrush}"
+                                                       VerticalAlignment="Center"
+                                                       Margin="12,0,0,0"
+                                                       Visibility="{Binding HasPotential, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </Grid>
 
-                <!-- ═══════════  DRIVE ROWS  ═══════════ -->
-                <TextBlock Text="État des disques"
-                           FontSize="15" FontWeight="SemiBold"
-                           Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
-                <ItemsControl ItemsSource="{Binding Drives}" Margin="0,0,0,24">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="{StaticResource BackgroundAltBrush}"
-                                    Padding="16,12" Margin="0,0,0,8" CornerRadius="4">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                                        <TextBlock Text="{Binding DisplayName}"
-                                                   FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" />
-                                        <Border Background="{Binding StatusBrush}"
-                                                Padding="8,2" Margin="10,0,0,0" CornerRadius="3"
-                                                VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Status}"
-                                                       FontSize="11" FontWeight="SemiBold"
-                                                       Foreground="White" />
-                                        </Border>
-                                    </StackPanel>
-
-                                    <TextBlock Grid.Row="0" Grid.Column="2"
-                                               Text="{Binding UsedPercentDisplay}"
-                                               FontWeight="SemiBold" VerticalAlignment="Center"
-                                               Foreground="{Binding StatusBrush}" />
-
-                                    <!-- Usage bar -->
-                                    <Border Grid.Row="1" Grid.ColumnSpan="3" Height="12" Margin="0,10,0,6"
-                                            Background="{StaticResource BackgroundElevatedBrush}"
-                                            CornerRadius="3" ClipToBounds="True">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="{Binding UsedPercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />
-                                                <ColumnDefinition Width="{Binding FreePercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />
-                                            </Grid.ColumnDefinitions>
-                                            <Border Grid.Column="0" Background="{Binding StatusBrush}" />
-                                        </Grid>
-                                    </Border>
-
-                                    <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,0,0">
-                                        <TextBlock Text="{Binding UsedDisplay}"
-                                                   FontSize="11"
-                                                   Foreground="{StaticResource ForegroundSubtleBrush}" />
-                                        <TextBlock Text="   •   " Foreground="{StaticResource ForegroundSubtleBrush}" FontSize="11" />
-                                        <TextBlock Text="{Binding FreeDisplay}"
-                                                   FontSize="11"
-                                                   Foreground="{StaticResource ForegroundSubtleBrush}" />
-                                        <TextBlock Text="   •   " Foreground="{StaticResource ForegroundSubtleBrush}" FontSize="11" />
-                                        <TextBlock Text="{Binding Format}" FontSize="11" Foreground="{StaticResource ForegroundSubtleBrush}" />
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <!-- ═══════════  METRIC CARDS  ═══════════ -->
-                <TextBlock Text="Opportunités de nettoyage"
-                           FontSize="15" FontWeight="SemiBold"
-                           Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
-                <ItemsControl ItemsSource="{Binding Metrics}" Margin="0,0,0,24">
+                <!-- ───────  Metric cards (4 compact)  ─────── -->
+                <TextBlock Text="OPPORTUNITÉS"
+                           FontSize="11" FontWeight="SemiBold"
+                           Foreground="{StaticResource ForegroundSubtleBrush}" Margin="4,0,0,8" />
+                <ItemsControl ItemsSource="{Binding Metrics}" Margin="0,0,0,14">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="4" Rows="1" />
@@ -153,47 +216,51 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Background="{StaticResource BackgroundAltBrush}"
-                                    Margin="0,0,12,0" Padding="18,14" CornerRadius="4"
+                                    Margin="0,0,10,0" Padding="14,10" CornerRadius="4"
                                     BorderBrush="{Binding Brush}" BorderThickness="0,0,0,3">
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Label}"
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Label}"
                                                Foreground="{StaticResource ForegroundSubtleBrush}"
-                                               FontSize="12" FontWeight="SemiBold" />
-                                    <TextBlock Text="{Binding ValueDisplay}"
-                                               FontSize="26" FontWeight="Bold"
+                                               FontSize="11" FontWeight="SemiBold"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" Text="{Binding ValueDisplay}"
+                                               FontSize="20" FontWeight="Bold"
                                                Foreground="{Binding Brush}"
-                                               Margin="0,6,0,0" />
-                                </StackPanel>
+                                               VerticalAlignment="Center" />
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <!-- ═══════════  TOP EXTENSIONS  ═══════════ -->
-                <Grid Margin="0,0,0,24">
+                <!-- ───────  Two columns: extensions + folders  ─────── -->
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="16" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Top extensions (par octets)"
-                                   FontSize="15" FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
-                        <Border Background="{StaticResource BackgroundAltBrush}" Padding="14,12" CornerRadius="4">
+                        <TextBlock Text="TOP EXTENSIONS"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{StaticResource ForegroundSubtleBrush}" Margin="4,0,0,8" />
+                        <Border Background="{StaticResource BackgroundAltBrush}" Padding="14,10" CornerRadius="4">
                             <ItemsControl ItemsSource="{Binding TopExtensions}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Grid Margin="0,3">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="80" />
+                                                <ColumnDefinition Width="70" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0"
-                                                       Text="{Binding Extension}"
-                                                       FontWeight="SemiBold" VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="0" Text="{Binding Extension}"
+                                                       FontWeight="SemiBold" VerticalAlignment="Center" FontSize="12" />
                                             <Border Grid.Column="1" Height="10"
                                                     Background="{StaticResource BackgroundElevatedBrush}"
                                                     CornerRadius="3" ClipToBounds="True" VerticalAlignment="Center">
@@ -205,12 +272,11 @@
                                                     <Border Grid.Column="0" Background="{StaticResource AccentBrush}" />
                                                 </Grid>
                                             </Border>
-                                            <TextBlock Grid.Column="2"
-                                                       Text="{Binding PercentDisplay}"
+                                            <TextBlock Grid.Column="2" Text="{Binding PercentDisplay}"
                                                        Foreground="{StaticResource ForegroundSubtleBrush}"
                                                        Margin="10,0,0,0"
-                                                       VerticalAlignment="Center"
-                                                       MinWidth="55" />
+                                                       VerticalAlignment="Center" FontSize="11"
+                                                       MinWidth="50" />
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -219,10 +285,10 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="Top dossiers racine"
-                                   FontSize="15" FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
-                        <Border Background="{StaticResource BackgroundAltBrush}" Padding="14,12" CornerRadius="4">
+                        <TextBlock Text="TOP DOSSIERS RACINE"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{StaticResource ForegroundSubtleBrush}" Margin="4,0,0,8" />
+                        <Border Background="{StaticResource BackgroundAltBrush}" Padding="14,10" CornerRadius="4">
                             <ItemsControl ItemsSource="{Binding TopFolders}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -236,18 +302,16 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0"
-                                                           Text="{Binding Name}"
-                                                           FontWeight="SemiBold"
+                                                <TextBlock Grid.Column="0" Text="{Binding Name}"
+                                                           FontWeight="SemiBold" FontSize="12"
                                                            TextTrimming="CharacterEllipsis" />
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{Binding SizeDisplay}"
+                                                <TextBlock Grid.Column="1" Text="{Binding SizeDisplay}"
                                                            Foreground="{StaticResource ForegroundSubtleBrush}"
-                                                           Margin="10,0,0,0" />
+                                                           Margin="10,0,0,0" FontSize="11" />
                                             </Grid>
-                                            <Border Grid.Row="1" Height="8" Margin="0,4,0,2"
+                                            <Border Grid.Row="1" Height="6" Margin="0,4,0,2"
                                                     Background="{StaticResource BackgroundElevatedBrush}"
-                                                    CornerRadius="2" ClipToBounds="True">
+                                                    CornerRadius="3" ClipToBounds="True">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="{Binding SharePercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />

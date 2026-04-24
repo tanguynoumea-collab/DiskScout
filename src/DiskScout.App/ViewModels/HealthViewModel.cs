@@ -53,6 +53,7 @@ public sealed partial class HealthViewModel : ObservableObject
 
     public ObservableCollection<DriveHealthRow> Drives { get; } = new();
     public ObservableCollection<HealthMetricCard> Metrics { get; } = new();
+    public ObservableCollection<HealthRecommendation> Recommendations { get; } = new();
     public ObservableCollection<ExtensionSlice> TopExtensions { get; } = new();
     public ObservableCollection<FolderSlice> TopFolders { get; } = new();
 
@@ -66,6 +67,7 @@ public sealed partial class HealthViewModel : ObservableObject
     {
         Drives.Clear();
         Metrics.Clear();
+        Recommendations.Clear();
         TopExtensions.Clear();
         TopFolders.Clear();
 
@@ -180,7 +182,81 @@ public sealed partial class HealthViewModel : ObservableObject
             TopFolders.Add(new FolderSlice(r.Name, r.FullPath, r.SizeBytes, share));
         }
 
+        BuildRecommendations(remnantsBytes, cleanupBytes, duplicatesBytes, oldFilesBytes);
+
         HasResults = Drives.Count > 0;
+    }
+
+    private void BuildRecommendations(long remnants, long cleanup, long duplicates, long oldFiles)
+    {
+        var redBrush    = new SolidColorBrush(Color.FromRgb(0xE7, 0x4C, 0x3C));
+        var orangeBrush = new SolidColorBrush(Color.FromRgb(0xE6, 0x7E, 0x22));
+        var yellowBrush = new SolidColorBrush(Color.FromRgb(0xF1, 0xC4, 0x0F));
+        var blueBrush   = new SolidColorBrush(Color.FromRgb(0x4C, 0x9A, 0xFF));
+
+        var raw = new List<(int Priority, HealthRecommendation R)>();
+
+        // Per-drive free space
+        foreach (var d in Drives)
+        {
+            if (d.FreePercent < 5)
+                raw.Add((0, new HealthRecommendation(
+                    $"Libérer de l'espace sur {d.RootPath.TrimEnd('\\')}",
+                    $"Critique : seulement {d.FreeDisplay}. Va dans Arborescence pour repérer les gros dossiers.",
+                    0, "Arborescence", redBrush)));
+            else if (d.FreePercent < 20)
+                raw.Add((1, new HealthRecommendation(
+                    $"Attention à {d.RootPath.TrimEnd('\\')}",
+                    $"{d.FreeDisplay}. Pense à archiver ou nettoyer.",
+                    0, "Arborescence", orangeBrush)));
+        }
+
+        if (cleanup >= 10L * 1024 * 1024 * 1024)
+            raw.Add((2, new HealthRecommendation(
+                "Vider les caches système et dev",
+                "Artefacts système, caches de navigateurs, node_modules etc. Souvent réversible.",
+                cleanup, "Nettoyage", orangeBrush)));
+        else if (cleanup >= 2L * 1024 * 1024 * 1024)
+            raw.Add((3, new HealthRecommendation(
+                "Caches détectés",
+                "Quelques Go récupérables via l'onglet Nettoyage.",
+                cleanup, "Nettoyage", yellowBrush)));
+
+        if (duplicates >= 5L * 1024 * 1024 * 1024)
+            raw.Add((2, new HealthRecommendation(
+                "Supprimer les doublons",
+                "Copies multiples repérées (même nom + même taille).",
+                duplicates, "Doublons", orangeBrush)));
+        else if (duplicates >= 1L * 1024 * 1024 * 1024)
+            raw.Add((4, new HealthRecommendation(
+                "Doublons repérés",
+                "Quelques copies à dédupliquer manuellement.",
+                duplicates, "Doublons", yellowBrush)));
+
+        if (remnants >= 5L * 1024 * 1024 * 1024)
+            raw.Add((3, new HealthRecommendation(
+                "Nettoyer les rémanents",
+                "AppData orphelins, Program Files vides, Temp anciens, patches MSI.",
+                remnants, "Rémanents", yellowBrush)));
+
+        if (oldFiles >= 50L * 1024 * 1024 * 1024)
+            raw.Add((4, new HealthRecommendation(
+                "Archiver les fichiers anciens",
+                "Beaucoup de vieux fichiers lourds — envisage archivage externe.",
+                oldFiles, "Vieux fichiers", blueBrush)));
+
+        foreach (var r in raw.OrderBy(x => x.Priority).Select(x => x.R).Take(4))
+        {
+            Recommendations.Add(r);
+        }
+
+        if (Recommendations.Count == 0)
+        {
+            Recommendations.Add(new HealthRecommendation(
+                "Rien à signaler",
+                "Disque en bon état. Relance un scan de temps en temps pour suivre l'évolution.",
+                0, null, new SolidColorBrush(Color.FromRgb(0x27, 0xAE, 0x60))));
+        }
     }
 
     private static HealthMetricCard BuildCard(string label, long bytes, long redThreshold)
@@ -250,6 +326,29 @@ public sealed record HealthMetricCard(
     string ValueDisplay,
     long Bytes,
     SolidColorBrush Brush);
+
+public sealed record HealthRecommendation(
+    string Title,
+    string Hint,
+    long PotentialBytes,
+    string? TargetTab,
+    SolidColorBrush PriorityBrush)
+{
+    public bool HasPotential => PotentialBytes > 0;
+    public string PotentialDisplay
+    {
+        get
+        {
+            if (PotentialBytes <= 0) return string.Empty;
+            string[] u = { "o", "Ko", "Mo", "Go", "To" };
+            double v = PotentialBytes;
+            int i = 0;
+            while (v >= 1024 && i < u.Length - 1) { v /= 1024; i++; }
+            return $"{v:F1} {u[i]}";
+        }
+    }
+    public string TargetHint => TargetTab is null ? string.Empty : $"→ Onglet {TargetTab}";
+}
 
 public sealed record ExtensionSlice(
     string Extension,
