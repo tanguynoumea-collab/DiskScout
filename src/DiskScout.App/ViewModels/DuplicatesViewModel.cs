@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Collections.Specialized;
 using System.Windows;
-using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DiskScout.Helpers;
@@ -13,14 +12,14 @@ namespace DiskScout.ViewModels;
 
 public sealed partial class DuplicatesViewModel : ObservableObject
 {
-    private const long DefaultMinSize = 1 * 1024 * 1024; // 1 MB floor
+    private const long DefaultMinSize = 1 * 1024 * 1024;
 
     private readonly IFileDeletionService _deletion;
     private readonly ILogger _logger;
 
     [ObservableProperty]
     private string _emptyStateMessage =
-        "Aucun scan effectué. Lance un scan pour chercher les doublons (nom + taille identiques).";
+        "Aucun scan effectué. Lance un scan pour chercher les doublons.";
 
     [ObservableProperty]
     private bool _hasResults;
@@ -43,8 +42,13 @@ public sealed partial class DuplicatesViewModel : ObservableObject
     [ObservableProperty]
     private bool _isHashRunning;
 
-    public ObservableCollection<DuplicateRow> Rows { get; } = new();
-    public ICollectionView View { get; }
+    [ObservableProperty]
+    private int _selectedCount;
+
+    [ObservableProperty]
+    private long _selectedBytes;
+
+    public ObservableCollection<DuplicateGroup> Groups { get; } = new();
 
     private IReadOnlyList<FileSystemNode>? _lastNodes;
 
@@ -52,10 +56,6 @@ public sealed partial class DuplicatesViewModel : ObservableObject
     {
         _deletion = deletion;
         _logger = logger;
-
-        View = CollectionViewSource.GetDefaultView(Rows);
-        View.GroupDescriptions.Add(new PropertyGroupDescription(nameof(DuplicateRow.GroupLabel)));
-        View.SortDescriptions.Add(new SortDescription(nameof(DuplicateRow.GroupWastedBytes), ListSortDirection.Descending));
     }
 
     partial void OnMinMbFilterChanged(double value)
@@ -66,14 +66,21 @@ public sealed partial class DuplicatesViewModel : ObservableObject
     public void Load(IReadOnlyList<FileSystemNode> nodes)
     {
         _lastNodes = nodes;
-        Rows.Clear();
+
+        foreach (var g in Groups)
+        {
+            foreach (var r in g.Rows) r.PropertyChanged -= OnRowPropertyChanged;
+            g.Rows.CollectionChanged -= OnGroupRowsChanged;
+        }
+        Groups.Clear();
+
         IsHashVerified = false;
         HashStatus = "Groupage par nom + taille. Clique « Vérifier par hash » pour éliminer les faux positifs.";
 
         long minBytes = (long)(Math.Max(0, MinMbFilter) * 1024 * 1024);
         if (minBytes <= 0) minBytes = DefaultMinSize;
 
-        var groups = nodes
+        var byNameSize = nodes
             .Where(n => n.Kind == FileSystemNodeKind.File && n.SizeBytes >= minBytes)
             .GroupBy(n => (n.Name.ToLowerInvariant(), n.SizeBytes))
             .Where(g => g.Count() > 1)
@@ -82,7 +89,7 @@ public sealed partial class DuplicatesViewModel : ObservableObject
         long wasted = 0;
         int groupCount = 0;
 
-        foreach (var g in groups.Take(500))
+        foreach (var g in byNameSize.Take(500))
         {
             var list = g.ToList();
             var sample = list[0];
@@ -90,112 +97,253 @@ public sealed partial class DuplicatesViewModel : ObservableObject
             wasted += groupWasted;
             groupCount++;
 
-            var label = $"{sample.Name} — {FormatBytes(sample.SizeBytes)} × {list.Count} copies  →  {FormatBytes(groupWasted)} gaspillés";
-
-            foreach (var node in list)
-            {
-                Rows.Add(new DuplicateRow(node, label, groupWasted));
-            }
+            var rows = list.Select(n => new DuplicateRow(n, groupWasted)).ToList();
+            var group = new DuplicateGroup(sample.Name, sample.SizeBytes, rows, groupWasted, hashVerified: false);
+            foreach (var r in rows) r.PropertyChanged += OnRowPropertyChanged;
+            group.Rows.CollectionChanged += OnGroupRowsChanged;
+            Groups.Add(group);
         }
 
         GroupCount = groupCount;
         WastedBytes = wasted;
-        HasResults = Rows.Count > 0;
-        View.Refresh();
+        SelectedCount = 0;
+        SelectedBytes = 0;
+        HasResults = Groups.Count > 0;
+    }
+
+    private void OnRowPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(DuplicateRow.IsSelected)) return;
+        RecomputeSelection();
+    }
+
+    private void OnGroupRowsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems is not null)
+            foreach (DuplicateRow r in e.OldItems) r.PropertyChanged -= OnRowPropertyChanged;
+        RecomputeSelection();
+    }
+
+    private void RecomputeSelection()
+    {
+        int sel = 0;
+        long bytes = 0;
+        foreach (var g in Groups)
+        {
+            int groupSel = 0;
+            foreach (var r in g.Rows)
+            {
+                if (r.IsSelected) { sel++; bytes += r.SizeBytes; groupSel++; }
+            }
+            g.SelectedCount = groupSel;
+            g.UpdateAllSelectedFlag();
+        }
+        SelectedCount = sel;
+        SelectedBytes = bytes;
+    }
+
+    [RelayCommand]
+    private void ToggleGroupSelection(DuplicateGroup? group)
+    {
+        if (group is null) return;
+        var v = !group.AreAllSelected;
+        foreach (var r in group.Rows) r.IsSelected = v;
+    }
+
+    [RelayCommand] private void SelectAll()
+    {
+        foreach (var g in Groups) foreach (var r in g.Rows) r.IsSelected = true;
+    }
+
+    [RelayCommand] private void ClearSelection()
+    {
+        foreach (var g in Groups) foreach (var r in g.Rows) r.IsSelected = false;
+    }
+
+    [RelayCommand] private void GenerateAiAuditPrompt()
+    {
+        var items = Groups.SelectMany(g => g.Rows).Where(r => r.IsSelected)
+            .Select(r => new AuditItem(r.FullPath, r.SizeBytes,
+                Reason: $"Doublon — {r.Name} ({r.SizeBytes:n0} octets). Groupe de {GroupSizeFor(r)} copies, {DeletePrompt.FormatBytes(GroupWastedFor(r))} gaspillés si on garde 1 seule copie."))
+            .ToList();
+        AuditPromptBuilder.BuildAndCopy("Doublons", items);
+    }
+
+    private int GroupSizeFor(DuplicateRow r) => Groups.FirstOrDefault(g => g.Rows.Contains(r))?.Rows.Count ?? 0;
+    private long GroupWastedFor(DuplicateRow r) => Groups.FirstOrDefault(g => g.Rows.Contains(r))?.WastedBytes ?? 0;
+
+    [RelayCommand]
+    private async Task PurgeSelectedAsync()
+    {
+        var selected = Groups.SelectMany(g => g.Rows).Where(r => r.IsSelected).ToList();
+        if (selected.Count == 0) return;
+
+        var totalBytes = selected.Sum(r => r.SizeBytes);
+        var summary =
+            $"{selected.Count} doublon(s) sélectionné(s) — {DeletePrompt.FormatBytes(totalBytes)} à libérer." +
+            Environment.NewLine + Environment.NewLine +
+            "Premiers éléments :" + Environment.NewLine +
+            string.Join(Environment.NewLine, selected.Take(6).Select(r => $"  • {r.FullPath}")) +
+            (selected.Count > 6 ? Environment.NewLine + $"  … et {selected.Count - 6} autre(s)" : string.Empty);
+
+        var (confirmed, permanent) = DeletePrompt.Ask(summary);
+        if (!confirmed) return;
+
+        var paths = selected.Select(r => r.FullPath).ToArray();
+        var result = await _deletion.DeleteAsync(paths, sendToRecycleBin: !permanent);
+        DeletePrompt.ShowResult(result);
+
+        if (result.SuccessCount > 0)
+        {
+            var successPaths = new HashSet<string>(
+                result.Entries.Where(e => e.Success).Select(e => e.Path),
+                StringComparer.OrdinalIgnoreCase);
+            var toRemove = selected.Where(r => successPaths.Contains(r.FullPath)).ToList();
+            foreach (var r in toRemove) RemoveRow(r);
+        }
+    }
+
+    private void RemoveRow(DuplicateRow row)
+    {
+        foreach (var g in Groups)
+        {
+            if (g.Rows.Remove(row))
+            {
+                row.PropertyChanged -= OnRowPropertyChanged;
+                g.RecomputeWasted();
+                break;
+            }
+        }
+        for (int i = Groups.Count - 1; i >= 0; i--)
+        {
+            if (Groups[i].Rows.Count < 2)
+            {
+                Groups[i].Rows.CollectionChanged -= OnGroupRowsChanged;
+                foreach (var r in Groups[i].Rows) r.PropertyChanged -= OnRowPropertyChanged;
+                Groups.RemoveAt(i);
+            }
+        }
+        GroupCount = Groups.Count;
+        WastedBytes = Groups.Sum(g => g.WastedBytes);
+        HasResults = Groups.Count > 0;
+        RecomputeSelection();
     }
 
     [RelayCommand]
     private async Task VerifyWithHashAsync()
     {
-        if (IsHashRunning || Rows.Count == 0) return;
+        if (IsHashRunning || Groups.Count == 0) return;
         IsHashRunning = true;
         HashStatus = "Vérification par hash en cours (xxHash3)…";
 
         var beforeGroups = GroupCount;
         var beforeWasted = WastedBytes;
 
-        var buckets = Rows.GroupBy(r => r.GroupLabel).ToList();
+        // Copy state for background work
+        var snapshot = Groups.Select(g => new { Group = g, Rows = g.Rows.ToList() }).ToList();
 
-        var verifiedRows = new List<DuplicateRow>();
-        long verifiedWasted = 0;
-        int verifiedGroups = 0;
+        var verifiedGroups = new List<(string Label, long SizeBytes, List<DuplicateRow> Rows, long Wasted)>();
 
         await Task.Run(() =>
         {
-            foreach (var bucket in buckets)
+            foreach (var s in snapshot)
             {
-                var rows = bucket.ToList();
-                if (rows.Count < 2) continue;
-
-                // Partial hash first (fast, 64 KB)
-                var byPartial = rows
+                if (s.Rows.Count < 2) continue;
+                var byPartial = s.Rows
                     .GroupBy(r => Helpers.FileHasher.ComputePartialHash(r.FullPath))
                     .Where(g => g.Key != 0 && g.Count() > 1);
-
                 foreach (var partial in byPartial)
                 {
-                    // Full hash on the partial-hash collision group
                     var byFull = partial
                         .GroupBy(r => Helpers.FileHasher.ComputeFullHash(r.FullPath))
                         .Where(g => g.Key != 0 && g.Count() > 1);
-
                     foreach (var full in byFull)
                     {
                         var list = full.ToList();
                         var wasted = list[0].SizeBytes * (list.Count - 1);
-                        verifiedWasted += wasted;
-                        verifiedGroups++;
-
-                        var newLabel = list[0].GroupLabel + "  ✓";
-                        foreach (var r in list)
-                        {
-                            verifiedRows.Add(new DuplicateRow(
-                                new FileSystemNode(0, null, r.Name, r.FullPath,
-                                    FileSystemNodeKind.File, r.SizeBytes, 1, 0,
-                                    r.LastModifiedUtc, false, 0),
-                                newLabel, wasted));
-                        }
+                        verifiedGroups.Add((list[0].Name, list[0].SizeBytes, list, wasted));
                     }
                 }
             }
         });
 
-        Rows.Clear();
-        foreach (var r in verifiedRows) Rows.Add(r);
-        GroupCount = verifiedGroups;
+        // Rebuild Groups on UI thread
+        foreach (var g in Groups)
+        {
+            foreach (var r in g.Rows) r.PropertyChanged -= OnRowPropertyChanged;
+            g.Rows.CollectionChanged -= OnGroupRowsChanged;
+        }
+        Groups.Clear();
+
+        long verifiedWasted = 0;
+        foreach (var vg in verifiedGroups.OrderByDescending(x => x.Wasted))
+        {
+            var group = new DuplicateGroup(vg.Label, vg.SizeBytes, vg.Rows, vg.Wasted, hashVerified: true);
+            foreach (var r in vg.Rows) r.PropertyChanged += OnRowPropertyChanged;
+            group.Rows.CollectionChanged += OnGroupRowsChanged;
+            Groups.Add(group);
+            verifiedWasted += vg.Wasted;
+        }
+
+        GroupCount = Groups.Count;
         WastedBytes = verifiedWasted;
-        HasResults = Rows.Count > 0;
+        HasResults = Groups.Count > 0;
         IsHashVerified = true;
         IsHashRunning = false;
+        RecomputeSelection();
 
-        var removedGroups = Math.Max(0, beforeGroups - verifiedGroups);
-        HashStatus = $"Vérifié par hash : {verifiedGroups} vrai{(verifiedGroups > 1 ? "s" : "")} doublon{(verifiedGroups > 1 ? "s" : "")} "
-                   + $"({FormatBytes(verifiedWasted)} gaspillés). "
-                   + $"{removedGroups} faux positif{(removedGroups > 1 ? "s" : "")} éliminé{(removedGroups > 1 ? "s" : "")} "
-                   + $"(économie {FormatBytes(Math.Max(0, beforeWasted - verifiedWasted))} retirée des faux doublons).";
-        View.Refresh();
+        var removedGroups = Math.Max(0, beforeGroups - Groups.Count);
+        HashStatus = $"Vérifié ✓ : {Groups.Count} vrais doublons ({DeletePrompt.FormatBytes(verifiedWasted)} gaspillés). " +
+                     $"{removedGroups} faux positifs éliminés.";
     }
+}
 
-    [RelayCommand]
-    private void CopyPath(DuplicateRow? row)
+public sealed partial class DuplicateGroup : ObservableObject
+{
+    public string Label { get; }
+    public long SizeBytes { get; }
+    public bool HashVerified { get; }
+
+    [ObservableProperty]
+    private long _wastedBytes;
+
+    [ObservableProperty]
+    private bool _isExpanded = true;
+
+    [ObservableProperty]
+    private int _selectedCount;
+
+    [ObservableProperty]
+    private bool _areAllSelected;
+
+    public ObservableCollection<DuplicateRow> Rows { get; }
+
+    public string Header => $"{Label} — {FormatBytes(SizeBytes)} × {Rows.Count} copies" + (HashVerified ? "  ✓" : string.Empty);
+    public string CountLabel => $"{Rows.Count} copie{(Rows.Count > 1 ? "s" : "")}";
+    public string WastedDisplay => FormatBytes(WastedBytes);
+    public string SelectedLabel => SelectedCount == 0 ? string.Empty : $"  ({SelectedCount} sélectionné{(SelectedCount > 1 ? "s" : "")})";
+
+    public DuplicateGroup(string label, long sizeBytes, IEnumerable<DuplicateRow> rows, long wastedBytes, bool hashVerified)
     {
-        if (row is null) return;
-        try { Clipboard.SetText(row.FullPath); } catch { }
+        Label = label;
+        SizeBytes = sizeBytes;
+        Rows = new ObservableCollection<DuplicateRow>(rows);
+        WastedBytes = wastedBytes;
+        HashVerified = hashVerified;
     }
 
-    [RelayCommand]
-    private async Task DeleteAsync(DuplicateRow? row)
+    public void RecomputeWasted()
     {
-        if (row is null) return;
-        var summary = $"Supprimer ce doublon :{Environment.NewLine}{row.FullPath}{Environment.NewLine}Taille : {FormatBytes(row.SizeBytes)}";
-        var (confirmed, permanent) = DeletePrompt.Ask(summary);
-        if (!confirmed) return;
-
-        var result = await _deletion.DeleteAsync(new[] { row.FullPath }, sendToRecycleBin: !permanent);
-        DeletePrompt.ShowResult(result);
-
-        if (result.SuccessCount > 0) Rows.Remove(row);
+        WastedBytes = Rows.Count < 2 ? 0 : SizeBytes * (Rows.Count - 1);
+        OnPropertyChanged(nameof(Header));
+        OnPropertyChanged(nameof(CountLabel));
+        OnPropertyChanged(nameof(WastedDisplay));
     }
+
+    public void UpdateAllSelectedFlag()
+        => AreAllSelected = Rows.Count > 0 && Rows.All(r => r.IsSelected);
+
+    partial void OnSelectedCountChanged(int value) => OnPropertyChanged(nameof(SelectedLabel));
 
     private static string FormatBytes(long bytes)
     {
@@ -208,15 +356,14 @@ public sealed partial class DuplicatesViewModel : ObservableObject
     }
 }
 
-public sealed class DuplicateRow
+public sealed partial class DuplicateRow : ObservableObject
 {
-    public DuplicateRow(FileSystemNode node, string groupLabel, long groupWastedBytes)
+    public DuplicateRow(FileSystemNode node, long groupWastedBytes)
     {
         FullPath = node.FullPath;
         Name = node.Name;
         SizeBytes = node.SizeBytes;
         LastModifiedUtc = node.LastModifiedUtc;
-        GroupLabel = groupLabel;
         GroupWastedBytes = groupWastedBytes;
     }
 
@@ -224,8 +371,10 @@ public sealed class DuplicateRow
     public string Name { get; }
     public long SizeBytes { get; }
     public DateTime LastModifiedUtc { get; }
-    public string GroupLabel { get; }
     public long GroupWastedBytes { get; }
+
+    [ObservableProperty]
+    private bool _isSelected;
 
     public string SizeDisplay
     {

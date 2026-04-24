@@ -2,82 +2,113 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:DiskScout.Views.Controls"
+             xmlns:vm="clr-namespace:DiskScout.ViewModels"
              Background="{StaticResource BackgroundBrush}">
     <Grid>
         <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}"
                                   Visibility="{Binding HasResults, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
         <DockPanel Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+
             <Border DockPanel.Dock="Top" Padding="14,10" Background="{StaticResource BackgroundAltBrush}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Taille mini (Mo) :" VerticalAlignment="Center" Foreground="{StaticResource ForegroundSubtleBrush}" Margin="0,0,8,0" />
-                    <TextBox Width="80"
-                             Text="{Binding MinMbFilter, UpdateSourceTrigger=LostFocus, StringFormat=F1}"
-                             Background="{StaticResource BackgroundElevatedBrush}"
-                             Foreground="{StaticResource ForegroundBrush}"
-                             BorderBrush="{StaticResource BorderBrush}"
-                             Padding="6,4" VerticalAlignment="Center" />
+                    <TextBox Width="70" Text="{Binding MinMbFilter, UpdateSourceTrigger=LostFocus, StringFormat=F1}"
+                             Background="{StaticResource BackgroundElevatedBrush}" Foreground="{StaticResource ForegroundBrush}"
+                             BorderBrush="{StaticResource BorderBrush}" Padding="6,4" VerticalAlignment="Center" />
                     <TextBlock VerticalAlignment="Center" Margin="18,0,14,0" Foreground="{StaticResource ForegroundSubtleBrush}">
                         <Run Text="{Binding GroupCount, Mode=OneWay}" /><Run Text=" groupes — " />
-                        <Run Text="{Binding WastedBytes, Converter={StaticResource BytesFormatConverter}, Mode=OneWay}" FontWeight="SemiBold" /><Run Text=" gaspillés" />
+                        <Run Text="{Binding WastedBytes, Converter={StaticResource BytesFormatConverter}, Mode=OneWay}" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" /><Run Text=" gaspillés" />
                     </TextBlock>
                     <Button Content="Vérifier par hash (xxHash3)"
                             Command="{Binding VerifyWithHashCommand}"
-                            IsEnabled="{Binding IsHashRunning, Converter={StaticResource InverseBooleanConverter}}"
-                            ToolTip="Vérifie chaque groupe par hash xxHash3 pour éliminer les faux positifs (mêmes nom+taille mais contenus différents)." />
+                            IsEnabled="{Binding IsHashRunning, Converter={StaticResource InverseBooleanConverter}}" />
                 </StackPanel>
             </Border>
             <Border DockPanel.Dock="Top" Padding="14,6" Background="{StaticResource BackgroundBrush}"
                     BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
-                <TextBlock Text="{Binding HashStatus}"
-                           Foreground="{StaticResource ForegroundSubtleBrush}"
-                           FontSize="11" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding HashStatus}" Foreground="{StaticResource ForegroundSubtleBrush}" FontSize="11" TextWrapping="Wrap" />
             </Border>
-            <ListBox ItemsSource="{Binding View}"
-                     Background="{StaticResource BackgroundBrush}"
-                     Foreground="{StaticResource ForegroundBrush}"
-                     BorderThickness="0"
-                     VirtualizingStackPanel.IsVirtualizing="True"
-                     VirtualizingStackPanel.VirtualizationMode="Recycling">
-                <ListBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Copier le chemin"
-                                  Command="{Binding PlacementTarget.DataContext.CopyPathCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
-                                  CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
-                        <Separator />
-                        <MenuItem Header="Supprimer (corbeille / définitif…)"
-                                  Command="{Binding PlacementTarget.DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
-                                  CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
-                    </ContextMenu>
-                </ListBox.ContextMenu>
-                <ListBox.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <Border Background="{StaticResource BackgroundAltBrush}" Padding="12,8" Margin="0,8,0,4">
-                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
-                                </Border>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListBox.GroupStyle>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border Padding="12,6">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding FullPath}" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Text="{Binding LastModifiedDisplay}" FontSize="11" Foreground="{StaticResource ForegroundSubtleBrush}" />
-                                </StackPanel>
-                                <TextBlock Grid.Column="1" Text="{Binding SizeDisplay}" FontWeight="SemiBold" VerticalAlignment="Center" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+
+            <Border DockPanel.Dock="Top" Padding="14,8"
+                    Background="{StaticResource BackgroundBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="{StaticResource ForegroundBrush}">
+                        <Run Text="Sélection :" Foreground="{StaticResource ForegroundSubtleBrush}" />
+                        <Run Text="{Binding SelectedCount, Mode=OneWay}" FontWeight="SemiBold" />
+                        <Run Text=" élément(s) • " Foreground="{StaticResource ForegroundSubtleBrush}" />
+                        <Run Text="{Binding SelectedBytes, Converter={StaticResource BytesFormatConverter}, Mode=OneWay}" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
+                    </TextBlock>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Content="Tout sélectionner" Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
+                        <Button Content="Tout décocher" Command="{Binding ClearSelectionCommand}" Margin="0,0,14,0" />
+                        <Button Content="🤖 Log IA"
+                                Command="{Binding GenerateAiAuditPromptCommand}"
+                                IsEnabled="{Binding SelectedCount, Converter={StaticResource ZeroToBoolInverseConverter}}"
+                                Margin="0,0,6,0"
+                                ToolTip="Copie un prompt d'audit dans le presse-papier (à coller dans ChatGPT / Claude / Gemini)" />
+                        <Button Content="Purger les sélectionnés"
+                                Command="{Binding PurgeSelectedCommand}"
+                                IsEnabled="{Binding SelectedCount, Converter={StaticResource ZeroToBoolInverseConverter}}"
+                                Background="#FFC0392B" BorderBrush="#FFE74C3C" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding Groups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:DuplicateGroup}">
+                            <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}" Margin="0,6,0,0">
+                                <Expander.Header>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding AreAllSelected, Mode=OneWay}"
+                                                  Command="{Binding DataContext.ToggleGroupSelectionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                  CommandParameter="{Binding}"
+                                                  VerticalAlignment="Center" Margin="0,0,10,0" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Header}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding SelectedLabel}" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="{Binding WastedDisplay, StringFormat={}{0} gaspillés}"
+                                                   FontWeight="Bold" Foreground="{StaticResource AccentBrush}" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Expander.Header>
+                                <ItemsControl ItemsSource="{Binding Rows}" Margin="22,4,0,6">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type vm:DuplicateRow}">
+                                            <Border Padding="10,6" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding FullPath}" TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Text="{Binding LastModifiedDisplay}" FontSize="11" Foreground="{StaticResource ForegroundSubtleBrush}" />
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="2" Text="{Binding SizeDisplay}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="14,0,0,0" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Expander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </DockPanel>
     </Grid>
 </UserControl>

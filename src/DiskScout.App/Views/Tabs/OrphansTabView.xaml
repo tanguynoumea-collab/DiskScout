@@ -80,6 +80,11 @@
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <Button Content="Tout sélectionner" Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
                         <Button Content="Tout décocher" Command="{Binding ClearSelectionCommand}" Margin="0,0,14,0" />
+                        <Button Content="🤖 Log IA"
+                                Command="{Binding GenerateAiAuditPromptCommand}"
+                                IsEnabled="{Binding SelectedCount, Converter={StaticResource ZeroToBoolInverseConverter}}"
+                                Margin="0,0,6,0"
+                                ToolTip="Copie un prompt dans le presse-papier pour analyser la dangerosité de suppression des éléments sélectionnés (à coller dans ChatGPT / Claude / Gemini / Mistral)." />
                         <Button Content="Purger les sélectionnés"
                                 Command="{Binding PurgeSelectedCommand}"
                                 IsEnabled="{Binding SelectedCount, Converter={StaticResource ZeroToBoolInverseConverter}}"

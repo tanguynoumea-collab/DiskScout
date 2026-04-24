@@ -69,49 +69,78 @@ public class TreeMapControl : Canvas
     public event EventHandler<FileSystemNode>? NodeClicked;
     public event EventHandler<FileSystemNode>? NodeRightClicked;
 
+    private const int MaxCellsPerLevel = 400;
+    private bool _redrawing;
+    private Size _lastRedrawSize = Size.Empty;
+
     public TreeMapControl()
     {
         Background = Brushes.Transparent;
         ClipToBounds = true;
         SnapsToDevicePixels = true;
-        SizeChanged += (_, _) => Redraw();
+        SizeChanged += OnSizeChanged;
     }
 
     private static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        => ((TreeMapControl)d).Redraw();
-
-    protected override Size ArrangeOverride(Size arrangeSize)
     {
-        var result = base.ArrangeOverride(arrangeSize);
-        Redraw();
-        return result;
+        var c = (TreeMapControl)d;
+        c._lastRedrawSize = Size.Empty; // invalidate cache so Redraw recomputes
+        c.Dispatcher.BeginInvoke(new Action(c.Redraw), System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var newSize = new Size(Math.Round(ActualWidth), Math.Round(ActualHeight));
+        if (newSize.Width < 1 || newSize.Height < 1) return;
+        if (newSize == _lastRedrawSize) return;
+        Dispatcher.BeginInvoke(new Action(Redraw), System.Windows.Threading.DispatcherPriority.Background);
     }
 
     private void Redraw()
     {
-        Children.Clear();
-
-        if (Nodes is null || Nodes.Count == 0 || ChildrenIndex is null) return;
-        if (ActualWidth < 1 || ActualHeight < 1) return;
-
-        var rootId = CurrentRootId;
-        IReadOnlyList<FileSystemNode> items;
-        if (rootId is null)
+        if (_redrawing) return;
+        _redrawing = true;
+        try
         {
-            items = Nodes.Where(n => n.ParentId is null).ToList();
+            var w = ActualWidth;
+            var h = ActualHeight;
+            if (w < 1 || h < 1) return;
+
+            _lastRedrawSize = new Size(Math.Round(w), Math.Round(h));
+
+            Children.Clear();
+
+            if (Nodes is null || Nodes.Count == 0 || ChildrenIndex is null) return;
+
+            var rootId = CurrentRootId;
+            IReadOnlyList<FileSystemNode> items;
+            if (rootId is null)
+            {
+                items = Nodes.Where(n => n.ParentId is null && n.SizeBytes > 0).ToList();
+            }
+            else if (ChildrenIndex.TryGetValue(rootId.Value, out var kids))
+            {
+                items = kids.Where(n => n.SizeBytes > 0).ToList();
+            }
+            else return;
+
+            if (items.Count == 0) return;
+
+            // Cap total cells to keep rendering bounded — even at 100k files per folder
+            var filtered = items
+                .OrderByDescending(n => n.SizeBytes)
+                .Take(MaxCellsPerLevel)
+                .ToList();
+
+            var rect = new Rect(0, 0, w, h);
+            var total = filtered.Sum(n => n.SizeBytes);
+            if (total <= 0) return;
+            Squarify(filtered, 0, filtered.Count, total, rect);
         }
-        else if (ChildrenIndex.TryGetValue(rootId.Value, out var kids))
+        finally
         {
-            items = kids;
+            _redrawing = false;
         }
-        else return;
-
-        var filtered = items.Where(n => n.SizeBytes > 0).OrderByDescending(n => n.SizeBytes).ToList();
-        if (filtered.Count == 0) return;
-
-        var rect = new Rect(0, 0, ActualWidth, ActualHeight);
-        var total = filtered.Sum(n => n.SizeBytes);
-        Squarify(filtered, 0, filtered.Count, total, rect);
     }
 
     /// <summary>Squarified treemap layout. Recursive on best-aspect-ratio rows.</summary>

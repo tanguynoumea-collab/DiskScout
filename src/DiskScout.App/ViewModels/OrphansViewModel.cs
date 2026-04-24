@@ -162,6 +162,15 @@ public sealed partial class OrphansViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void GenerateAiAuditPrompt()
+    {
+        var selected = Groups.SelectMany(g => g.Rows).Where(r => r.IsSelected).ToList();
+        var items = selected.Select(r => new AuditItem(r.FullPath, r.SizeBytes, r.Reason)).ToList();
+        var tabLabel = _acceptedCategories.Contains(OrphanCategory.AppDataOrphan) ? "Rémanents" : "Nettoyage";
+        AuditPromptBuilder.BuildAndCopy(tabLabel, items);
+    }
+
+    [RelayCommand]
     private void CopyPath(OrphanRow? row)
     {
         if (row is null || string.IsNullOrEmpty(row.FullPath)) return;
