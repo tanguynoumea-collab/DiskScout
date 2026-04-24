@@ -48,6 +48,14 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
     [ObservableProperty]
     private string _statusMessage = string.Empty;
 
+    [ObservableProperty]
+    private string _throughputText = string.Empty;
+
+    [ObservableProperty]
+    private string _elapsedText = string.Empty;
+
+    private DateTime _scanStartedUtc;
+
     public ScanOrchestratorViewModel(
         ILogger logger,
         IDriveService driveService,
@@ -117,6 +125,9 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
         _cts = new CancellationTokenSource();
         IProgress<ScanProgress> progress = new Progress<ScanProgress>(OnProgress);
         var stopwatch = Stopwatch.StartNew();
+        _scanStartedUtc = DateTime.UtcNow;
+        ThroughputText = string.Empty;
+        ElapsedText = string.Empty;
 
         try
         {
@@ -197,11 +208,31 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
 
     private bool CanCancelScan() => CanCancel;
 
+    private static string FormatBytesPerSec(double bps)
+    {
+        if (bps <= 0) return "0 o/s";
+        string[] u = { "o/s", "Ko/s", "Mo/s", "Go/s" };
+        int i = 0;
+        while (bps >= 1024 && i < u.Length - 1) { bps /= 1024; i++; }
+        return $"{bps:F1} {u[i]}";
+    }
+
     private void OnProgress(ScanProgress p)
     {
         FilesProcessed = p.FilesProcessed;
         BytesScanned = p.BytesScanned;
         CurrentPath = p.CurrentPath;
+
+        var elapsed = DateTime.UtcNow - _scanStartedUtc;
+        if (elapsed.TotalSeconds >= 1)
+        {
+            var filesPerSec = p.FilesProcessed / elapsed.TotalSeconds;
+            var bytesPerSec = p.BytesScanned / elapsed.TotalSeconds;
+            ThroughputText = $"{filesPerSec:n0} fichiers/s  •  {FormatBytesPerSec(bytesPerSec)}";
+            ElapsedText = elapsed.TotalHours >= 1
+                ? $"{(int)elapsed.TotalHours}h {elapsed.Minutes:00}m {elapsed.Seconds:00}s"
+                : $"{(int)elapsed.TotalMinutes:00}m {elapsed.Seconds:00}s";
+        }
         ProgressText = p.Phase switch
         {
             ScanPhase.EnumeratingDrives => "Enumération des disques...",

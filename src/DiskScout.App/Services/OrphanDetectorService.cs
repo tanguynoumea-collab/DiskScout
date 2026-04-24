@@ -13,6 +13,7 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
     private const long MinSystemArtifactBytes = 50 * 1024 * 1024; // ignore tiny artefacts
     private const long MinDevCacheBytes = 50 * 1024 * 1024;
     private const long MinBrowserCacheBytes = 20 * 1024 * 1024;
+    private const int MinEmptyFolderDepth = 2;
 
     private static readonly (string PathContains, string Browser)[] BrowserCachePatterns =
     {
@@ -172,6 +173,30 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
                     "Patch MSI potentiellement orphelin dans Windows\\Installer.",
                     MatchScore: null));
             }
+            // Empty folders
+            else if (node.Kind == FileSystemNodeKind.Directory &&
+                     node.SizeBytes == 0 &&
+                     node.FileCount == 0 &&
+                     node.Depth >= MinEmptyFolderDepth &&
+                     !IsUnderAny(node.FullPath, programFilesRoots))
+            {
+                orphans.Add(new OrphanCandidate(
+                    node.Id, node.FullPath, 0,
+                    OrphanCategory.EmptyFolder,
+                    "Dossier vide (pas de fichier, pas de sous-dossier non-vide).",
+                    MatchScore: null));
+            }
+            // Broken shortcut
+            else if (node.Kind == FileSystemNodeKind.File &&
+                     node.FullPath.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase) &&
+                     IsBrokenShortcut(node.FullPath))
+            {
+                orphans.Add(new OrphanCandidate(
+                    node.Id, node.FullPath, node.SizeBytes,
+                    OrphanCategory.BrokenShortcut,
+                    "Raccourci pointant vers un chemin introuvable.",
+                    MatchScore: null));
+            }
         }
 
         _logger.Information("Detected {Count} orphan candidates", orphans.Count);
@@ -253,6 +278,36 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
         }
 
         return false;
+    }
+
+    private static bool IsBrokenShortcut(string lnkPath)
+    {
+        // Parse LNK header minimally via Windows Script Host COM (works with admin elevation).
+        try
+        {
+            var shellType = Type.GetTypeFromProgID("WScript.Shell");
+            if (shellType is null) return false;
+            dynamic? shell = Activator.CreateInstance(shellType);
+            if (shell is null) return false;
+            try
+            {
+                dynamic shortcut = shell.CreateShortcut(lnkPath);
+                string target = shortcut.TargetPath as string ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(target)) return false; // URL shortcut, skip
+                // Resolve env vars
+                target = Environment.ExpandEnvironmentVariables(target);
+                if (target.Contains('%')) return false; // unresolved
+                return !System.IO.File.Exists(target) && !System.IO.Directory.Exists(target);
+            }
+            finally
+            {
+                try { System.Runtime.InteropServices.Marshal.FinalReleaseComObject(shell); } catch { }
+            }
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static bool TryClassifyBrowserCache(FileSystemNode node, out string browser)

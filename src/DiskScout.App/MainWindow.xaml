@@ -59,6 +59,9 @@
                     <Button Content="Annuler"
                             Command="{Binding Orchestrator.CancelScanCommand}"
                             IsEnabled="{Binding Orchestrator.CanCancel}" />
+                    <Button Content="Exporter PDF"
+                            Command="{Binding ExportPdfCommand}" Margin="8,0,0,0"
+                            ToolTip="Générer un rapport PDF du dernier scan" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -87,10 +90,22 @@
                              Height="6" Minimum="0" Maximum="100"
                              Background="{StaticResource BackgroundElevatedBrush}"
                              Foreground="{StaticResource AccentBrush}" BorderBrush="Transparent" />
-                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                           Text="{Binding Orchestrator.CurrentPath}"
-                           Foreground="{StaticResource ForegroundSubtleBrush}"
-                           FontSize="11" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" />
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,6,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Orchestrator.CurrentPath}"
+                               Foreground="{StaticResource ForegroundSubtleBrush}"
+                               FontSize="11" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="1" Text="{Binding Orchestrator.ThroughputText}"
+                               Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold"
+                               FontSize="11" Margin="14,0,14,0" />
+                    <TextBlock Grid.Column="2" Text="{Binding Orchestrator.ElapsedText}"
+                               Foreground="{StaticResource ForegroundSubtleBrush}"
+                               FontSize="11" />
+                </Grid>
             </Grid>
         </Border>
 
@@ -122,6 +137,9 @@
             <TabItem Header="Arborescence">
                 <tabs:TreeTabView DataContext="{Binding Tree}" />
             </TabItem>
+            <TabItem Header="Carte">
+                <tabs:TreeMapTabView DataContext="{Binding TreeMap}" />
+            </TabItem>
             <TabItem Header="Gros fichiers">
                 <tabs:LargestFilesTabView DataContext="{Binding LargestFiles}" />
             </TabItem>
@@ -133,6 +151,9 @@
             </TabItem>
             <TabItem Header="Vieux fichiers">
                 <tabs:OldFilesTabView DataContext="{Binding OldFiles}" />
+            </TabItem>
+            <TabItem Header="Quarantaine">
+                <tabs:QuarantineTabView DataContext="{Binding Quarantine}" />
             </TabItem>
         </TabControl>
     </DockPanel>

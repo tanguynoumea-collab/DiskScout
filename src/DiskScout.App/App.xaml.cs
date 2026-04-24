@@ -49,6 +49,10 @@ public partial class App : Application
         IOrphanDetectorService orphanDetectorService = new OrphanDetectorService(_logger);
         IPersistenceService persistenceService = new JsonPersistenceService(_logger);
         IFileDeletionService fileDeletionService = new FileDeletionService(_logger);
+        IQuarantineService quarantineService = new QuarantineService(_logger);
+        IPdfReportService pdfReport = new PdfReportService(_logger);
+        // Purge expired quarantine (>30 days) in background at startup
+        _ = quarantineService.PurgeAsync(TimeSpan.FromDays(30));
         IDeltaComparator deltaComparator = new PathKeyedDeltaComparator();
         ScanResult? lastScan = null;
         IExporter exporter = new CsvHtmlExporter(() => lastScan);
@@ -62,7 +66,9 @@ public partial class App : Application
             persistenceService,
             deltaComparator,
             exporter,
-            fileDeletionService);
+            fileDeletionService,
+            quarantineService,
+            pdfReport);
 
         var mainWindow = new MainWindow(mainViewModel);
         mainWindow.Show();

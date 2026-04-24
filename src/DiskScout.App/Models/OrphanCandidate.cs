@@ -9,6 +9,8 @@ public enum OrphanCategory
     SystemArtifact,
     DevCache,
     BrowserCache,
+    EmptyFolder,
+    BrokenShortcut,
 }
 
 public sealed record OrphanCandidate(

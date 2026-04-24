@@ -16,11 +16,21 @@
                              Foreground="{StaticResource ForegroundBrush}"
                              BorderBrush="{StaticResource BorderBrush}"
                              Padding="6,4" VerticalAlignment="Center" />
-                    <TextBlock VerticalAlignment="Center" Margin="18,0,0,0" Foreground="{StaticResource ForegroundSubtleBrush}">
+                    <TextBlock VerticalAlignment="Center" Margin="18,0,14,0" Foreground="{StaticResource ForegroundSubtleBrush}">
                         <Run Text="{Binding GroupCount, Mode=OneWay}" /><Run Text=" groupes — " />
                         <Run Text="{Binding WastedBytes, Converter={StaticResource BytesFormatConverter}, Mode=OneWay}" FontWeight="SemiBold" /><Run Text=" gaspillés" />
                     </TextBlock>
+                    <Button Content="Vérifier par hash (xxHash3)"
+                            Command="{Binding VerifyWithHashCommand}"
+                            IsEnabled="{Binding IsHashRunning, Converter={StaticResource InverseBooleanConverter}}"
+                            ToolTip="Vérifie chaque groupe par hash xxHash3 pour éliminer les faux positifs (mêmes nom+taille mais contenus différents)." />
                 </StackPanel>
+            </Border>
+            <Border DockPanel.Dock="Top" Padding="14,6" Background="{StaticResource BackgroundBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+                <TextBlock Text="{Binding HashStatus}"
+                           Foreground="{StaticResource ForegroundSubtleBrush}"
+                           FontSize="11" TextWrapping="Wrap" />
             </Border>
             <ListBox ItemsSource="{Binding View}"
                      Background="{StaticResource BackgroundBrush}"

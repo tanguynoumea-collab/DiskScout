@@ -1,0 +1,62 @@
+<UserControl x:Class="DiskScout.Views.Tabs.TreeMapTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:DiskScout.Views.Controls"
+             xmlns:vm="clr-namespace:DiskScout.ViewModels"
+             Background="{StaticResource BackgroundBrush}">
+    <Grid>
+        <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}"
+                                  Visibility="{Binding HasResults, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+        <DockPanel Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+            <Border DockPanel.Dock="Top" Padding="14,10" Background="{StaticResource BackgroundAltBrush}">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="↑ Remonter"
+                            Command="{Binding GoUpCommand}" Margin="0,0,14,0" />
+                    <TextBlock Text="Couleur :" VerticalAlignment="Center"
+                               Foreground="{StaticResource ForegroundSubtleBrush}" Margin="0,0,8,0" />
+                    <Button Content="Profondeur"
+                            Command="{Binding SetColorModeCommand}" CommandParameter="Depth" Margin="0,0,4,0" />
+                    <Button Content="Âge"
+                            Command="{Binding SetColorModeCommand}" CommandParameter="Age" Margin="0,0,4,0" />
+                    <Button Content="Type"
+                            Command="{Binding SetColorModeCommand}" CommandParameter="Type" />
+                    <TextBlock VerticalAlignment="Center" Margin="20,0,0,0"
+                               Foreground="{StaticResource ForegroundSubtleBrush}"
+                               Text="{Binding CurrentPath}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </Border>
+
+            <!-- Breadcrumb strip -->
+            <Border DockPanel.Dock="Top" Padding="14,6" Background="{StaticResource BackgroundBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+                <ItemsControl ItemsSource="{Binding Breadcrumbs}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="{Binding Label}"
+                                        Command="{Binding DataContext.NavigateToCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Padding="6,2" />
+                                <TextBlock Text=" ›  " Foreground="{StaticResource ForegroundSubtleBrush}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+
+            <controls:TreeMapControl x:Name="Map"
+                                     Nodes="{Binding Nodes}"
+                                     ChildrenIndex="{Binding ChildrenIndex}"
+                                     CurrentRootId="{Binding CurrentRootId}"
+                                     ColorMode="{Binding ColorMode}" />
+        </DockPanel>
+    </Grid>
+</UserControl>

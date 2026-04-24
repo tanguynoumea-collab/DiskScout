@@ -34,6 +34,15 @@ public sealed partial class DuplicatesViewModel : ObservableObject
     [ObservableProperty]
     private double _minMbFilter = 1.0;
 
+    [ObservableProperty]
+    private bool _isHashVerified;
+
+    [ObservableProperty]
+    private string _hashStatus = "Groupage par nom + taille. Clique « Vérifier par hash » pour éliminer les faux positifs.";
+
+    [ObservableProperty]
+    private bool _isHashRunning;
+
     public ObservableCollection<DuplicateRow> Rows { get; } = new();
     public ICollectionView View { get; }
 
@@ -58,6 +67,8 @@ public sealed partial class DuplicatesViewModel : ObservableObject
     {
         _lastNodes = nodes;
         Rows.Clear();
+        IsHashVerified = false;
+        HashStatus = "Groupage par nom + taille. Clique « Vérifier par hash » pour éliminer les faux positifs.";
 
         long minBytes = (long)(Math.Max(0, MinMbFilter) * 1024 * 1024);
         if (minBytes <= 0) minBytes = DefaultMinSize;
@@ -90,6 +101,78 @@ public sealed partial class DuplicatesViewModel : ObservableObject
         GroupCount = groupCount;
         WastedBytes = wasted;
         HasResults = Rows.Count > 0;
+        View.Refresh();
+    }
+
+    [RelayCommand]
+    private async Task VerifyWithHashAsync()
+    {
+        if (IsHashRunning || Rows.Count == 0) return;
+        IsHashRunning = true;
+        HashStatus = "Vérification par hash en cours (xxHash3)…";
+
+        var beforeGroups = GroupCount;
+        var beforeWasted = WastedBytes;
+
+        var buckets = Rows.GroupBy(r => r.GroupLabel).ToList();
+
+        var verifiedRows = new List<DuplicateRow>();
+        long verifiedWasted = 0;
+        int verifiedGroups = 0;
+
+        await Task.Run(() =>
+        {
+            foreach (var bucket in buckets)
+            {
+                var rows = bucket.ToList();
+                if (rows.Count < 2) continue;
+
+                // Partial hash first (fast, 64 KB)
+                var byPartial = rows
+                    .GroupBy(r => Helpers.FileHasher.ComputePartialHash(r.FullPath))
+                    .Where(g => g.Key != 0 && g.Count() > 1);
+
+                foreach (var partial in byPartial)
+                {
+                    // Full hash on the partial-hash collision group
+                    var byFull = partial
+                        .GroupBy(r => Helpers.FileHasher.ComputeFullHash(r.FullPath))
+                        .Where(g => g.Key != 0 && g.Count() > 1);
+
+                    foreach (var full in byFull)
+                    {
+                        var list = full.ToList();
+                        var wasted = list[0].SizeBytes * (list.Count - 1);
+                        verifiedWasted += wasted;
+                        verifiedGroups++;
+
+                        var newLabel = list[0].GroupLabel + "  ✓";
+                        foreach (var r in list)
+                        {
+                            verifiedRows.Add(new DuplicateRow(
+                                new FileSystemNode(0, null, r.Name, r.FullPath,
+                                    FileSystemNodeKind.File, r.SizeBytes, 1, 0,
+                                    r.LastModifiedUtc, false, 0),
+                                newLabel, wasted));
+                        }
+                    }
+                }
+            }
+        });
+
+        Rows.Clear();
+        foreach (var r in verifiedRows) Rows.Add(r);
+        GroupCount = verifiedGroups;
+        WastedBytes = verifiedWasted;
+        HasResults = Rows.Count > 0;
+        IsHashVerified = true;
+        IsHashRunning = false;
+
+        var removedGroups = Math.Max(0, beforeGroups - verifiedGroups);
+        HashStatus = $"Vérifié par hash : {verifiedGroups} vrai{(verifiedGroups > 1 ? "s" : "")} doublon{(verifiedGroups > 1 ? "s" : "")} "
+                   + $"({FormatBytes(verifiedWasted)} gaspillés). "
+                   + $"{removedGroups} faux positif{(removedGroups > 1 ? "s" : "")} éliminé{(removedGroups > 1 ? "s" : "")} "
+                   + $"(économie {FormatBytes(Math.Max(0, beforeWasted - verifiedWasted))} retirée des faux doublons).";
         View.Refresh();
     }
 

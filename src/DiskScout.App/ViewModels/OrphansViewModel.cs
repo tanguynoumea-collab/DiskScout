@@ -123,6 +123,8 @@ public sealed class OrphanRow
         OrphanCategory.SystemArtifact => "Artefacts système",
         OrphanCategory.DevCache => "Caches de développement",
         OrphanCategory.BrowserCache => "Caches de navigateurs",
+        OrphanCategory.EmptyFolder => "Dossiers vides",
+        OrphanCategory.BrokenShortcut => "Raccourcis cassés",
         _ => "Autres",
     };
 
