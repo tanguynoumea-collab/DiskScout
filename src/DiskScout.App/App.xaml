@@ -11,6 +11,7 @@
             <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
             <helpers:BytesFormatConverter x:Key="BytesFormatConverter" />
+            <helpers:ZeroToBoolInverseConverter x:Key="ZeroToBoolInverseConverter" />
             <helpers:PercentToStarGridLengthConverter x:Key="PercentToStarGridLengthConverter" />
             <!-- Document type palette -->
             <SolidColorBrush x:Key="DocPdfBrush" Color="#FFE74C3C" />
