@@ -39,6 +39,11 @@ public sealed partial class TreeViewModel : ObservableObject
     [ObservableProperty]
     private DocumentTypeBreakdown _globalBreakdown = DocumentTypeBreakdown.Empty;
 
+    [ObservableProperty]
+    private bool _isAgeHeatmapEnabled;
+
+    partial void OnIsAgeHeatmapEnabledChanged(bool value) => RebuildRoots();
+
     public ObservableCollection<TreeNodeViewModel> Roots { get; } = new();
 
     public long MinSizeBytes => (long)Math.Max(0, MinSizeGb * BytesPerGb);
@@ -125,7 +130,7 @@ public sealed partial class TreeViewModel : ObservableObject
         {
             var rootSize = root.SizeBytes > 0 ? root.SizeBytes : 1;
             var vm = new TreeNodeViewModel(root, _childrenByParent, rootSize, threshold,
-                _breakdownByNode, IsDocumentAnalysisEnabled, _deletion, _logger);
+                _breakdownByNode, IsDocumentAnalysisEnabled, _deletion, _logger, IsAgeHeatmapEnabled);
             Roots.Add(vm);
         }
         HasResults = Roots.Count > 0;
@@ -145,6 +150,7 @@ public sealed partial class TreeNodeViewModel : ObservableObject
     private readonly bool _docAnalysisEnabled;
     private readonly IFileDeletionService? _deletion;
     private readonly ILogger? _logger;
+    private readonly bool _ageHeatmap;
     private bool _childrenLoaded;
 
     public FileSystemNode Node { get; }
@@ -166,6 +172,7 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         _docAnalysisEnabled = false;
         _deletion = null;
         _logger = null;
+        _ageHeatmap = false;
     }
 
     public TreeNodeViewModel(
@@ -176,7 +183,8 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         Dictionary<long, DocumentTypeBreakdown> breakdownByNode,
         bool docAnalysisEnabled,
         IFileDeletionService? deletion,
-        ILogger? logger)
+        ILogger? logger,
+        bool ageHeatmap = false)
     {
         Node = node;
         _index = index;
@@ -186,6 +194,7 @@ public sealed partial class TreeNodeViewModel : ObservableObject
         _docAnalysisEnabled = docAnalysisEnabled;
         _deletion = deletion;
         _logger = logger;
+        _ageHeatmap = ageHeatmap;
 
         if (index.TryGetValue(node.Id, out var kids) && HasVisibleChild(kids, minSizeBytes))
         {
@@ -253,6 +262,29 @@ public sealed partial class TreeNodeViewModel : ObservableObject
     public double VideosPercent   => Breakdown.VideosPercent;
     public double ArchivesPercent => Breakdown.ArchivesPercent;
     public double OtherPercent    => Breakdown.OtherPercent;
+
+    public bool ShowAgeHeatmap => _ageHeatmap && !_docAnalysisEnabled && Node.LastModifiedUtc != DateTime.MinValue;
+
+    /// <summary>Heatmap color: green (recent) → yellow → orange → red (old).</summary>
+    public System.Windows.Media.SolidColorBrush AgeBrush
+    {
+        get
+        {
+            if (!ShowAgeHeatmap) return System.Windows.Application.Current?.TryFindResource("AccentBrush") as System.Windows.Media.SolidColorBrush
+                ?? System.Windows.Media.Brushes.DodgerBlue;
+
+            var days = (DateTime.UtcNow - Node.LastModifiedUtc).TotalDays;
+            // 0-30d green, 30-180d yellow, 180-365d orange, 365-1095d red, 1095+ dark red
+            return days switch
+            {
+                < 30   => new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x27, 0xAE, 0x60)),   // green
+                < 180  => new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0xF1, 0xC4, 0x0F)),   // yellow
+                < 365  => new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE6, 0x7E, 0x22)),   // orange
+                < 1095 => new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE7, 0x4C, 0x3C)),   // red
+                _      => new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x8B, 0x00, 0x00)),   // dark red
+            };
+        }
+    }
 
     [RelayCommand]
     private void CopyPath()

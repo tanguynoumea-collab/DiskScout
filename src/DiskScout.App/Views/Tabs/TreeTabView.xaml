@@ -32,6 +32,12 @@
                     <Button Content="Réinitialiser l'analyse"
                             Command="{Binding ClearDocumentAnalysisCommand}"
                             Visibility="{Binding IsDocumentAnalysisEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <CheckBox Content="Heatmap d'âge"
+                              IsChecked="{Binding IsAgeHeatmapEnabled, Mode=TwoWay}"
+                              Foreground="{StaticResource ForegroundBrush}"
+                              VerticalAlignment="Center"
+                              Margin="20,0,0,0"
+                              ToolTip="Colorise les barres selon l'âge du dernier fichier modifié (vert récent → rouge ancien). Désactivée si l'analyse des types est active." />
                 </StackPanel>
             </Border>
 
@@ -146,7 +152,7 @@
                                     <!-- Filled portion proportional to SharePercent -->
                                     <Grid Grid.Column="0">
                                         <!-- Single colour when analysis is off -->
-                                        <Border Background="{StaticResource AccentBrush}"
+                                        <Border Background="{Binding AgeBrush}"
                                                 Visibility="{Binding ShowDocumentBreakdown, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
 
                                         <!-- 8-segment doc-type breakdown when analysis is on -->

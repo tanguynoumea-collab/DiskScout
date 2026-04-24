@@ -111,6 +111,7 @@ public sealed class OrphanRow
         OrphanCategory.OrphanInstallerPatch => "Patches MSI orphelins",
         OrphanCategory.SystemArtifact => "Artefacts système",
         OrphanCategory.DevCache => "Caches de développement",
+        OrphanCategory.BrowserCache => "Caches de navigateurs",
         _ => "Autres",
     };
 

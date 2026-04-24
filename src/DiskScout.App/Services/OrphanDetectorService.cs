@@ -12,6 +12,23 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
     private const int StaleTempDays = 30;
     private const long MinSystemArtifactBytes = 50 * 1024 * 1024; // ignore tiny artefacts
     private const long MinDevCacheBytes = 50 * 1024 * 1024;
+    private const long MinBrowserCacheBytes = 20 * 1024 * 1024;
+
+    private static readonly (string PathContains, string Browser)[] BrowserCachePatterns =
+    {
+        (@"\Google\Chrome\User Data\",                "Chrome"),
+        (@"\Microsoft\Edge\User Data\",               "Edge"),
+        (@"\BraveSoftware\Brave-Browser\User Data\",  "Brave"),
+        (@"\Opera Software\",                         "Opera"),
+        (@"\Vivaldi\User Data\",                      "Vivaldi"),
+        (@"\Mozilla\Firefox\Profiles\",               "Firefox"),
+    };
+
+    private static readonly string[] BrowserCacheLeafNames =
+    {
+        "Cache", "cache2", "Code Cache", "GPUCache", "Service Worker",
+        "ShaderCache", "GrShaderCache", "Media Cache", "Application Cache",
+    };
 
     private static readonly string[] DevCacheDirNames =
     {
@@ -76,6 +93,19 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
                 orphans.Add(new OrphanCandidate(
                     node.Id, node.FullPath, node.SizeBytes,
                     OrphanCategory.SystemArtifact, artifactReason, MatchScore: null));
+                continue;
+            }
+
+            // Browser caches
+            if (node.Kind == FileSystemNodeKind.Directory
+                && node.SizeBytes >= MinBrowserCacheBytes
+                && TryClassifyBrowserCache(node, out var browser))
+            {
+                orphans.Add(new OrphanCandidate(
+                    node.Id, node.FullPath, node.SizeBytes,
+                    OrphanCategory.BrowserCache,
+                    $"Cache {browser} ({FormatBytes(node.SizeBytes)}). Supprimable via clic droit ou l'option « Effacer la navigation » du navigateur.",
+                    MatchScore: null));
                 continue;
             }
 
@@ -222,6 +252,25 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
             return node.SizeBytes >= MinSystemArtifactBytes;
         }
 
+        return false;
+    }
+
+    private static bool TryClassifyBrowserCache(FileSystemNode node, out string browser)
+    {
+        browser = string.Empty;
+        var name = node.Name;
+        foreach (var leaf in BrowserCacheLeafNames)
+        {
+            if (!string.Equals(name, leaf, StringComparison.OrdinalIgnoreCase)) continue;
+            foreach (var (pathContains, browserName) in BrowserCachePatterns)
+            {
+                if (node.FullPath.Contains(pathContains, StringComparison.OrdinalIgnoreCase))
+                {
+                    browser = browserName;
+                    return true;
+                }
+            }
+        }
         return false;
     }
 

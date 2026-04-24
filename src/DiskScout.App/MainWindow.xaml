@@ -52,6 +52,10 @@
                             Command="{Binding Orchestrator.StartScanCommand}"
                             IsEnabled="{Binding Orchestrator.IsScanning, Converter={StaticResource InverseBooleanConverter}}"
                             Margin="0,0,8,0" />
+                    <Button Content="Scanner dossier…"
+                            Command="{Binding Orchestrator.StartFocusedScanCommand}"
+                            IsEnabled="{Binding Orchestrator.IsScanning, Converter={StaticResource InverseBooleanConverter}}"
+                            Margin="0,0,8,0" />
                     <Button Content="Annuler"
                             Command="{Binding Orchestrator.CancelScanCommand}"
                             IsEnabled="{Binding Orchestrator.CanCancel}" />
@@ -114,6 +118,15 @@
             </TabItem>
             <TabItem Header="Gros fichiers">
                 <tabs:LargestFilesTabView DataContext="{Binding LargestFiles}" />
+            </TabItem>
+            <TabItem Header="Extensions">
+                <tabs:ExtensionsTabView DataContext="{Binding Extensions}" />
+            </TabItem>
+            <TabItem Header="Doublons">
+                <tabs:DuplicatesTabView DataContext="{Binding Duplicates}" />
+            </TabItem>
+            <TabItem Header="Vieux fichiers">
+                <tabs:OldFilesTabView DataContext="{Binding OldFiles}" />
             </TabItem>
         </TabControl>
     </DockPanel>

@@ -8,6 +8,7 @@ public enum OrphanCategory
     OrphanInstallerPatch,
     SystemArtifact,
     DevCache,
+    BrowserCache,
 }
 
 public sealed record OrphanCandidate(

@@ -14,6 +14,9 @@ public sealed partial class MainViewModel : ObservableObject
     public OrphansViewModel Orphans { get; }
     public TreeViewModel Tree { get; }
     public LargestFilesViewModel LargestFiles { get; }
+    public ExtensionsViewModel Extensions { get; }
+    public DuplicatesViewModel Duplicates { get; }
+    public OldFilesViewModel OldFiles { get; }
     public ScanOrchestratorViewModel Orchestrator { get; }
 
     [ObservableProperty]
@@ -41,6 +44,9 @@ public sealed partial class MainViewModel : ObservableObject
         Orphans = new OrphansViewModel(fileDeletionService, logger);
         Tree = new TreeViewModel(fileDeletionService, logger);
         LargestFiles = new LargestFilesViewModel(fileDeletionService, logger);
+        Extensions = new ExtensionsViewModel();
+        Duplicates = new DuplicatesViewModel(fileDeletionService, logger);
+        OldFiles = new OldFilesViewModel(fileDeletionService, logger);
 
         Orchestrator = new ScanOrchestratorViewModel(
             logger, driveService, fileSystemScanner, installedProgramsScanner,
@@ -58,9 +64,13 @@ public sealed partial class MainViewModel : ObservableObject
             Orphans.Load(result.Orphans);
             Tree.Load(result.Nodes);
             LargestFiles.Load(result.Nodes);
+            Extensions.Load(result.Nodes);
+            Duplicates.Load(result.Nodes);
+            OldFiles.Load(result.Nodes);
             _logger.Information(
-                "UI loaded: {Programs} programs, {Orphans} orphans, {Roots} tree roots, {Top} largest files",
-                Programs.Count, Orphans.Count, Tree.Roots.Count, LargestFiles.Count);
+                "UI loaded: {Programs} progs, {Orphans} orphans, {Roots} roots, {Top} largest, {Exts} exts, {Dups} dup groups, {Old} old files",
+                Programs.Count, Orphans.Count, Tree.Roots.Count, LargestFiles.Count,
+                Extensions.Count, Duplicates.GroupCount, OldFiles.Count);
         }
 
         var dispatcher = Application.Current?.Dispatcher;

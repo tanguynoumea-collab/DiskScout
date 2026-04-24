@@ -82,14 +82,27 @@ public sealed partial class ScanOrchestratorViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanStartScan))]
-    private async Task StartScanAsync()
+    private Task StartScanAsync() => StartScanInternalAsync(null);
+
+    [RelayCommand(CanExecute = nameof(CanStartScan))]
+    private Task StartFocusedScanAsync()
+    {
+        var dlg = new Microsoft.Win32.OpenFolderDialog
+        {
+            Title = "Sélectionne un dossier à analyser",
+        };
+        if (dlg.ShowDialog() != true) return Task.CompletedTask;
+        return StartScanInternalAsync(new[] { dlg.FolderName });
+    }
+
+    private async Task StartScanInternalAsync(string[]? focusedPaths)
     {
         if (IsScanning) return;
 
-        var selected = Drives.Where(d => d.IsSelected).Select(d => d.RootPath).ToArray();
+        var selected = focusedPaths ?? Drives.Where(d => d.IsSelected).Select(d => d.RootPath).ToArray();
         if (selected.Length == 0)
         {
-            StatusMessage = "Sélectionne au moins un disque.";
+            StatusMessage = "Sélectionne au moins un disque ou un dossier.";
             return;
         }
 

@@ -1,0 +1,29 @@
+<UserControl x:Class="DiskScout.Views.Tabs.ExtensionsTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:DiskScout.Views.Controls"
+             Background="{StaticResource BackgroundBrush}">
+    <Grid>
+        <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}"
+                                  Visibility="{Binding HasResults, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+        <DockPanel Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border DockPanel.Dock="Top" Padding="14,10" Background="{StaticResource BackgroundAltBrush}">
+                <TextBlock Foreground="{StaticResource ForegroundSubtleBrush}">
+                    <Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" extensions — " />
+                    <Run Text="{Binding TotalBytes, Converter={StaticResource BytesFormatConverter}, Mode=OneWay}" FontWeight="SemiBold" />
+                </TextBlock>
+            </Border>
+            <DataGrid ItemsSource="{Binding View}"
+                      AutoGenerateColumns="False" IsReadOnly="True"
+                      EnableRowVirtualization="True" EnableColumnVirtualization="True"
+                      CanUserAddRows="False" CanUserDeleteRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Extension" Binding="{Binding Extension}" Width="1*" />
+                    <DataGridTextColumn Header="Fichiers" Binding="{Binding FilesDisplay}" Width="1*" SortMemberPath="Files" />
+                    <DataGridTextColumn Header="Taille" Binding="{Binding BytesDisplay}" Width="1*" SortMemberPath="Bytes" />
+                    <DataGridTextColumn Header="% disque" Binding="{Binding PercentDisplay}" Width="1*" SortMemberPath="Percent" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</UserControl>
