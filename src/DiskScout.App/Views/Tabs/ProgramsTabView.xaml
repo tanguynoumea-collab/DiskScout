@@ -1,0 +1,7 @@
+<UserControl x:Class="DiskScout.Views.Tabs.ProgramsTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:DiskScout.Views.Controls"
+             Background="{StaticResource BackgroundBrush}">
+    <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}" />
+</UserControl>

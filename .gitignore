@@ -1,0 +1,14 @@
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+TestResults/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.swp
+*.DS_Store

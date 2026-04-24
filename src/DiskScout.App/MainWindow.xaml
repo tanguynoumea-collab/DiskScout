@@ -1,0 +1,70 @@
+<Window x:Class="DiskScout.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:tabs="clr-namespace:DiskScout.Views.Tabs"
+        Title="{Binding WindowTitle}"
+        Height="800" Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}"
+        Foreground="{StaticResource ForegroundBrush}">
+    <DockPanel LastChildFill="True">
+
+        <!-- Header region (drives selector + Scanner button land in Phase 4) -->
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource BackgroundAltBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="18,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="&#xE74C;"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="20"
+                               Foreground="{StaticResource AccentBrush}"
+                               Margin="0,0,10,0"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="DiskScout"
+                               FontSize="18"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="Analyse d'occupation disque en lecture seule"
+                               Foreground="{StaticResource ForegroundSubtleBrush}"
+                               Margin="12,0,0,0"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Grid.Column="2"
+                           Text="Scanner (Phase 4)"
+                           Foreground="{StaticResource ForegroundSubtleBrush}"
+                           VerticalAlignment="Center"
+                           FontStyle="Italic" />
+            </Grid>
+        </Border>
+
+        <!-- Progress region (wired in Phase 4) -->
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource BackgroundAltBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="18,6"
+                Visibility="Collapsed" />
+
+        <!-- Tabs -->
+        <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"
+                    Background="{StaticResource BackgroundBrush}"
+                    BorderThickness="0">
+            <TabItem Header="Programmes">
+                <tabs:ProgramsTabView DataContext="{Binding Programs}" />
+            </TabItem>
+            <TabItem Header="Rémanents">
+                <tabs:OrphansTabView DataContext="{Binding Orphans}" />
+            </TabItem>
+            <TabItem Header="Arborescence">
+                <tabs:TreeTabView DataContext="{Binding Tree}" />
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

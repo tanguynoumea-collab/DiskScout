@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DiskScout.App/DiskScout.App.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DiskScout.Tests/DiskScout.Tests.csproj" />
+  </Folder>
+</Solution>
