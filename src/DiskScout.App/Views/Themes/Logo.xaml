@@ -1,0 +1,76 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+      DiskScout logo — stylised disc platter with a read-head sector.
+      Scalable vector; colors follow the dark-theme palette.
+      Viewbox: 0..64. Use inside a Viewbox or Image host.
+    -->
+    <DrawingImage x:Key="DiskScoutLogoImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.ClipGeometry>
+                    <RectangleGeometry Rect="0,0,64,64" />
+                </DrawingGroup.ClipGeometry>
+
+                <!-- Background disc (Dark BackgroundElevated) -->
+                <GeometryDrawing Brush="{StaticResource BackgroundElevatedBrush}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="31" RadiusY="31" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <!-- Outer ring accent -->
+                <GeometryDrawing Brush="{StaticResource AccentBrush}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="28" RadiusY="28" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <!-- Dark groove -->
+                <GeometryDrawing Brush="{StaticResource BackgroundBrush}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="23" RadiusY="23" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <!-- Mid accent ring -->
+                <GeometryDrawing Brush="{StaticResource AccentMutedBrush}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="18" RadiusY="18" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <!-- 90° accent sector — read head -->
+                <GeometryDrawing Brush="{StaticResource AccentBrush}">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry>
+                            <PathFigure StartPoint="32,32" IsClosed="True">
+                                <LineSegment Point="50,32" />
+                                <ArcSegment Point="32,14"
+                                            Size="18,18"
+                                            SweepDirection="Counterclockwise"
+                                            IsLargeArc="False" />
+                            </PathFigure>
+                        </PathGeometry>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <!-- Center hole -->
+                <GeometryDrawing Brush="{StaticResource BackgroundBrush}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="5" RadiusY="5" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <!-- Spindle dot -->
+                <GeometryDrawing Brush="{StaticResource AccentBrush}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="2" RadiusY="2" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+</ResourceDictionary>

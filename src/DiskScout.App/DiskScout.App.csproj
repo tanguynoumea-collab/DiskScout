@@ -9,6 +9,7 @@
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\DiskScout.ico</ApplicationIcon>
     <AssemblyName>DiskScout</AssemblyName>
     <RootNamespace>DiskScout</RootNamespace>
     <Version>0.1.0</Version>
@@ -31,6 +32,10 @@
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\DiskScout.ico" />
   </ItemGroup>
 
 </Project>

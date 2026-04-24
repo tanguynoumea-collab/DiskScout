@@ -4,6 +4,7 @@
         xmlns:tabs="clr-namespace:DiskScout.Views.Tabs"
         xmlns:vm="clr-namespace:DiskScout.ViewModels"
         Title="{Binding WindowTitle}"
+        Icon="/DiskScout;component/Assets/DiskScout.ico"
         Height="800" Width="1280"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BackgroundBrush}"
@@ -23,9 +24,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="&#xE74C;" FontFamily="Segoe MDL2 Assets" FontSize="20"
-                               Foreground="{StaticResource AccentBrush}" Margin="0,0,10,0" VerticalAlignment="Center" />
-                    <TextBlock Text="DiskScout" FontSize="18" FontWeight="SemiBold" />
+                    <Image Source="{StaticResource DiskScoutLogoImage}" Width="28" Height="28"
+                           Margin="0,0,12,0" VerticalAlignment="Center" />
+                    <TextBlock Text="DiskScout" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="24,0,0,0">
                     <TextBlock Text="Disques :" Foreground="{StaticResource ForegroundSubtleBrush}"

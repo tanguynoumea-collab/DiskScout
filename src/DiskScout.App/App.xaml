@@ -6,6 +6,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Views/Themes/DarkTheme.xaml" />
+                <ResourceDictionary Source="Views/Themes/Logo.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />

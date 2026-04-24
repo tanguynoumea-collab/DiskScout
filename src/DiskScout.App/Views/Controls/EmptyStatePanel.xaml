@@ -4,12 +4,11 @@
              Background="{StaticResource BackgroundBrush}">
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="460">
-            <TextBlock Text="&#xE74C;"
-                       FontFamily="Segoe MDL2 Assets"
-                       FontSize="48"
-                       Foreground="{StaticResource AccentMutedBrush}"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,18" />
+            <Image Source="{StaticResource DiskScoutLogoImage}"
+                   Width="72" Height="72"
+                   HorizontalAlignment="Center"
+                   Opacity="0.85"
+                   Margin="0,0,0,18" />
             <TextBlock Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}"
                        Foreground="{StaticResource ForegroundSubtleBrush}"
                        FontSize="14"
