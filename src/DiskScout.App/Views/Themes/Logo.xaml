@@ -2,9 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--
-      DiskScout logo — stylised disc platter with a read-head sector.
-      Scalable vector; colors follow the dark-theme palette.
-      Viewbox: 0..64. Use inside a Viewbox or Image host.
+      DiskScout logo — sonar sweep across a dark platter.
+      Scalable vector; viewbox 0..64. Use inside a Viewbox or Image host.
     -->
     <DrawingImage x:Key="DiskScoutLogoImage">
         <DrawingImage.Drawing>
@@ -13,42 +12,52 @@
                     <RectangleGeometry Rect="0,0,64,64" />
                 </DrawingGroup.ClipGeometry>
 
-                <!-- Background disc (Dark BackgroundElevated) -->
-                <GeometryDrawing Brush="{StaticResource BackgroundElevatedBrush}">
+                <!-- Dark disc base -->
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="#FF16181D" />
+                    </GeometryDrawing.Brush>
                     <GeometryDrawing.Geometry>
                         <EllipseGeometry Center="32,32" RadiusX="31" RadiusY="31" />
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
 
-                <!-- Outer ring accent -->
-                <GeometryDrawing Brush="{StaticResource AccentBrush}">
+                <!-- Subtle inner platter ring -->
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="#FF283040" />
+                    </GeometryDrawing.Brush>
                     <GeometryDrawing.Geometry>
-                        <EllipseGeometry Center="32,32" RadiusX="28" RadiusY="28" />
+                        <EllipseGeometry Center="32,32" RadiusX="25" RadiusY="25" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="#FF16181D" />
+                    </GeometryDrawing.Brush>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="23.5" RadiusY="23.5" />
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
 
-                <!-- Dark groove -->
-                <GeometryDrawing Brush="{StaticResource BackgroundBrush}">
-                    <GeometryDrawing.Geometry>
-                        <EllipseGeometry Center="32,32" RadiusX="23" RadiusY="23" />
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-
-                <!-- Mid accent ring -->
-                <GeometryDrawing Brush="{StaticResource AccentMutedBrush}">
-                    <GeometryDrawing.Geometry>
-                        <EllipseGeometry Center="32,32" RadiusX="18" RadiusY="18" />
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-
-                <!-- 90° accent sector — read head -->
-                <GeometryDrawing Brush="{StaticResource AccentBrush}">
+                <!-- SONAR SWEEP — 110° gradient pie slice -->
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#F0B4DCFF" Offset="0.0" />
+                            <GradientStop Color="#D25CACFF" Offset="0.15" />
+                            <GradientStop Color="#502D78D2" Offset="0.6" />
+                            <GradientStop Color="#002D78D2" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </GeometryDrawing.Brush>
                     <GeometryDrawing.Geometry>
                         <PathGeometry>
                             <PathFigure StartPoint="32,32" IsClosed="True">
-                                <LineSegment Point="50,32" />
-                                <ArcSegment Point="32,14"
-                                            Size="18,18"
+                                <!-- From 45° direction (top-right) sweeping counterclockwise
+                                     110° to the upper-left -->
+                                <LineSegment Point="49.89,14.11" />
+                                <ArcSegment Point="11.89,17.49"
+                                            Size="23.5,23.5"
                                             SweepDirection="Counterclockwise"
                                             IsLargeArc="False" />
                             </PathFigure>
@@ -56,17 +65,41 @@
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
 
-                <!-- Center hole -->
-                <GeometryDrawing Brush="{StaticResource BackgroundBrush}">
+                <!-- Leading-edge highlight line -->
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#FFB4DCFF" Thickness="1.2" StartLineCap="Round" EndLineCap="Round" />
+                    </GeometryDrawing.Pen>
                     <GeometryDrawing.Geometry>
-                        <EllipseGeometry Center="32,32" RadiusX="5" RadiusY="5" />
+                        <LineGeometry StartPoint="32,32" EndPoint="49.89,14.11" />
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
 
-                <!-- Spindle dot -->
-                <GeometryDrawing Brush="{StaticResource AccentBrush}">
+                <!-- Outer accent ring -->
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource AccentBrush}" Thickness="1.8" />
+                    </GeometryDrawing.Pen>
                     <GeometryDrawing.Geometry>
-                        <EllipseGeometry Center="32,32" RadiusX="2" RadiusY="2" />
+                        <EllipseGeometry Center="32,32" RadiusX="28" RadiusY="28" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <!-- Spindle — outer glow + hot core -->
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="#FF2D78D2" />
+                    </GeometryDrawing.Brush>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="4" RadiusY="4" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="#FFB4DCFF" />
+                    </GeometryDrawing.Brush>
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="32,32" RadiusX="2.5" RadiusY="2.5" />
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
             </DrawingGroup>
