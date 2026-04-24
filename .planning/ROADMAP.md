@@ -8,13 +8,13 @@
 ## Phases
 
 - [x] **Phase 1: Foundations & Launchable Shell** - Bootstrap models, helpers, logging, admin manifest, and an empty WPF shell that launches and shows three empty tabs ✅
-- [ ] **Phase 2: FileSystem Scanner Core (P/Invoke)** - Trim-safe native scanner with reparse detection, long paths, bottom-up size aggregation, and cancellation — backend-only, unit-tested
-- [ ] **Phase 3: Registry & Orphan Detection** - Dual-view registry enumeration, two-stage fuzzy matching, and four orphan heuristic classifiers — backend-only, regression-tested
-- [ ] **Phase 4: UI Shell & Scan Orchestration** - Drive selection, Start/Cancel buttons, live throttled progress, scan orchestrator wiring backend scanners to the shell
-- [ ] **Phase 5: Three Result Panes** - Programs DataGrid (sort/filter), Orphans grouped list (category + reason), Tree view with virtualization, lazy-load, and percentage bars
-- [ ] **Phase 6: Scan Persistence & History** - Flat-node JSON persistence with schema versioning; scan history UI to list and reload past scans
-- [ ] **Phase 7: Delta Comparison** - Path-keyed dictionary diff between two persisted scans; delta pane displaying Added/Removed/Grew/Shrank with size deltas
-- [ ] **Phase 8: Export & Portable Publish** - CSV and HTML exporters respecting active filters/sorts; single-file self-contained win-x64 publish validated on a clean VM
+- [x] **Phase 2: FileSystem Scanner Core (P/Invoke)** - Trim-safe native scanner with reparse detection, long paths, bottom-up size aggregation, and cancellation — backend-only, unit-tested
+- [x] **Phase 3: Registry & Orphan Detection** - Dual-view registry enumeration, two-stage fuzzy matching, and four orphan heuristic classifiers — backend-only, regression-tested
+- [x] **Phase 4: UI Shell & Scan Orchestration** - Drive selection, Start/Cancel buttons, live throttled progress, scan orchestrator wiring backend scanners to the shell
+- [x] **Phase 5: Three Result Panes** - Programs DataGrid (sort/filter), Orphans grouped list (category + reason), Tree view with virtualization, lazy-load, and percentage bars
+- [x] **Phase 6: Scan Persistence & History** - Flat-node JSON persistence with schema versioning; scan history UI to list and reload past scans
+- [x] **Phase 7: Delta Comparison** - Path-keyed dictionary diff between two persisted scans; delta pane displaying Added/Removed/Grew/Shrank with size deltas
+- [x] **Phase 8: Export & Portable Publish** - CSV and HTML exporters respecting active filters/sorts; single-file self-contained win-x64 publish validated on a clean VM
 
 ## Phase Details
 
