@@ -10,6 +10,7 @@ public sealed partial class MainViewModel : ObservableObject
 {
     private readonly ILogger _logger;
 
+    public HealthViewModel Health { get; }
     public ProgramsViewModel Programs { get; }
     public OrphansViewModel Orphans { get; }
     public OrphansViewModel Cleanup { get; }
@@ -19,6 +20,8 @@ public sealed partial class MainViewModel : ObservableObject
     public DuplicatesViewModel Duplicates { get; }
     public OldFilesViewModel OldFiles { get; }
     public ScanOrchestratorViewModel Orchestrator { get; }
+
+    private readonly IDriveService _driveService;
 
     [ObservableProperty]
     private string _windowTitle = "DiskScout [Admin]";
@@ -38,9 +41,11 @@ public sealed partial class MainViewModel : ObservableObject
         IFileDeletionService fileDeletionService)
     {
         _logger = logger;
+        _driveService = driveService;
         _ = deltaComparator;
         _ = exporter;
 
+        Health = new HealthViewModel();
         Programs = new ProgramsViewModel();
 
         // Base 'Rémanents' = historical 4 categories
@@ -92,6 +97,14 @@ public sealed partial class MainViewModel : ObservableObject
             Extensions.Load(result.Nodes);
             Duplicates.Load(result.Nodes);
             OldFiles.Load(result.Nodes);
+
+            Health.Load(
+                result,
+                _driveService.GetFixedDrives(),
+                remnantsBytes: Orphans.TotalBytes,
+                cleanupBytes: Cleanup.TotalBytes,
+                duplicatesBytes: Duplicates.WastedBytes,
+                oldFilesBytes: OldFiles.TotalBytes);
             _logger.Information(
                 "UI loaded: {Programs} progs, {Orphans} orphans, {Roots} roots, {Top} largest, {Exts} exts, {Dups} dup groups, {Old} old files",
                 Programs.Count, Orphans.Count, Tree.Roots.Count, LargestFiles.Count,

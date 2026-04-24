@@ -107,6 +107,9 @@
         <!-- Tabs -->
         <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"
                     Background="{StaticResource BackgroundBrush}" BorderThickness="0">
+            <TabItem Header="Santé">
+                <tabs:HealthTabView DataContext="{Binding Health}" />
+            </TabItem>
             <TabItem Header="Programmes">
                 <tabs:ProgramsTabView DataContext="{Binding Programs}" />
             </TabItem>
