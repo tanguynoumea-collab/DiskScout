@@ -113,6 +113,9 @@
             <TabItem Header="Rémanents">
                 <tabs:OrphansTabView DataContext="{Binding Orphans}" />
             </TabItem>
+            <TabItem Header="Nettoyage">
+                <tabs:OrphansTabView DataContext="{Binding Cleanup}" />
+            </TabItem>
             <TabItem Header="Arborescence">
                 <tabs:TreeTabView DataContext="{Binding Tree}" />
             </TabItem>

@@ -15,6 +15,7 @@ public sealed partial class OrphansViewModel : ObservableObject
 {
     private readonly IFileDeletionService _deletion;
     private readonly ILogger _logger;
+    private readonly HashSet<OrphanCategory> _acceptedCategories;
 
     [ObservableProperty]
     private string _emptyStateMessage =
@@ -33,10 +34,19 @@ public sealed partial class OrphansViewModel : ObservableObject
 
     public ICollectionView View { get; }
 
-    public OrphansViewModel(IFileDeletionService deletion, ILogger logger)
+    public OrphansViewModel(
+        IFileDeletionService deletion,
+        ILogger logger,
+        IEnumerable<OrphanCategory>? acceptedCategories = null,
+        string? emptyStateMessage = null)
     {
         _deletion = deletion;
         _logger = logger;
+        _acceptedCategories = acceptedCategories is null
+            ? new HashSet<OrphanCategory>(Enum.GetValues<OrphanCategory>())
+            : new HashSet<OrphanCategory>(acceptedCategories);
+
+        if (emptyStateMessage is not null) EmptyStateMessage = emptyStateMessage;
 
         View = CollectionViewSource.GetDefaultView(Rows);
         View.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OrphanRow.CategoryLabel)));
@@ -50,6 +60,7 @@ public sealed partial class OrphansViewModel : ObservableObject
         long total = 0;
         foreach (var c in candidates)
         {
+            if (!_acceptedCategories.Contains(c.Category)) continue;
             Rows.Add(new OrphanRow(c));
             total += c.SizeBytes;
         }
