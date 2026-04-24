@@ -74,6 +74,18 @@
                         <TextBlock VerticalAlignment="Center"><Run Text="EXE " FontWeight="SemiBold" /><Run Text="{Binding GlobalBreakdown.ExePercent, StringFormat={}{0:F1}%, Mode=OneWay}" /></TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,18,6">
+                        <Border Width="14" Height="10" Background="{StaticResource DocImagesBrush}" Margin="0,0,6,0" />
+                        <TextBlock VerticalAlignment="Center"><Run Text="Images " FontWeight="SemiBold" /><Run Text="{Binding GlobalBreakdown.ImagesPercent, StringFormat={}{0:F1}%, Mode=OneWay}" /></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,18,6">
+                        <Border Width="14" Height="10" Background="{StaticResource DocVideosBrush}" Margin="0,0,6,0" />
+                        <TextBlock VerticalAlignment="Center"><Run Text="Vidéos " FontWeight="SemiBold" /><Run Text="{Binding GlobalBreakdown.VideosPercent, StringFormat={}{0:F1}%, Mode=OneWay}" /></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,18,6">
+                        <Border Width="14" Height="10" Background="{StaticResource DocArchivesBrush}" Margin="0,0,6,0" />
+                        <TextBlock VerticalAlignment="Center"><Run Text="Archives " FontWeight="SemiBold" /><Run Text="{Binding GlobalBreakdown.ArchivesPercent, StringFormat={}{0:F1}%, Mode=OneWay}" /></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,18,6">
                         <Border Width="14" Height="10" Background="{StaticResource DocOtherBrush}" Margin="0,0,6,0" />
                         <TextBlock VerticalAlignment="Center"><Run Text="Autres " FontWeight="SemiBold" /><Run Text="{Binding GlobalBreakdown.OtherPercent, StringFormat={}{0:F1}%, Mode=OneWay}" /></TextBlock>
                     </StackPanel>
@@ -146,17 +158,23 @@
                                                 <ColumnDefinition Width="{Binding TxtPercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
                                                 <ColumnDefinition Width="{Binding DllPercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
                                                 <ColumnDefinition Width="{Binding SysPercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
-                                                <ColumnDefinition Width="{Binding ExePercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
-                                                <ColumnDefinition Width="{Binding OtherPercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                                <ColumnDefinition Width="{Binding ExePercent,      Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                                <ColumnDefinition Width="{Binding ImagesPercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                                <ColumnDefinition Width="{Binding VideosPercent,   Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                                <ColumnDefinition Width="{Binding ArchivesPercent, Converter={StaticResource PercentToStarGridLengthConverter}}" />
+                                                <ColumnDefinition Width="{Binding OtherPercent,    Converter={StaticResource PercentToStarGridLengthConverter}}" />
                                             </Grid.ColumnDefinitions>
-                                            <Border Grid.Column="0" Background="{StaticResource DocPdfBrush}" />
-                                            <Border Grid.Column="1" Background="{StaticResource DocXlsxBrush}" />
-                                            <Border Grid.Column="2" Background="{StaticResource DocRvtBrush}" />
-                                            <Border Grid.Column="3" Background="{StaticResource DocTxtBrush}" />
-                                            <Border Grid.Column="4" Background="{StaticResource DocDllBrush}" />
-                                            <Border Grid.Column="5" Background="{StaticResource DocSysBrush}" />
-                                            <Border Grid.Column="6" Background="{StaticResource DocExeBrush}" />
-                                            <Border Grid.Column="7" Background="{StaticResource DocOtherBrush}" />
+                                            <Border Grid.Column="0"  Background="{StaticResource DocPdfBrush}" />
+                                            <Border Grid.Column="1"  Background="{StaticResource DocXlsxBrush}" />
+                                            <Border Grid.Column="2"  Background="{StaticResource DocRvtBrush}" />
+                                            <Border Grid.Column="3"  Background="{StaticResource DocTxtBrush}" />
+                                            <Border Grid.Column="4"  Background="{StaticResource DocDllBrush}" />
+                                            <Border Grid.Column="5"  Background="{StaticResource DocSysBrush}" />
+                                            <Border Grid.Column="6"  Background="{StaticResource DocExeBrush}" />
+                                            <Border Grid.Column="7"  Background="{StaticResource DocImagesBrush}" />
+                                            <Border Grid.Column="8"  Background="{StaticResource DocVideosBrush}" />
+                                            <Border Grid.Column="9"  Background="{StaticResource DocArchivesBrush}" />
+                                            <Border Grid.Column="10" Background="{StaticResource DocOtherBrush}" />
                                         </Grid>
                                     </Grid>
                                 </Grid>

@@ -242,14 +242,17 @@ public sealed partial class TreeNodeViewModel : ObservableObject
             ? b
             : DocumentTypeBreakdown.Empty;
 
-    public double PdfPercent   => Breakdown.PdfPercent;
-    public double XlsxPercent  => Breakdown.XlsxPercent;
-    public double RvtPercent   => Breakdown.RvtPercent;
-    public double TxtPercent   => Breakdown.TxtPercent;
-    public double DllPercent   => Breakdown.DllPercent;
-    public double SysPercent   => Breakdown.SysPercent;
-    public double ExePercent   => Breakdown.ExePercent;
-    public double OtherPercent => Breakdown.OtherPercent;
+    public double PdfPercent      => Breakdown.PdfPercent;
+    public double XlsxPercent     => Breakdown.XlsxPercent;
+    public double RvtPercent      => Breakdown.RvtPercent;
+    public double TxtPercent      => Breakdown.TxtPercent;
+    public double DllPercent      => Breakdown.DllPercent;
+    public double SysPercent      => Breakdown.SysPercent;
+    public double ExePercent      => Breakdown.ExePercent;
+    public double ImagesPercent   => Breakdown.ImagesPercent;
+    public double VideosPercent   => Breakdown.VideosPercent;
+    public double ArchivesPercent => Breakdown.ArchivesPercent;
+    public double OtherPercent    => Breakdown.OtherPercent;
 
     [RelayCommand]
     private void CopyPath()

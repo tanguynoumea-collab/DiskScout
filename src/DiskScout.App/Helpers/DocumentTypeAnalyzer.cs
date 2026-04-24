@@ -4,6 +4,21 @@ namespace DiskScout.Helpers;
 
 public static class DocumentTypeAnalyzer
 {
+    private static readonly HashSet<string> ImageExts = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "jpg", "jpeg", "png", "gif", "bmp", "tif", "tiff", "webp",
+        "heic", "heif", "svg", "ico", "raw", "cr2", "nef", "arw", "dng",
+    };
+    private static readonly HashSet<string> VideoExts = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "mp4", "mkv", "mov", "avi", "webm", "flv", "wmv", "m4v",
+        "mpg", "mpeg", "3gp", "m2ts", "ts",
+    };
+    private static readonly HashSet<string> ArchiveExts = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "zip", "7z", "rar", "tar", "xz", "gz", "bz2", "iso", "tgz", "cab",
+    };
+
     public static DocumentCategory Classify(string fileName)
     {
         if (string.IsNullOrEmpty(fileName)) return DocumentCategory.Other;
@@ -11,7 +26,8 @@ public static class DocumentTypeAnalyzer
         var lastDot = fileName.LastIndexOf('.');
         if (lastDot < 0 || lastDot == fileName.Length - 1) return DocumentCategory.Other;
 
-        var ext = fileName.AsSpan(lastDot + 1);
+        var ext = fileName[(lastDot + 1)..];
+
         if (ext.Equals("pdf",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Pdf;
         if (ext.Equals("xlsx", StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Xlsx;
         if (ext.Equals("rvt",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Rvt;
@@ -19,6 +35,11 @@ public static class DocumentTypeAnalyzer
         if (ext.Equals("dll",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Dll;
         if (ext.Equals("sys",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Sys;
         if (ext.Equals("exe",  StringComparison.OrdinalIgnoreCase)) return DocumentCategory.Exe;
+
+        if (ImageExts.Contains(ext))   return DocumentCategory.Images;
+        if (VideoExts.Contains(ext))   return DocumentCategory.Videos;
+        if (ArchiveExts.Contains(ext)) return DocumentCategory.Archives;
+
         return DocumentCategory.Other;
     }
 
@@ -47,7 +68,6 @@ public static class DocumentTypeAnalyzer
         var childrenByParent = BuildChildrenIndex(nodes);
         var result = new Dictionary<long, DocumentTypeBreakdown>(nodes.Count);
 
-        // Bottom-up aggregation via post-order traversal from each root.
         foreach (var root in nodes.Where(n => n.ParentId is null))
         {
             cancellationToken.ThrowIfCancellationRequested();

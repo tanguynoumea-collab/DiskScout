@@ -19,6 +19,9 @@
             <SolidColorBrush x:Key="DocDllBrush" Color="#FF9B59B6" />
             <SolidColorBrush x:Key="DocSysBrush" Color="#FFE67E22" />
             <SolidColorBrush x:Key="DocExeBrush" Color="#FF1ABC9C" />
+            <SolidColorBrush x:Key="DocImagesBrush" Color="#FFE91E63" />
+            <SolidColorBrush x:Key="DocVideosBrush" Color="#FF00BCD4" />
+            <SolidColorBrush x:Key="DocArchivesBrush" Color="#FF795548" />
             <SolidColorBrush x:Key="DocOtherBrush" Color="#FF7F8C8D" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
