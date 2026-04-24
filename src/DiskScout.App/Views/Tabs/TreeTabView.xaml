@@ -2,6 +2,45 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:DiskScout.Views.Controls"
+             xmlns:vm="clr-namespace:DiskScout.ViewModels"
              Background="{StaticResource BackgroundBrush}">
-    <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}" />
+    <Grid>
+        <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}"
+                                  Visibility="{Binding HasResults, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+        <TreeView ItemsSource="{Binding Roots}"
+                  Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  Background="{StaticResource BackgroundBrush}"
+                  Foreground="{StaticResource ForegroundBrush}"
+                  BorderThickness="0"
+                  VirtualizingStackPanel.IsVirtualizing="True"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  ScrollViewer.CanContentScroll="True">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type vm:TreeNodeViewModel}" ItemsSource="{Binding Children}">
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="260" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="140" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding SizeDisplay}"
+                                   Foreground="{StaticResource ForegroundSubtleBrush}"
+                                   VerticalAlignment="Center" Margin="12,0,12,0" />
+                        <Border Grid.Column="2" Height="10"
+                                Background="{StaticResource BackgroundElevatedBrush}" CornerRadius="2" VerticalAlignment="Center">
+                            <Border Background="{StaticResource AccentBrush}" CornerRadius="2"
+                                    HorizontalAlignment="Left" Width="{Binding SharePercent}" />
+                        </Border>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
 </UserControl>

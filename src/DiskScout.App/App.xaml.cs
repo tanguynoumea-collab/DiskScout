@@ -2,6 +2,7 @@ using System.Windows;
 using DiskScout.Helpers;
 using DiskScout.Services;
 using DiskScout.Services.Stubs;
+using DiskScout.Models;
 using DiskScout.ViewModels;
 using Serilog;
 using Serilog.Core;
@@ -21,22 +22,25 @@ public partial class App : Application
 
         _logger.Information("DiskScout starting (version {Version}).", typeof(App).Assembly.GetName().Version);
 
-        // Composition root — manual DI, no container.
-        IFileSystemScanner fileSystemScanner = new StubFileSystemScanner();
-        IInstalledProgramsScanner installedProgramsScanner = new StubInstalledProgramsScanner();
-        IOrphanDetectorService orphanDetectorService = new StubOrphanDetectorService();
-        IPersistenceService persistenceService = new StubPersistenceService();
-        IDeltaComparator deltaComparator = new StubDeltaComparator();
-        IExporter exporter = new StubExporter();
+        // Composition root — manual DI.
+        IDriveService driveService = new DriveService();
+        IFileSystemScanner fileSystemScanner = new NativeFileSystemScanner(_logger);
+        IInstalledProgramsScanner installedProgramsScanner = new RegistryInstalledProgramsScanner(_logger);
+        IOrphanDetectorService orphanDetectorService = new OrphanDetectorService(_logger);
+        IPersistenceService persistenceService = new JsonPersistenceService(_logger);
+        IDeltaComparator deltaComparator = new PathKeyedDeltaComparator();
+        ScanResult? lastScan = null;
+        IExporter exporter = new CsvHtmlExporter(() => lastScan);
 
         var mainViewModel = new MainViewModel(
             _logger,
+            driveService,
             fileSystemScanner,
             installedProgramsScanner,
             orphanDetectorService,
             persistenceService,
-            exporter: exporter,
-            deltaComparator: deltaComparator);
+            deltaComparator,
+            exporter);
 
         var mainWindow = new MainWindow(mainViewModel);
         mainWindow.Show();

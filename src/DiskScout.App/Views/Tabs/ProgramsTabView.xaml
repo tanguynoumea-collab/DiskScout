@@ -3,5 +3,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:DiskScout.Views.Controls"
              Background="{StaticResource BackgroundBrush}">
-    <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}" />
+    <Grid>
+        <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}"
+                                  Visibility="{Binding HasResults, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+        <DockPanel Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border DockPanel.Dock="Top" Padding="14,10" Background="{StaticResource BackgroundAltBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Recherche :" VerticalAlignment="Center" Margin="0,0,8,0"
+                               Foreground="{StaticResource ForegroundSubtleBrush}" />
+                    <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Background="{StaticResource BackgroundElevatedBrush}"
+                             Foreground="{StaticResource ForegroundBrush}"
+                             BorderBrush="{StaticResource BorderBrush}" Padding="6,4" />
+                    <TextBlock Grid.Column="2" Margin="14,0,0,0" VerticalAlignment="Center"
+                               Foreground="{StaticResource ForegroundSubtleBrush}">
+                        <Run Text="{Binding Count, Mode=OneWay}" />
+                        <Run Text=" programmes" />
+                    </TextBlock>
+                </Grid>
+            </Border>
+            <DataGrid ItemsSource="{Binding View}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      EnableRowVirtualization="True"
+                      EnableColumnVirtualization="True"
+                      CanUserAddRows="False" CanUserDeleteRows="False"
+                      HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                      Background="{StaticResource BackgroundBrush}"
+                      Foreground="{StaticResource ForegroundBrush}"
+                      BorderBrush="Transparent" BorderThickness="0"
+                      RowBackground="Transparent"
+                      AlternatingRowBackground="{StaticResource BackgroundAltBrush}"
+                      HorizontalGridLinesBrush="{StaticResource BorderBrush}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nom" Binding="{Binding DisplayName}" Width="2.5*" />
+                    <DataGridTextColumn Header="Éditeur" Binding="{Binding Publisher}" Width="2*" />
+                    <DataGridTextColumn Header="Version" Binding="{Binding Version}" Width="0.8*" />
+                    <DataGridTextColumn Header="Installé" Binding="{Binding InstallDate}" Width="0.8*" />
+                    <DataGridTextColumn Header="Taille" Binding="{Binding SizeDisplay}" Width="0.8*" SortMemberPath="SizeBytes" />
+                    <DataGridTextColumn Header="Chemin" Binding="{Binding InstallLocation}" Width="3*" />
+                    <DataGridTextColumn Header="Hive" Binding="{Binding Hive}" Width="1*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
 </UserControl>

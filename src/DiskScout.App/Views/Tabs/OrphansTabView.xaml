@@ -3,5 +3,54 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:DiskScout.Views.Controls"
              Background="{StaticResource BackgroundBrush}">
-    <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}" />
+    <Grid>
+        <controls:EmptyStatePanel Message="{Binding EmptyStateMessage}"
+                                  Visibility="{Binding HasResults, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+        <DockPanel Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border DockPanel.Dock="Top" Padding="14,10" Background="{StaticResource BackgroundAltBrush}">
+                <TextBlock Foreground="{StaticResource ForegroundSubtleBrush}">
+                    <Run Text="{Binding Count, Mode=OneWay}" /> <Run Text="rémanents détectés" />
+                </TextBlock>
+            </Border>
+            <ListBox ItemsSource="{Binding View}"
+                     Background="{StaticResource BackgroundBrush}"
+                     Foreground="{StaticResource ForegroundBrush}"
+                     BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     VirtualizingStackPanel.IsVirtualizing="True"
+                     VirtualizingStackPanel.VirtualizationMode="Recycling">
+                <ListBox.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource BackgroundAltBrush}" Padding="12,8" Margin="0,8,0,4">
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource AccentBrush}" />
+                                </Border>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListBox.GroupStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="12,6">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding FullPath}" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Reason}" FontSize="11"
+                                               Foreground="{StaticResource ForegroundSubtleBrush}" />
+                                </StackPanel>
+                                <TextBlock Grid.Column="1" Text="{Binding SizeDisplay}"
+                                           FontWeight="SemiBold" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </Grid>
 </UserControl>
