@@ -7,7 +7,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: Foundations & Launchable Shell** - Bootstrap models, helpers, logging, admin manifest, and an empty WPF shell that launches and shows three empty tabs
+- [x] **Phase 1: Foundations & Launchable Shell** - Bootstrap models, helpers, logging, admin manifest, and an empty WPF shell that launches and shows three empty tabs ✅
 - [ ] **Phase 2: FileSystem Scanner Core (P/Invoke)** - Trim-safe native scanner with reparse detection, long paths, bottom-up size aggregation, and cancellation — backend-only, unit-tested
 - [ ] **Phase 3: Registry & Orphan Detection** - Dual-view registry enumeration, two-stage fuzzy matching, and four orphan heuristic classifiers — backend-only, regression-tested
 - [ ] **Phase 4: UI Shell & Scan Orchestration** - Drive selection, Start/Cancel buttons, live throttled progress, scan orchestrator wiring backend scanners to the shell
