@@ -1,0 +1,23 @@
+{
+  "id": "jetbrains",
+  "publisherPattern": "(?i)^JetBrains",
+  "displayNamePattern": null,
+  "filesystemPaths": [
+    "%LocalAppData%\\JetBrains",
+    "%AppData%\\JetBrains",
+    "%LocalAppData%\\Programs\\{DisplayName}",
+    "%UserProfile%\\.IntelliJIdea*",
+    "%UserProfile%\\.PyCharm*",
+    "%UserProfile%\\.WebStorm*",
+    "%UserProfile%\\.PhpStorm*",
+    "%UserProfile%\\.GoLand*",
+    "%UserProfile%\\.Rider*",
+    "%UserProfile%\\.CLion*"
+  ],
+  "registryPaths": [
+    "HKCU\\Software\\JavaSoft\\Prefs\\jetbrains",
+    "HKCU\\Software\\JetBrains"
+  ],
+  "services": [],
+  "scheduledTasks": []
+}

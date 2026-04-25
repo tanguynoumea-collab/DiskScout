@@ -1,0 +1,20 @@
+{
+  "id": "microsoft-office",
+  "publisherPattern": "(?i)^Microsoft Corporation$",
+  "displayNamePattern": "(?i)(Office|Outlook|Word|Excel|PowerPoint|OneNote|Skype|Teams|OneDrive)",
+  "filesystemPaths": [
+    "%LocalAppData%\\Microsoft\\{DisplayName}",
+    "%AppData%\\Microsoft\\{DisplayName}",
+    "%LocalAppData%\\Microsoft\\Office",
+    "%AppData%\\Microsoft\\Office",
+    "%LocalAppData%\\Microsoft\\Teams",
+    "%LocalAppData%\\Microsoft\\OneDrive"
+  ],
+  "registryPaths": [
+    "HKCU\\Software\\Microsoft\\Office",
+    "HKLM\\SOFTWARE\\Microsoft\\Office",
+    "HKCU\\Software\\Microsoft\\OneDrive"
+  ],
+  "services": [],
+  "scheduledTasks": ["\\Microsoft\\Office", "\\Microsoft\\OneDrive"]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "adobe",
+  "publisherPattern": "(?i)^Adobe(\\s|$)",
+  "displayNamePattern": null,
+  "filesystemPaths": [
+    "%LocalAppData%\\Adobe",
+    "%AppData%\\Adobe",
+    "%ProgramData%\\Adobe",
+    "%ProgramFiles%\\Common Files\\Adobe",
+    "%ProgramFiles(x86)%\\Common Files\\Adobe"
+  ],
+  "registryPaths": [
+    "HKLM\\SOFTWARE\\Adobe",
+    "HKLM\\SOFTWARE\\WOW6432Node\\Adobe",
+    "HKCU\\Software\\Adobe"
+  ],
+  "services": ["AdobeARMservice", "AGSService", "AGMService", "AdobeUpdateService"],
+  "scheduledTasks": ["\\Adobe", "Adobe Acrobat Update Task"]
+}

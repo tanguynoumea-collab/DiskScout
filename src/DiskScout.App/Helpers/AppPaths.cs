@@ -8,6 +8,7 @@ public static class AppPaths
     public const string LogFileName = "diskscout.log";
     public const string ScansFolderName = "scans";
     public const string InstallTracesFolderName = "install-traces";
+    public const string PublisherRulesFolderName = "publisher-rules";
 
     public static string AppDataFolder
     {
@@ -37,6 +38,16 @@ public static class AppPaths
         get
         {
             var path = Path.Combine(AppDataFolder, InstallTracesFolderName);
+            Directory.CreateDirectory(path);
+            return path;
+        }
+    }
+
+    public static string PublisherRulesFolder
+    {
+        get
+        {
+            var path = Path.Combine(AppDataFolder, PublisherRulesFolderName);
             Directory.CreateDirectory(path);
             return path;
         }

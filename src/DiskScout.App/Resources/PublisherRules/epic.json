@@ -1,0 +1,17 @@
+{
+  "id": "epic-games",
+  "publisherPattern": "(?i)Epic Games",
+  "displayNamePattern": null,
+  "filesystemPaths": [
+    "%ProgramFiles%\\Epic Games",
+    "%LocalAppData%\\EpicGamesLauncher",
+    "%ProgramData%\\Epic"
+  ],
+  "registryPaths": [
+    "HKLM\\SOFTWARE\\Epic Games",
+    "HKLM\\SOFTWARE\\WOW6432Node\\Epic Games",
+    "HKCU\\Software\\Epic Games"
+  ],
+  "services": ["EpicOnlineServices"],
+  "scheduledTasks": []
+}

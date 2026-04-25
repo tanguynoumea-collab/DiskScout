@@ -41,4 +41,10 @@
     <Resource Include="Assets\DiskScout.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\PublisherRules\*.json">
+      <LogicalName>DiskScout.Resources.PublisherRules.%(Filename).json</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

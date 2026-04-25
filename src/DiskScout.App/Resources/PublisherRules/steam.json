@@ -1,0 +1,18 @@
+{
+  "id": "steam",
+  "publisherPattern": "(?i)Valve",
+  "displayNamePattern": "(?i)Steam",
+  "filesystemPaths": [
+    "%ProgramFiles(x86)%\\Steam",
+    "%ProgramFiles%\\Steam",
+    "%LocalAppData%\\Steam",
+    "%AppData%\\Steam"
+  ],
+  "registryPaths": [
+    "HKLM\\SOFTWARE\\Valve",
+    "HKLM\\SOFTWARE\\WOW6432Node\\Valve",
+    "HKCU\\Software\\Valve"
+  ],
+  "services": ["Steam Client Service"],
+  "scheduledTasks": []
+}

@@ -1,0 +1,19 @@
+{
+  "id": "mozilla",
+  "publisherPattern": "(?i)^Mozilla",
+  "displayNamePattern": null,
+  "filesystemPaths": [
+    "%LocalAppData%\\Mozilla",
+    "%AppData%\\Mozilla",
+    "%ProgramFiles%\\Mozilla Firefox",
+    "%ProgramFiles(x86)%\\Mozilla Firefox",
+    "%ProgramFiles%\\Mozilla Maintenance Service"
+  ],
+  "registryPaths": [
+    "HKLM\\SOFTWARE\\Mozilla",
+    "HKLM\\SOFTWARE\\WOW6432Node\\Mozilla",
+    "HKCU\\Software\\Mozilla"
+  ],
+  "services": ["MozillaMaintenance"],
+  "scheduledTasks": []
+}

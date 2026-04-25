@@ -1,0 +1,19 @@
+{
+  "id": "autodesk",
+  "publisherPattern": "(?i)^Autodesk",
+  "displayNamePattern": null,
+  "filesystemPaths": [
+    "%LocalAppData%\\Autodesk",
+    "%AppData%\\Autodesk",
+    "%ProgramData%\\Autodesk",
+    "%ProgramFiles%\\Autodesk",
+    "%ProgramFiles(x86)%\\Common Files\\Autodesk Shared"
+  ],
+  "registryPaths": [
+    "HKLM\\SOFTWARE\\Autodesk",
+    "HKLM\\SOFTWARE\\WOW6432Node\\Autodesk",
+    "HKCU\\Software\\Autodesk"
+  ],
+  "services": ["AdAppMgrSvc", "Autodesk Desktop App", "FNPLicensingService"],
+  "scheduledTasks": ["\\Autodesk"]
+}
