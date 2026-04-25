@@ -258,4 +258,213 @@ public class ResidueScannerTests : IDisposable
         sw.Stop();
         sw.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(2));
     }
+
+    // ----- Task 3 tests: MSI / Service / Scheduled task / Shell extension -----
+
+    [Fact]
+    public async Task MsiPatches_MatchesByPublisherFilenamePrefix()
+    {
+        // Synthetic Windows\Installer dir with two .msp files.
+        var fakeInstaller = CreateDir("FakeWindowsInstaller");
+        // RegistryKeyName for an MSI is typically a GUID. We seed an .msp whose filename
+        // starts with the same 8-char prefix to simulate the heuristic match.
+        var msiGuidPrefix = "AB12CDEF";
+        var matchingPatch = Path.Combine(fakeInstaller, $"{msiGuidPrefix}1234.msp");
+        File.WriteAllBytes(matchingPatch, new byte[8192]);
+        var unrelatedPatch = Path.Combine(fakeInstaller, "FFFFAAAA9999.msp");
+        File.WriteAllBytes(unrelatedPatch, new byte[8192]);
+
+        var scanner = new ResidueScanner(
+            _logger,
+            defaultFsRoots: Array.Empty<string>(),
+            defaultShortcutRoots: Array.Empty<string>(),
+            includeRegistry: false,
+            includeServices: false,
+            includeScheduledTasks: false,
+            includeShellExtensions: false,
+            includeMsiPatches: true,
+            registryTestPrefix: null,
+            windowsInstallerPath: fakeInstaller,
+            serviceEnumerator: null,
+            scheduledTaskEnumerator: null);
+
+        var target = new ResidueScanTarget(
+            DisplayName: "MyProduct",
+            Publisher: "MyVendor",
+            InstallLocation: null,
+            RegistryKeyName: $"{{{msiGuidPrefix}-AAAA-BBBB-CCCC-DDDDEEEEFFFF}}");
+
+        var findings = await scanner.ScanAsync(target, installTrace: null, progress: null, default);
+
+        findings.Should().Contain(f =>
+            f.Category == ResidueCategory.MsiPatch &&
+            string.Equals(f.Path, matchingPatch, StringComparison.OrdinalIgnoreCase) &&
+            f.SizeBytes > 0);
+        findings.Should().NotContain(f =>
+            string.Equals(f.Path, unrelatedPatch, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task Services_MatchesByPublisherSubstring_AndRespectsSafeServiceName()
+    {
+        // Note: AdobeARMservice's real-world BinaryPath lives under \Common Files\ which is on the
+        // whitelist (legit shared dir — Microsoft / Adobe / others all share it). Use a path
+        // outside Common Files for the heuristic-pass case.
+        var enumerator = new FakeServiceEnumerator(new (string, string, string?)[]
+        {
+            ("AdobeARMservice", "Adobe Acrobat Update Service",
+                @"C:\Program Files\Adobe\Acrobat DC\Acrobat\armsvc.exe"),
+            ("WinDefend", "Windows Defender Service", @"C:\Program Files\Windows Defender\MsMpEng.exe"),
+            ("Spooler", "Print Spooler", @"C:\Windows\System32\spoolsv.exe"),
+        });
+
+        var scanner = new ResidueScanner(
+            _logger,
+            defaultFsRoots: Array.Empty<string>(),
+            defaultShortcutRoots: Array.Empty<string>(),
+            includeRegistry: false,
+            includeServices: true,
+            includeScheduledTasks: false,
+            includeShellExtensions: false,
+            includeMsiPatches: false,
+            registryTestPrefix: null,
+            windowsInstallerPath: null,
+            serviceEnumerator: enumerator,
+            scheduledTaskEnumerator: null);
+
+        var target = new ResidueScanTarget(
+            DisplayName: "Acrobat",
+            Publisher: "Adobe",
+            InstallLocation: null,
+            RegistryKeyName: null);
+
+        var findings = await scanner.ScanAsync(target, installTrace: null, progress: null, default);
+
+        findings.Should().Contain(f =>
+            f.Category == ResidueCategory.Service &&
+            f.Path == "Service:AdobeARMservice");
+        findings.Should().NotContain(f =>
+            f.Category == ResidueCategory.Service && f.Path.Contains("WinDefend"));
+    }
+
+    [Fact]
+    public async Task ScheduledTasks_MatchByAuthorOrTaskPathContainsPublisher()
+    {
+        var enumerator = new FakeScheduledTaskEnumerator(new (string, string?, string?)[]
+        {
+            (@"\Adobe\Adobe Acrobat Update Task", "Adobe Inc.",
+                @"C:\Program Files\Adobe\Acrobat DC\AcroUpdate.exe"),
+            (@"\Microsoft\Windows\WindowsUpdate\sih", "Microsoft Corporation",
+                @"C:\Windows\System32\sihclient.exe"),
+        });
+
+        var scanner = new ResidueScanner(
+            _logger,
+            defaultFsRoots: Array.Empty<string>(),
+            defaultShortcutRoots: Array.Empty<string>(),
+            includeRegistry: false,
+            includeServices: false,
+            includeScheduledTasks: true,
+            includeShellExtensions: false,
+            includeMsiPatches: false,
+            registryTestPrefix: null,
+            windowsInstallerPath: null,
+            serviceEnumerator: null,
+            scheduledTaskEnumerator: enumerator);
+
+        var target = new ResidueScanTarget(
+            DisplayName: "Acrobat",
+            Publisher: "Adobe",
+            InstallLocation: null,
+            RegistryKeyName: null);
+
+        var findings = await scanner.ScanAsync(target, installTrace: null, progress: null, default);
+
+        findings.Should().Contain(f =>
+            f.Category == ResidueCategory.ScheduledTask &&
+            f.Path.Contains("Adobe Acrobat Update Task", StringComparison.OrdinalIgnoreCase));
+        // The Microsoft entry must NOT be reported — its path contains \Windows\System32 (whitelist),
+        // and even at the action-path level the publisher fuzzy doesn't match "Adobe".
+        findings.Should().NotContain(f =>
+            f.Category == ResidueCategory.ScheduledTask && f.Path.Contains("sihclient",
+                StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task ShellExtensions_FlagsClsidWhoseInprocServerLivesUnderInstallLocation()
+    {
+        // Build a fake install location and a synthetic CLSID under HKCU\Software\<TestRoot>\Classes\CLSID.
+        var installRoot = CreateDir("FakeInstallRoot", "MyVendor", "MyProduct");
+        var dllPath = Path.Combine(installRoot, "shellext.dll");
+        File.WriteAllBytes(dllPath, new byte[2048]);
+
+        var testRootName = "DiskScoutTestShell_" + Guid.NewGuid().ToString("N");
+        _hkcuKeysToCleanup.Add("Software\\" + testRootName);
+
+        var clsidGuid = "{11111111-2222-3333-4444-555555555555}";
+        using (var clsidKey = Registry.CurrentUser.CreateSubKey(
+            $@"Software\{testRootName}\Classes\CLSID\{clsidGuid}\InprocServer32", writable: true))
+        {
+            clsidKey!.SetValue("", dllPath);
+        }
+        // A control CLSID whose InprocServer32 path lies OUTSIDE the install root.
+        var unrelatedGuid = "{22222222-3333-4444-5555-666666666666}";
+        using (var clsidKey = Registry.CurrentUser.CreateSubKey(
+            $@"Software\{testRootName}\Classes\CLSID\{unrelatedGuid}\InprocServer32", writable: true))
+        {
+            clsidKey!.SetValue("", @"C:\SomeOtherVendor\helper.dll");
+        }
+
+        var scanner = new ResidueScanner(
+            _logger,
+            defaultFsRoots: Array.Empty<string>(),
+            defaultShortcutRoots: Array.Empty<string>(),
+            includeRegistry: false,
+            includeServices: false,
+            includeScheduledTasks: false,
+            includeShellExtensions: true,
+            includeMsiPatches: false,
+            registryTestPrefix: null,
+            windowsInstallerPath: null,
+            serviceEnumerator: null,
+            scheduledTaskEnumerator: null,
+            shellExtensionTestPrefix: $@"Software\{testRootName}\Classes\CLSID");
+
+        var target = new ResidueScanTarget(
+            DisplayName: "MyProduct",
+            Publisher: "MyVendor",
+            InstallLocation: installRoot,
+            RegistryKeyName: null);
+
+        var findings = await scanner.ScanAsync(target, installTrace: null, progress: null, default);
+
+        findings.Should().Contain(f =>
+            f.Category == ResidueCategory.ShellExtension &&
+            f.Path.Contains(clsidGuid, StringComparison.OrdinalIgnoreCase));
+        findings.Should().NotContain(f =>
+            f.Category == ResidueCategory.ShellExtension &&
+            f.Path.Contains(unrelatedGuid, StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
+    /// Hand-written fake for IServiceEnumerator (no Moq — project policy forbids new NuGet packages).
+    /// </summary>
+    private sealed class FakeServiceEnumerator : IServiceEnumerator
+    {
+        private readonly List<(string Name, string DisplayName, string? BinaryPath)> _services;
+        public FakeServiceEnumerator(IEnumerable<(string Name, string DisplayName, string? BinaryPath)> services)
+            => _services = services.ToList();
+        public IEnumerable<(string Name, string DisplayName, string? BinaryPath)> EnumerateServices() => _services;
+    }
+
+    /// <summary>
+    /// Hand-written fake for IScheduledTaskEnumerator (no Moq — project policy forbids new NuGet packages).
+    /// </summary>
+    private sealed class FakeScheduledTaskEnumerator : IScheduledTaskEnumerator
+    {
+        private readonly List<(string TaskPath, string? Author, string? ActionPath)> _tasks;
+        public FakeScheduledTaskEnumerator(IEnumerable<(string TaskPath, string? Author, string? ActionPath)> tasks)
+            => _tasks = tasks.ToList();
+        public IEnumerable<(string TaskPath, string? Author, string? ActionPath)> EnumerateTasks() => _tasks;
+    }
 }

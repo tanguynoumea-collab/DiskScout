@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using DiskScout.Helpers;
 using DiskScout.Models;
@@ -5,6 +6,26 @@ using Microsoft.Win32;
 using Serilog;
 
 namespace DiskScout.Services;
+
+/// <summary>
+/// Abstraction over the Windows service enumerator. Lets tests inject deterministic
+/// service fixtures without spinning up real services. The default implementation
+/// (<see cref="WmiServiceEnumerator"/>) reads <see cref="ServiceController.GetServices"/>.
+/// </summary>
+internal interface IServiceEnumerator
+{
+    IEnumerable<(string Name, string DisplayName, string? BinaryPath)> EnumerateServices();
+}
+
+/// <summary>
+/// Abstraction over the scheduled-task enumerator. Lets tests inject deterministic
+/// task fixtures without launching schtasks.exe. The default implementation
+/// (<see cref="SchTasksEnumerator"/>) shells out to schtasks /query /fo CSV /v.
+/// </summary>
+internal interface IScheduledTaskEnumerator
+{
+    IEnumerable<(string TaskPath, string? Author, string? ActionPath)> EnumerateTasks();
+}
 
 /// <summary>
 /// Post-uninstall residue scanner — scans seven surfaces for artifacts left behind by a uninstalled
@@ -60,6 +81,22 @@ public sealed class ResidueScanner : IResidueScanner
     /// </summary>
     private readonly string? _registryTestPrefix;
 
+    /// <summary>Override for the Windows\Installer scan root (defaults to %WINDIR%\Installer).</summary>
+    private readonly string _windowsInstallerPath;
+
+    /// <summary>Service enumerator (defaults to ServiceController.GetServices()).</summary>
+    private readonly IServiceEnumerator _serviceEnumerator;
+
+    /// <summary>Scheduled-task enumerator (defaults to schtasks /query /fo CSV /v parser).</summary>
+    private readonly IScheduledTaskEnumerator _scheduledTaskEnumerator;
+
+    /// <summary>
+    /// When non-null, the shell-extension scan walks this single HKCU prefix (under which the
+    /// test creates synthetic CLSID\{guid}\InprocServer32 keys). When null, the real
+    /// HKLM\SOFTWARE\Classes\CLSID hive is enumerated. Test-only knob.
+    /// </summary>
+    private readonly string? _shellExtensionTestPrefix;
+
     /// <summary>Production constructor: uses real environment paths and full registry enumeration.</summary>
     public ResidueScanner(ILogger logger)
         : this(logger, defaultFsRoots: null, defaultShortcutRoots: null) { }
@@ -77,7 +114,11 @@ public sealed class ResidueScanner : IResidueScanner
         bool includeScheduledTasks = true,
         bool includeShellExtensions = true,
         bool includeMsiPatches = true,
-        string? registryTestPrefix = null)
+        string? registryTestPrefix = null,
+        string? windowsInstallerPath = null,
+        IServiceEnumerator? serviceEnumerator = null,
+        IScheduledTaskEnumerator? scheduledTaskEnumerator = null,
+        string? shellExtensionTestPrefix = null)
     {
         _logger = logger;
         _filesystemRoots = defaultFsRoots ?? DefaultFilesystemRoots();
@@ -88,6 +129,11 @@ public sealed class ResidueScanner : IResidueScanner
         _includeShellExtensions = includeShellExtensions;
         _includeMsiPatches = includeMsiPatches;
         _registryTestPrefix = registryTestPrefix;
+        _windowsInstallerPath = windowsInstallerPath ??
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Installer");
+        _serviceEnumerator = serviceEnumerator ?? new WmiServiceEnumerator(logger);
+        _scheduledTaskEnumerator = scheduledTaskEnumerator ?? new SchTasksEnumerator(logger);
+        _shellExtensionTestPrefix = shellExtensionTestPrefix;
     }
 
     public Task<IReadOnlyList<ResidueFinding>> ScanAsync(
@@ -461,30 +507,457 @@ public sealed class ResidueScanner : IResidueScanner
         }
     }
 
-    // ---------- Task 3 stubs (populated in next commit) ----------
+    // ---------- MSI patch scan ----------
 
-    private void ScanMsiPatches(ResidueScanTarget target, List<ResidueFinding> findings,
-        HashSet<string> seen, CancellationToken ct)
+    /// <summary>
+    /// Walks <c>%WINDIR%\Installer\*.msp</c> for MSI patches whose filename's first 8 hex
+    /// characters match the target's RegistryKeyName GUID prefix (heuristic — full PatchInfo
+    /// metadata extraction is intentionally NOT performed to avoid linking against MsiOpenDatabase).
+    /// </summary>
+    private void ScanMsiPatches(
+        ResidueScanTarget target,
+        List<ResidueFinding> findings,
+        HashSet<string> seen,
+        CancellationToken ct)
     {
-        // Populated by Task 3 (MSI patch heuristic against C:\Windows\Installer\*.msp).
+        if (string.IsNullOrWhiteSpace(_windowsInstallerPath) || !Directory.Exists(_windowsInstallerPath))
+            return;
+
+        // Strip leading '{' and any non-hex chars from RegistryKeyName to get a comparable prefix.
+        var keyName = target.RegistryKeyName ?? string.Empty;
+        var guidPrefix = ExtractGuidPrefix(keyName);
+        if (string.IsNullOrEmpty(guidPrefix)) return;
+
+        IEnumerable<string> patches;
+        try
+        {
+            patches = Directory.EnumerateFiles(_windowsInstallerPath, "*.msp", SearchOption.TopDirectoryOnly);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.Warning(ex, "MSI patch scan unauthorized at {Path}", _windowsInstallerPath);
+            return;
+        }
+        catch (IOException ex) { _logger.Warning(ex, "MSI patch scan IO error at {Path}", _windowsInstallerPath); return; }
+
+        foreach (var patch in patches)
+        {
+            ct.ThrowIfCancellationRequested();
+            var fileName = Path.GetFileNameWithoutExtension(patch);
+            if (string.IsNullOrEmpty(fileName)) continue;
+
+            if (!fileName.StartsWith(guidPrefix, StringComparison.OrdinalIgnoreCase)) continue;
+
+            long size = TryGetFileSize(patch);
+            TryAdd(findings, seen, new ResidueFinding(
+                Category: ResidueCategory.MsiPatch,
+                Path: patch,
+                SizeBytes: size,
+                Reason: $"MSI patch '{fileName}.msp' shares GUID prefix '{guidPrefix}' with target's RegistryKeyName.",
+                Trust: ResidueTrustLevel.MediumConfidence,
+                Source: ResidueSource.NameHeuristic));
+        }
     }
 
-    private void ScanServices(ResidueScanTarget target, List<ResidueFinding> findings,
-        HashSet<string> seen, CancellationToken ct)
+    private static string ExtractGuidPrefix(string keyName)
     {
-        // Populated by Task 3 (System.ServiceProcess.ServiceController + IsSafeServiceName).
+        // Accept GUIDs with or without enclosing braces. Take the first 8 hex chars after any '{'.
+        var trimmed = keyName.TrimStart('{');
+        var prefix = new char[8];
+        int filled = 0;
+        foreach (var c in trimmed)
+        {
+            if (filled == 8) break;
+            if (Uri.IsHexDigit(c)) prefix[filled++] = c;
+            else if (c != '-') break;
+        }
+        return filled == 8 ? new string(prefix) : string.Empty;
     }
 
-    private void ScanScheduledTasks(ResidueScanTarget target, List<ResidueFinding> findings,
-        HashSet<string> seen, CancellationToken ct)
+    // ---------- Service scan ----------
+
+    /// <summary>
+    /// Iterates every Windows service from <see cref="IServiceEnumerator"/>. A service is a
+    /// candidate if its Name contains the publisher (or its DisplayName contains the program
+    /// DisplayName, or its ImagePath starts with InstallLocation) AND
+    /// <see cref="ResiduePathSafety.IsSafeServiceName"/> returns true.
+    /// </summary>
+    private void ScanServices(
+        ResidueScanTarget target,
+        List<ResidueFinding> findings,
+        HashSet<string> seen,
+        CancellationToken ct)
     {
-        // Populated by Task 3 (schtasks.exe /query /fo CSV /v parsing).
+        const StringComparison OIC = StringComparison.OrdinalIgnoreCase;
+
+        foreach (var svc in _serviceEnumerator.EnumerateServices())
+        {
+            ct.ThrowIfCancellationRequested();
+            if (string.IsNullOrWhiteSpace(svc.Name)) continue;
+            if (!ResiduePathSafety.IsSafeServiceName(svc.Name)) continue;
+
+            bool nameMatch = !string.IsNullOrWhiteSpace(target.Publisher) &&
+                             svc.Name.Contains(target.Publisher!, OIC);
+            bool displayMatch = !string.IsNullOrWhiteSpace(target.DisplayName) &&
+                                !string.IsNullOrWhiteSpace(svc.DisplayName) &&
+                                svc.DisplayName.Contains(target.DisplayName, OIC);
+            bool binaryMatch = !string.IsNullOrWhiteSpace(target.InstallLocation) &&
+                               !string.IsNullOrWhiteSpace(svc.BinaryPath) &&
+                               svc.BinaryPath!.StartsWith(target.InstallLocation!, OIC);
+
+            if (!(nameMatch || displayMatch || binaryMatch)) continue;
+
+            // ResiduePathSafety also checks the BinaryPath — if the binary lives in a critical
+            // directory, refuse to propose deletion of the service.
+            if (!string.IsNullOrWhiteSpace(svc.BinaryPath) && !ResiduePathSafety.IsSafeToPropose(svc.BinaryPath!))
+            {
+                _logger.Debug("Service {Name} skipped: binary {Path} hits whitelist", svc.Name, svc.BinaryPath);
+                continue;
+            }
+
+            string reason = nameMatch
+                ? $"Service name '{svc.Name}' contains publisher '{target.Publisher}'."
+                : displayMatch
+                    ? $"Service display name '{svc.DisplayName}' contains '{target.DisplayName}'."
+                    : $"Service binary path lives under InstallLocation '{target.InstallLocation}'.";
+
+            TryAdd(findings, seen, new ResidueFinding(
+                Category: ResidueCategory.Service,
+                Path: $"Service:{svc.Name}",
+                SizeBytes: 0,
+                Reason: reason,
+                Trust: ResidueTrustLevel.MediumConfidence,
+                Source: ResidueSource.NameHeuristic));
+        }
     }
 
-    private void ScanShellExtensions(ResidueScanTarget target, List<ResidueFinding> findings,
-        HashSet<string> seen, CancellationToken ct)
+    // ---------- Scheduled task scan ----------
+
+    /// <summary>
+    /// Iterates every scheduled task from <see cref="IScheduledTaskEnumerator"/>. A task is a
+    /// candidate if its Author contains the publisher, its TaskPath contains the publisher, OR
+    /// its ActionPath starts with InstallLocation. Whitelist-filtered before emit.
+    /// </summary>
+    private void ScanScheduledTasks(
+        ResidueScanTarget target,
+        List<ResidueFinding> findings,
+        HashSet<string> seen,
+        CancellationToken ct)
     {
-        // Populated by Task 3 (HKLM\SOFTWARE\Classes\CLSID\*\InprocServer32 walk).
+        const StringComparison OIC = StringComparison.OrdinalIgnoreCase;
+
+        foreach (var task in _scheduledTaskEnumerator.EnumerateTasks())
+        {
+            ct.ThrowIfCancellationRequested();
+            if (string.IsNullOrWhiteSpace(task.TaskPath)) continue;
+
+            bool authorMatch = !string.IsNullOrWhiteSpace(target.Publisher) &&
+                               !string.IsNullOrWhiteSpace(task.Author) &&
+                               task.Author!.Contains(target.Publisher!, OIC);
+            bool taskPathMatch = !string.IsNullOrWhiteSpace(target.Publisher) &&
+                                 task.TaskPath.Contains(target.Publisher!, OIC);
+            bool actionPathMatch = !string.IsNullOrWhiteSpace(target.InstallLocation) &&
+                                   !string.IsNullOrWhiteSpace(task.ActionPath) &&
+                                   task.ActionPath!.StartsWith(target.InstallLocation!, OIC);
+
+            if (!(authorMatch || taskPathMatch || actionPathMatch)) continue;
+
+            // Reject if the action path is on the critical-system whitelist.
+            if (!string.IsNullOrWhiteSpace(task.ActionPath) && !ResiduePathSafety.IsSafeToPropose(task.ActionPath!))
+            {
+                _logger.Debug("Scheduled task {TaskPath} skipped: action {Action} hits whitelist",
+                    task.TaskPath, task.ActionPath);
+                continue;
+            }
+
+            string reason = authorMatch
+                ? $"Task author '{task.Author}' contains publisher '{target.Publisher}'."
+                : taskPathMatch
+                    ? $"Task path '{task.TaskPath}' contains publisher '{target.Publisher}'."
+                    : $"Task action path lives under InstallLocation '{target.InstallLocation}'.";
+
+            TryAdd(findings, seen, new ResidueFinding(
+                Category: ResidueCategory.ScheduledTask,
+                Path: $"ScheduledTask:{task.TaskPath}",
+                SizeBytes: 0,
+                Reason: reason,
+                Trust: ResidueTrustLevel.MediumConfidence,
+                Source: ResidueSource.NameHeuristic));
+        }
+    }
+
+    // ---------- Shell extension scan ----------
+
+    /// <summary>
+    /// Walks every CLSID under HKLM\SOFTWARE\Classes\CLSID and inspects its InprocServer32
+    /// default value. A finding is emitted if the InprocServer32 DLL path lives under the
+    /// target's InstallLocation. In test mode, walks the injected HKCU prefix instead.
+    /// </summary>
+    private void ScanShellExtensions(
+        ResidueScanTarget target,
+        List<ResidueFinding> findings,
+        HashSet<string> seen,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(target.InstallLocation)) return;
+        if (!ResiduePathSafety.IsSafeToPropose(target.InstallLocation!))
+        {
+            // If the install location itself is on the critical whitelist, refuse to scan
+            // shell extensions for it (no third-party shell ext lives at the OS layer).
+            return;
+        }
+
+        if (_shellExtensionTestPrefix is not null)
+        {
+            ScanShellExtensionsAtPrefix(
+                Registry.CurrentUser,
+                _shellExtensionTestPrefix,
+                hivePrefixForReporting: $"HKCU\\{_shellExtensionTestPrefix}",
+                target,
+                findings,
+                seen,
+                ct);
+            return;
+        }
+
+        try
+        {
+            using var root = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
+            ScanShellExtensionsAtPrefix(
+                root,
+                @"SOFTWARE\Classes\CLSID",
+                hivePrefixForReporting: @"HKLM\SOFTWARE\Classes\CLSID",
+                target,
+                findings,
+                seen,
+                ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning(ex, "Shell extension scan failed at HKLM\\SOFTWARE\\Classes\\CLSID");
+        }
+    }
+
+    private void ScanShellExtensionsAtPrefix(
+        RegistryKey baseKey,
+        string subPath,
+        string hivePrefixForReporting,
+        ResidueScanTarget target,
+        List<ResidueFinding> findings,
+        HashSet<string> seen,
+        CancellationToken ct)
+    {
+        using var clsidRoot = baseKey.OpenSubKey(subPath, writable: false);
+        if (clsidRoot is null) return;
+
+        foreach (var clsidName in clsidRoot.GetSubKeyNames())
+        {
+            ct.ThrowIfCancellationRequested();
+            try
+            {
+                using var clsidKey = clsidRoot.OpenSubKey(clsidName, writable: false);
+                if (clsidKey is null) continue;
+                using var inproc = clsidKey.OpenSubKey("InprocServer32", writable: false);
+                if (inproc is null) continue;
+
+                var dllPath = inproc.GetValue("") as string;
+                if (string.IsNullOrWhiteSpace(dllPath)) continue;
+
+                // Strip surrounding quotes that some installers add.
+                dllPath = dllPath.Trim().Trim('"');
+                if (string.IsNullOrEmpty(dllPath)) continue;
+
+                if (!dllPath.StartsWith(target.InstallLocation!, StringComparison.OrdinalIgnoreCase)) continue;
+
+                var fullClsidPath = $"{hivePrefixForReporting}\\{clsidName}";
+                TryAdd(findings, seen, new ResidueFinding(
+                    Category: ResidueCategory.ShellExtension,
+                    Path: fullClsidPath,
+                    SizeBytes: 0,
+                    Reason: $"Shell extension CLSID points InprocServer32 at '{dllPath}' under InstallLocation '{target.InstallLocation}'.",
+                    Trust: ResidueTrustLevel.MediumConfidence,
+                    Source: ResidueSource.NameHeuristic));
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug(ex, "Failed to inspect CLSID subkey {Clsid}", clsidName);
+            }
+        }
+    }
+
+    // ---------- Default enumerator implementations ----------
+
+    /// <summary>
+    /// Default implementation of <see cref="IServiceEnumerator"/> backed by direct enumeration
+    /// of <c>HKLM\SYSTEM\CurrentControlSet\Services</c>. Each subkey is a service; DisplayName
+    /// and ImagePath are values on that subkey.
+    /// </summary>
+    /// <remarks>
+    /// We enumerate the registry rather than calling <c>ServiceController.GetServices()</c> to
+    /// avoid taking a dependency on the <c>System.ServiceProcess.ServiceController</c> NuGet
+    /// package (project policy: no new packages — see Plan 09-01 SUMMARY).
+    /// </remarks>
+    private sealed class WmiServiceEnumerator : IServiceEnumerator
+    {
+        private readonly ILogger _logger;
+        public WmiServiceEnumerator(ILogger logger) => _logger = logger;
+
+        public IEnumerable<(string Name, string DisplayName, string? BinaryPath)> EnumerateServices()
+        {
+            RegistryKey? root = null;
+            RegistryKey? servicesKey = null;
+            string[] subKeyNames;
+            try
+            {
+                root = RegistryKey.OpenBaseKey(
+                    Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
+                servicesKey = root.OpenSubKey(@"SYSTEM\CurrentControlSet\Services", writable: false);
+                if (servicesKey is null) yield break;
+                subKeyNames = servicesKey.GetSubKeyNames();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warning(ex, "Failed to open HKLM\\SYSTEM\\CurrentControlSet\\Services");
+                root?.Dispose();
+                servicesKey?.Dispose();
+                yield break;
+            }
+
+            try
+            {
+                foreach (var serviceName in subKeyNames)
+                {
+                    string? displayName = null;
+                    string? binaryPath = null;
+                    try
+                    {
+                        using var key = servicesKey.OpenSubKey(serviceName, writable: false);
+                        if (key is null) continue;
+                        displayName = key.GetValue("DisplayName") as string;
+                        binaryPath = key.GetValue("ImagePath") as string;
+                        if (!string.IsNullOrWhiteSpace(binaryPath))
+                        {
+                            binaryPath = binaryPath.Trim();
+                            // ImagePath often starts with '\??\' or is quoted; strip prefix + quotes.
+                            if (binaryPath.StartsWith(@"\??\", StringComparison.Ordinal)) binaryPath = binaryPath[4..];
+                            binaryPath = binaryPath.Trim('"');
+                            var spaceIdx = binaryPath.IndexOf(' ');
+                            if (spaceIdx > 0 && binaryPath[0] != '"') binaryPath = binaryPath[..spaceIdx];
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Debug(ex, "Failed to read service {Name}", serviceName);
+                        continue;
+                    }
+                    yield return (serviceName, displayName ?? serviceName, binaryPath);
+                }
+            }
+            finally
+            {
+                servicesKey.Dispose();
+                root.Dispose();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Default implementation of <see cref="IScheduledTaskEnumerator"/> that shells out to
+    /// <c>schtasks.exe /query /fo CSV /v</c> and parses the verbose CSV output.
+    /// Times out after 10 seconds.
+    /// </summary>
+    private sealed class SchTasksEnumerator : IScheduledTaskEnumerator
+    {
+        private readonly ILogger _logger;
+        public SchTasksEnumerator(ILogger logger) => _logger = logger;
+
+        public IEnumerable<(string TaskPath, string? Author, string? ActionPath)> EnumerateTasks()
+        {
+            string output;
+            try
+            {
+                var psi = new ProcessStartInfo("schtasks.exe", "/query /fo CSV /v")
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+                using var p = Process.Start(psi);
+                if (p is null) yield break;
+                output = p.StandardOutput.ReadToEnd();
+                if (!p.WaitForExit(10_000))
+                {
+                    try { p.Kill(); } catch { /* best-effort */ }
+                    _logger.Warning("schtasks.exe timed out after 10s; results may be incomplete");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warning(ex, "schtasks.exe failed to launch");
+                yield break;
+            }
+
+            // Parse CSV: first line = headers, subsequent lines = tasks.
+            // Columns of interest: "TaskName", "Author", "Task To Run".
+            using var reader = new StringReader(output);
+            string? headerLine = reader.ReadLine();
+            if (string.IsNullOrEmpty(headerLine)) yield break;
+
+            var headers = ParseCsvLine(headerLine);
+            int idxTaskName = headers.FindIndex(h => string.Equals(h, "TaskName", StringComparison.OrdinalIgnoreCase));
+            int idxAuthor   = headers.FindIndex(h => string.Equals(h, "Author",   StringComparison.OrdinalIgnoreCase));
+            int idxAction   = headers.FindIndex(h =>
+                string.Equals(h, "Task To Run", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(h, "Action",      StringComparison.OrdinalIgnoreCase));
+
+            if (idxTaskName < 0) yield break;
+
+            string? line;
+            while ((line = reader.ReadLine()) is not null)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                if (line.StartsWith("\"TaskName\"", StringComparison.OrdinalIgnoreCase)) continue; // repeat headers per folder
+
+                var fields = ParseCsvLine(line);
+                if (fields.Count <= idxTaskName) continue;
+                var taskPath = fields[idxTaskName];
+                if (string.IsNullOrWhiteSpace(taskPath)) continue;
+
+                string? author = idxAuthor >= 0 && idxAuthor < fields.Count ? fields[idxAuthor] : null;
+                string? action = idxAction >= 0 && idxAction < fields.Count ? fields[idxAction] : null;
+
+                yield return (taskPath, author, action);
+            }
+        }
+
+        /// <summary>Minimal RFC-4180 CSV line parser for schtasks output (no embedded newlines expected).</summary>
+        private static List<string> ParseCsvLine(string line)
+        {
+            var result = new List<string>(16);
+            var current = new System.Text.StringBuilder();
+            bool inQuotes = false;
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (inQuotes)
+                {
+                    if (c == '"')
+                    {
+                        if (i + 1 < line.Length && line[i + 1] == '"') { current.Append('"'); i++; }
+                        else inQuotes = false;
+                    }
+                    else current.Append(c);
+                }
+                else
+                {
+                    if (c == ',') { result.Add(current.ToString()); current.Clear(); }
+                    else if (c == '"') inQuotes = true;
+                    else current.Append(c);
+                }
+            }
+            result.Add(current.ToString());
+            return result;
+        }
     }
 
     // ---------- Helpers ----------
