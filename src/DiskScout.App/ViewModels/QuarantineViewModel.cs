@@ -92,6 +92,24 @@ public sealed partial class QuarantineViewModel : ObservableObject
             "DiskScout", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
     }
 
+    [RelayCommand]
+    private async Task PurgeAllAsync()
+    {
+        var result = System.Windows.MessageBox.Show(
+            $"Purger définitivement TOUTES les entrées de quarantaine ({Count} entrée(s), {Fmt(TotalBytes)}) ?\n\n" +
+            "Aucune restauration ne sera plus possible.\nCette action est IRRÉVERSIBLE.",
+            "DiskScout — tout purger maintenant",
+            System.Windows.MessageBoxButton.OKCancel,
+            System.Windows.MessageBoxImage.Warning);
+        if (result != System.Windows.MessageBoxResult.OK) return;
+
+        var freed = await _quarantine.PurgeAsync(TimeSpan.Zero);
+        await RefreshAsync();
+        System.Windows.MessageBox.Show(
+            $"Purge totale : {Fmt(freed)} libérés définitivement.",
+            "DiskScout", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+    }
+
     private static string Fmt(long bytes)
     {
         if (bytes <= 0) return "0 o";
