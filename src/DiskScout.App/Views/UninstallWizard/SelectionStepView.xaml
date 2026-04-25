@@ -28,15 +28,15 @@
                                Foreground="{StaticResource ForegroundBrush}" />
                     <TextBlock Margin="0,4,0,0" Foreground="{StaticResource ForegroundSubtleBrush}">
                         <Run Text="Éditeur : " />
-                        <Run Text="{Binding Target.Publisher}" FontWeight="SemiBold" />
+                        <Run Text="{Binding Target.Publisher, Mode=OneWay}" FontWeight="SemiBold" />
                     </TextBlock>
                     <TextBlock Margin="0,2,0,0" Foreground="{StaticResource ForegroundSubtleBrush}">
                         <Run Text="Version : " />
-                        <Run Text="{Binding Target.Version}" />
+                        <Run Text="{Binding Target.Version, Mode=OneWay}" />
                     </TextBlock>
                     <TextBlock Margin="0,2,0,0" Foreground="{StaticResource ForegroundSubtleBrush}">
                         <Run Text="Chemin : " />
-                        <Run Text="{Binding Target.InstallLocation}" />
+                        <Run Text="{Binding Target.InstallLocation, Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
             </Border>
@@ -50,7 +50,7 @@
                                Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,6" />
                     <TextBlock Foreground="{StaticResource ForegroundSubtleBrush}">
                         <Run Text="Règles éditeur : " />
-                        <Run Text="{Binding MatchedRulesSummary}" FontWeight="SemiBold" />
+                        <Run Text="{Binding MatchedRulesSummary, Mode=OneWay}" FontWeight="SemiBold" />
                     </TextBlock>
                 </StackPanel>
             </Border>
