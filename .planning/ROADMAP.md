@@ -149,7 +149,7 @@
 **Plans:** 6 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Install Tracker (FileSystemWatcher + RegNotifyChangeKeyValue + JSON trace store)
+- [x] 09-01-PLAN.md — Install Tracker (FileSystemWatcher + RegNotifyChangeKeyValue + JSON trace store) ✅ 2026-04-25 (commits 342b7b7 / 94a1b89 / 4a39106 — 12 tests passing)
 - [ ] 09-02-PLAN.md — Native Uninstaller Driver (parser MSI/Inno/NSIS + Job-Object tree-kill + 30 min timeout + IProgress<string> output streaming)
 - [ ] 09-03-PLAN.md — Residue Scanner (7 catégories : registre, FS, raccourcis, MSI patches, services, tâches planifiées, shell extensions) + ResiduePathSafety whitelist
 - [ ] 09-04-PLAN.md — Publisher Rule Engine (7 règles embarquées : Adobe, Autodesk, JetBrains, Mozilla, Microsoft, Steam, Epic + extensions utilisateur)
@@ -158,4 +158,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-04-24*
-*Last updated: 2026-04-25 after Phase 9 plan-phase decomposition*
+*Last updated: 2026-04-25 after Plan 09-01 (Install Tracker) execution*

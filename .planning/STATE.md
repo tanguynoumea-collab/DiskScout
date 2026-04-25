@@ -1,20 +1,37 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: executing
+last_updated: "2026-04-25T15:27:26.153Z"
+progress:
+  total_phases: 9
+  completed_phases: 0
+  total_plans: 6
+  completed_plans: 2
+  percent: 33
+---
+
 # STATE: DiskScout
 
-**Last updated:** 2026-04-24
+**Last updated:** 2026-04-25
 
 ## Project Reference
 
 **Core Value:** Montrer clairement où va l'espace disque et identifier les rémanents — sans jamais rien supprimer. L'utilisateur supprime lui-même ailleurs (Explorateur, PowerShell) après analyse.
 
-**Current Focus:** Initial v1 milestone — ship a portable read-only Windows disk analyzer combining registry-driven installed-program inventory, orphan/remnant detection, and size-sorted filesystem tree in a single `.exe`.
+**Current Focus:** Phase 09 — programs-tab-real-uninstaller-assistant
 
 ## Current Position
 
-- **Milestone:** v1 (initial release)
-- **Phase:** 1 of 8 — Foundations & Launchable Shell
-- **Plan:** Not started (pending `/gsd:plan-phase 1`)
-- **Status:** Roadmap approved, awaiting first plan
-- **Progress:** 0/8 phases complete
+Phase: 09 (programs-tab-real-uninstaller-assistant) — EXECUTING
+Plan: 2 of 6 (next: 09-02 Native Uninstaller Driver)
+
+- **Milestone:** v1.1 (post-v1, Programs-tab uninstaller assistant)
+- **Phase:** 9 of 9 — Programs Tab Real Uninstaller Assistant
+- **Plan:** 09-01 completed (Install Tracker)
+- **Status:** Executing Phase 09
+- **Progress:** [███░░░░░░░] 33%
 
 ```
 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
@@ -59,6 +76,7 @@
 ### Roadmap Evolution
 
 - Phase 9 added: Programs Tab Real Uninstaller Assistant (Revo-Pro-style — install tracker temps réel + native uninstaller driver + residue scanner + publisher rule engine + wizard UI). User decisions locked: extend registry scan, Revo-Pro level, direct delete (no quarantine).
+- 2026-04-25: Plan 09-01 (Install Tracker) completed — IInstallTracker + IInstallTraceStore contracts + JsonInstallTraceStore + InstallTracker (FileSystemWatcher + RegNotifyChangeKeyValue P/Invoke) + 12 passing tests. See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-01-SUMMARY.md`.
 
 ### Blockers
 
@@ -74,14 +92,14 @@ None.
 
 ### Last Session
 
-- **Date:** 2026-04-24
-- **Action:** Project initialization — PROJECT.md, REQUIREMENTS.md (37 items), research (SUMMARY/STACK/ARCHITECTURE/PITFALLS), ROADMAP.md (8 phases), STATE.md written
-- **Outcome:** Roadmap created with 100% requirement coverage, ready for plan-phase
+- **Date:** 2026-04-25
+- **Action:** Executed Plan 09-01 (Install Tracker) — added InstallTrace models, IInstallTracker / IInstallTraceStore contracts, JsonInstallTraceStore, InstallTracker (FileSystemWatcher + RegNotifyChangeKeyValue), 12 unit tests, AppPaths.InstallTracesFolder helper.
+- **Outcome:** 3 task commits (342b7b7 / 94a1b89 / 4a39106), all 29 tests passing, build clean. Tracker ready to be consumed by plans 09-03 (Residue Scanner) and 09-05 (Wizard UI).
 
 ### Next Session
 
-- **Next action:** Run `/gsd:plan-phase 1` to decompose Phase 1 (Foundations & Launchable Shell) into executable plans
-- **Expected deliverable:** Launchable WPF shell with admin manifest, Serilog rotating log, models + helpers, empty three-tab UI
+- **Next action:** Execute Plan 09-02 (Native Uninstaller Driver — parser MSI/Inno/NSIS + Job-Object tree-kill + IProgress<string> output streaming).
+- **Expected deliverable:** `INativeUninstallerDriver` service that runs `UninstallString` / `QuietUninstallString` with progress + cancellation + 30 min timeout, killing the entire process tree on cancel.
 
 ### Files to Watch
 
