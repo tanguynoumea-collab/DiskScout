@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-25T16:00:37Z"
+last_updated: "2026-04-25T16:25:30.216Z"
 progress:
   total_phases: 9
   completed_phases: 0
   total_plans: 6
-  completed_plans: 4
-  percent: 67
+  completed_plans: 6
+  percent: 100
 ---
 
 # STATE: DiskScout
 
-**Last updated:** 2026-04-25 (after Plan 09-04 — Publisher Rule Engine)
+**Last updated:** 2026-04-25 (after Plan 09-05 — Uninstall Wizard UI)
 
 ## Project Reference
 
@@ -25,13 +25,13 @@ progress:
 ## Current Position
 
 Phase: 09 (programs-tab-real-uninstaller-assistant) — EXECUTING
-Plan: 5 of 6 (next: 09-05 Wizard UI)
+Plan: 6 of 6 (next: 09-06 Integration + Report)
 
 - **Milestone:** v1.1 (post-v1, Programs-tab uninstaller assistant)
 - **Phase:** 9 of 9 — Programs Tab Real Uninstaller Assistant
-- **Plans:** 09-01 (Install Tracker) + 09-02 (Native Uninstaller Driver) + 09-03 (Residue Scanner) + 09-04 (Publisher Rule Engine) completed
-- **Status:** Executing Phase 09
-- **Progress:** [███████░░░] 67%
+- **Plans:** 09-01 (Install Tracker) + 09-02 (Native Uninstaller Driver) + 09-03 (Residue Scanner) + 09-04 (Publisher Rule Engine) + 09-05 (Uninstall Wizard UI) completed
+- **Status:** Ready to execute Plan 09-06
+- **Progress:** [██████████] 100%
 
 ```
 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
@@ -48,6 +48,7 @@ Plan: 5 of 6 (next: 09-05 Wizard UI)
 | TreeView expand 10k children | — | < 500 ms |
 | Cancel latency | — | < 2 s |
 | Single-file binary size | — | 70-90 MB |
+| Phase 09-programs-tab-real-uninstaller-assistant P05 | 13m 19s | 4 tasks | 26 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,7 @@ Plan: 5 of 6 (next: 09-05 Wizard UI)
 - 2026-04-25: Plan 09-02 (Native Uninstaller Driver) completed — INativeUninstallerDriver with parser (MSI/Inno/NSIS/Generic) + RunAsync with Win32 Job Object KILL_ON_JOB_CLOSE tree-kill + 30-min timeout + IProgress<string> output streaming + 20 passing tests (14 parser + 6 RunAsync). See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-02-SUMMARY.md`.
 - 2026-04-25: Plan 09-03 (Residue Scanner) completed — IResidueScanner + ResidueScanner (7 categories: Registry, Filesystem, Shortcut, MsiPatch, Service, ScheduledTask, ShellExtension) + ResiduePathSafety non-bypassable whitelist (19 fs substrings + 17 registry prefixes + 15 critical service names) + IServiceEnumerator/IScheduledTaskEnumerator test seams + 46 passing tests (36 path-safety + 10 scanner). See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-03-SUMMARY.md`.
 - 2026-04-25: Plan 09-04 (Publisher Rule Engine) completed — IPublisherRuleEngine + PublisherRuleEngine (LoadAsync embedded+user merge with last-write-wins by Id, Match with specificity scoring, ExpandTokens for env vars + {Publisher}/{DisplayName}) + 7 embedded rule JSONs as `<EmbeddedResource>` (adobe, autodesk, jetbrains, mozilla, microsoft-office, steam, epic-games) + AppPaths.PublisherRulesFolder helper + 16 passing tests (10 facts + 1 theory × 7 env vars). All 111 / 111 tests in suite pass; no regressions. See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-04-SUMMARY.md`.
+- 2026-04-25: Plan 09-05 (Uninstall Wizard UI) completed (auto-approved checkpoint per --auto chain) — UninstallWizardViewModel + 5 step VMs (Selection / Preview / RunUninstall / ResidueScan / ConfirmDelete) + ResidueTreeNode (tri-state checkable, default UNCHECKED, child propagation) + UninstallWizardWindow + 5 step views with DataTemplate-by-type pattern; ProgramsTabView gained right-click "Désinstaller…" context menu + 2 diagnostic columns ("Tracé ?", "Règles éditeur"); App.xaml.cs cached 4 Phase-9 services + static OpenUninstallWizard launcher; defense-in-depth ResiduePathSafety re-assertion at 6 wizard call-sites (BuildTree, SelectedPaths getter, ConfirmAsync + ResidueScan scanner-output and rule-merge); D-03 honored (ZERO IQuarantineService refs in Phase-9 wizard files; deletion via DeleteMode.Permanent); 19 unit tests (10 wizard VM + 9 step). All 130 / 130 tests pass; 0 warnings, 0 errors. See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-05-SUMMARY.md`.
 
 ### Blockers
 
@@ -96,13 +98,13 @@ None.
 ### Last Session
 
 - **Date:** 2026-04-25
-- **Action:** Executed Plan 09-04 (Publisher Rule Engine) — added PublisherRule + PublisherRuleMatch records, IPublisherRuleEngine contract, PublisherRuleEngine sealed class (LoadAsync merges embedded GetManifestResourceNames-enumerated rules with user *.json files in %LocalAppData%\DiskScout\publisher-rules with last-write-wins by Id; Match scores publisher-only at 10 and DisplayName-narrowed at 110 with regex 200ms timeout + skip-on-bad-regex; ExpandTokens runs Environment.ExpandEnvironmentVariables then literal {Publisher}/{DisplayName} substitution), 7 publisher rule JSONs embedded via <EmbeddedResource Include="Resources\PublisherRules\*.json"><LogicalName>DiskScout.Resources.PublisherRules.%(Filename).json</LogicalName></EmbeddedResource> (adobe, autodesk, jetbrains, mozilla, microsoft-office narrowed to Office/Teams/OneDrive, steam narrowed to Valve+Steam, epic-games), AppPaths.PublisherRulesFolderName + PublisherRulesFolder helpers appended alongside Plan 01's InstallTracesFolder, 16 unit tests (10 facts + 1 theory × 7 env vars).
-- **Outcome:** 2 task commits (39568c9 / df8952e), all 111 / 111 tests passing (baseline 95 + 16 = 111), build clean (0 warnings, 0 errors). Engine ready to be consumed by Plan 09-05 (Wizard UI step 2 "Preview résidus connus" + step 4 residue scan post-uninstall — rule-derived paths feed back to ResidueScanner with Source=PublisherRule + Trust=HighConfidence when path exists on disk).
+- **Action:** Executed Plan 09-05 (Uninstall Wizard UI, auto-approved checkpoint per --auto chain). Added 8 view-models under `ViewModels/UninstallWizard/` (WizardStep enum, UninstallWizardViewModel state machine, ResidueTreeNode tri-state hierarchy, 5 step VMs Selection/Preview/RunUninstall/ResidueScan/ConfirmDelete) and 6 views under `Views/UninstallWizard/` (UninstallWizardWindow modal + 5 step views with DataTemplate-by-type pattern). Modified ProgramsViewModel (SelectedRow + UninstallSelectedCommand + UninstallRequested event + Annotate API + InstalledProgramRow.HasInstallTrace/MatchedPublisherRuleIds), ProgramsTabView.xaml (2 new columns "Tracé ?" + "Règles éditeur" + ContextMenu with "Désinstaller…" MenuItem), ProgramsTabView.xaml.cs (DataContextChanged subscribes UninstallRequested -> App.OpenUninstallWizard), App.xaml.cs (cached 4 Phase-9 services + static OpenUninstallWizard launcher, fired-and-forgotten PublisherRuleEngine.LoadAsync at startup). Defense-in-depth ResiduePathSafety re-assertion at 6 call-sites; ConfirmDelete uses DeleteMode.Permanent + dedicated MessageBox.Show with IRRÉVERSIBLE wording + MessageBoxImage.Stop + default=No (D-03 honored, ZERO IQuarantineService refs). 19 unit tests (10 wizard VM covering state machine + tree node + ConfirmDelete safety, 9 step business-logic with hand-written fakes — no Moq dep, project policy precedent).
+- **Outcome:** 3 task commits (6b92ae4 wizard scaffold + step VMs, 31ea66a step tests, bf5bba0 XAML window + Programs DataGrid integration). Auto-approval evidence: build clean (0 warnings, 0 errors), all 130 / 130 tests passing (baseline 111 + 19 = 130), grep cross-checks all green (DeleteMode.Permanent: 4 hits, IRRÉVERSIBLE: 2, ResiduePathSafety.IsSafeToPropose: 6 ≥2 required for defense-in-depth, IQuarantineService: 0, MessageBoxImage.Stop: 1, ProgramsTabView.xaml has all 3 expected strings). Manual UAT (right-click -> wizard navigation -> tree manipulation -> IRRÉVERSIBLE modal) deferred to Plan 09-06's end-to-end smoke; build+test+grep evidence is the auto-approval substitute. Note: ProgramsViewModel.Annotate is wired but not yet called from MainViewModel.OnScanCompleted (intentionally deferred per plan instructions to Plan 09-06).
 
 ### Next Session
 
-- **Next action:** Execute Plan 09-05 (Wizard UI — refonte onglet Programs en wizard 5 étapes : Sélection programme + colonnes diagnostiques "Tracé ?" et "Règles éditeur ?" / Preview résidus connus / Run native uninstaller / Scan résidus post-uninstall / Confirmation suppression résidus + tree cochable + checkpoint UAT manuel pour validation visuelle).
-- **Expected deliverable:** Refonte `ProgramsView.xaml` + `ProgramsViewModel` injectant les 4 services Wave-1 (`IInstallTracker`, `INativeUninstallerDriver`, `IResidueScanner`, `IPublisherRuleEngine`), avec wizard navigation, default-unchecked tree, modale de confirmation irreversible avant DELETE permanent (pas via quarantaine — CONTEXT.md D-03).
+- **Next action:** Execute Plan 09-06 (Integration + Report) — wire ProgramsViewModel.Annotate in MainViewModel.OnScanCompleted (build dictionaries from IInstallTraceStore.ListAsync + IPublisherRuleEngine.Match), add Report step (Step 6 / Done state) consuming UninstallOutcome + DeletionOutcome, wire UninstallWizardViewModel.Trace via IInstallTraceStore.LoadAsync, end-to-end UAT with a real installed program (recommended: a JetBrains IDE for rich rule + likely InstallTrace, plus a small generic app for no-match path).
+- **Expected deliverable:** End-to-end Phase 9 closure: HTML/JSON report exportable from the Done state, both diagnostic columns populated post-scan, full wizard flow tested with a real uninstall.
 
 ### Files to Watch
 
