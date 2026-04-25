@@ -152,10 +152,10 @@ Plans:
 - [x] 09-01-PLAN.md — Install Tracker (FileSystemWatcher + RegNotifyChangeKeyValue + JSON trace store) ✅ 2026-04-25 (commits 342b7b7 / 94a1b89 / 4a39106 — 12 tests passing)
 - [x] 09-02-PLAN.md — Native Uninstaller Driver (parser MSI/Inno/NSIS + Job-Object tree-kill + 30 min timeout + IProgress<string> output streaming) ✅ 2026-04-25 (commits ac27c65 / 4610b8d / 10efd7b — 20 tests passing)
 - [x] 09-03-PLAN.md — Residue Scanner (7 catégories : registre, FS, raccourcis, MSI patches, services, tâches planifiées, shell extensions) + ResiduePathSafety whitelist ✅ 2026-04-25 (commits 3d12d9f / be47f5b / 238532d — 46 tests passing : 36 path-safety + 10 scanner)
-- [ ] 09-04-PLAN.md — Publisher Rule Engine (7 règles embarquées : Adobe, Autodesk, JetBrains, Mozilla, Microsoft, Steam, Epic + extensions utilisateur)
+- [x] 09-04-PLAN.md — Publisher Rule Engine (7 règles embarquées : Adobe, Autodesk, JetBrains, Mozilla, Microsoft, Steam, Epic + extensions utilisateur) ✅ 2026-04-25 (commits 39568c9 / df8952e — 16 tests passing)
 - [ ] 09-05-PLAN.md — Wizard UI (5 étapes + 2 colonnes diagnostiques sur la DataGrid Programs + checkpoint UAT manuel)
 - [ ] 09-06-PLAN.md — Integration + Report (export JSON/HTML + annotation post-scan + UAT end-to-end)
 
 ---
 *Roadmap created: 2026-04-24*
-*Last updated: 2026-04-25 after Plan 09-03 (Residue Scanner) execution*
+*Last updated: 2026-04-25 after Plan 09-04 (Publisher Rule Engine) execution*
