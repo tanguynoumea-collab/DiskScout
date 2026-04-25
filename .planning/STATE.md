@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-25T15:35:42Z"
+last_updated: "2026-04-25T15:51:13Z"
 progress:
   total_phases: 9
   completed_phases: 0
@@ -25,13 +25,13 @@ progress:
 ## Current Position
 
 Phase: 09 (programs-tab-real-uninstaller-assistant) — EXECUTING
-Plan: 3 of 6 (next: 09-03 Residue Scanner)
+Plan: 4 of 6 (next: 09-04 Publisher Rule Engine)
 
 - **Milestone:** v1.1 (post-v1, Programs-tab uninstaller assistant)
 - **Phase:** 9 of 9 — Programs Tab Real Uninstaller Assistant
-- **Plans:** 09-01 (Install Tracker) + 09-02 (Native Uninstaller Driver) completed
+- **Plans:** 09-01 (Install Tracker) + 09-02 (Native Uninstaller Driver) + 09-03 (Residue Scanner) completed
 - **Status:** Executing Phase 09
-- **Progress:** [█████░░░░░] 50%
+- **Progress:** [██████░░░░] 50%
 
 ```
 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
@@ -78,6 +78,7 @@ Plan: 3 of 6 (next: 09-03 Residue Scanner)
 - Phase 9 added: Programs Tab Real Uninstaller Assistant (Revo-Pro-style — install tracker temps réel + native uninstaller driver + residue scanner + publisher rule engine + wizard UI). User decisions locked: extend registry scan, Revo-Pro level, direct delete (no quarantine).
 - 2026-04-25: Plan 09-01 (Install Tracker) completed — IInstallTracker + IInstallTraceStore contracts + JsonInstallTraceStore + InstallTracker (FileSystemWatcher + RegNotifyChangeKeyValue P/Invoke) + 12 passing tests. See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-01-SUMMARY.md`.
 - 2026-04-25: Plan 09-02 (Native Uninstaller Driver) completed — INativeUninstallerDriver with parser (MSI/Inno/NSIS/Generic) + RunAsync with Win32 Job Object KILL_ON_JOB_CLOSE tree-kill + 30-min timeout + IProgress<string> output streaming + 20 passing tests (14 parser + 6 RunAsync). See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-02-SUMMARY.md`.
+- 2026-04-25: Plan 09-03 (Residue Scanner) completed — IResidueScanner + ResidueScanner (7 categories: Registry, Filesystem, Shortcut, MsiPatch, Service, ScheduledTask, ShellExtension) + ResiduePathSafety non-bypassable whitelist (19 fs substrings + 17 registry prefixes + 15 critical service names) + IServiceEnumerator/IScheduledTaskEnumerator test seams + 46 passing tests (36 path-safety + 10 scanner). See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-03-SUMMARY.md`.
 
 ### Blockers
 
@@ -94,13 +95,13 @@ None.
 ### Last Session
 
 - **Date:** 2026-04-25
-- **Action:** Executed Plan 09-02 (Native Uninstaller Driver) — added UninstallExecution models, INativeUninstallerDriver contract, NativeUninstallerDriver implementation (parser for MSI/Inno/NSIS + RunAsync with Win32 Job Object KILL_ON_JOB_CLOSE tree-kill + 30-min hard timeout + IProgress<string> output streaming), 20 unit tests (14 parser + 6 RunAsync), [InternalsVisibleTo] for the test-only hardTimeout constructor.
-- **Outcome:** 3 task commits (ac27c65 / 4610b8d / 10efd7b), all 49 tests passing, build clean (0 warnings). Driver ready to be consumed by Plan 09-05 (Wizard UI step 3 "Run native uninstaller") and Plan 09-06 (final report).
+- **Action:** Executed Plan 09-03 (Residue Scanner) — added ResidueFinding model + 3 supporting enums + ResidueScanTarget record, IResidueScanner interface, ResidueScanner sealed class implementing seven scan branches (Registry, Filesystem, Shortcut, MsiPatch, Service, ScheduledTask, ShellExtension) + IServiceEnumerator/IScheduledTaskEnumerator internal interfaces with hand-written fakes for tests + ResiduePathSafety static whitelist (19 fs substrings + 17 registry prefixes + 15 critical service names) + InstallTrace correlation (HighConfidence/TraceMatch findings). 46 unit tests (36 path-safety + 10 scanner integration).
+- **Outcome:** 3 task commits (3d12d9f / be47f5b / 238532d), all 95 tests passing, build clean (0 warnings). Scanner ready to be consumed by Plan 09-05 (Wizard UI step 4 "Scan résidus post-uninstall") and Plan 09-06 (final report). Plan 09-04 (Publisher Rule Engine) can begin in parallel.
 
 ### Next Session
 
-- **Next action:** Execute Plan 09-03 (Residue Scanner — 7 catégories : registre, FS, raccourcis, MSI patches, services, tâches planifiées, shell extensions + ResiduePathSafety whitelist).
-- **Expected deliverable:** `IResidueScanner` service that consumes `IInstallTraceStore` traces (from 09-01) + publisher rules (from 09-04) to enumerate residual files/keys/services/tasks after uninstall, with strict whitelist enforcement to avoid false positives on system-critical paths.
+- **Next action:** Execute Plan 09-04 (Publisher Rule Engine — 7 règles JSON embarquées : Adobe, Autodesk, JetBrains, Mozilla, Microsoft, Steam, Epic + extensions utilisateur sous %LocalAppData%\DiskScout\publisher-rules\).
+- **Expected deliverable:** `IPublisherRuleEngine` service producing additional ResidueFinding entries with `Source = ResidueSource.PublisherRule` (currently emitted by no scan branch — reserved for this plan), with rule-set bundled into the exe + user-extensible folder.
 
 ### Files to Watch
 
