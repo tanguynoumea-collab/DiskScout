@@ -56,6 +56,10 @@
 - [ ] Regression fixture of 100 real AppData↔registry pairs — build before Phase 3 is declared done
 - [ ] Clean-VM publish smoke test — first attempt in Phase 8, may uncover packaging bugs not visible in VS
 
+### Roadmap Evolution
+
+- Phase 9 added: Programs Tab Real Uninstaller Assistant (Revo-Pro-style — install tracker temps réel + native uninstaller driver + residue scanner + publisher rule engine + wizard UI). User decisions locked: extend registry scan, Revo-Pro level, direct delete (no quarantine).
+
 ### Blockers
 
 None.

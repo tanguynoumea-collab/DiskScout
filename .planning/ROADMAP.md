@@ -141,6 +141,21 @@
 - **.NET 10 LTS migration:** .NET 8 EOL is 2026-11-10. A post-v1 migration is tracked in REQUIREMENTS.md v2 (PLAT-V2-01) and must be scheduled before EOL.
 - **Fuzzy-matching empirical validation:** Phase 3 ships with a regression fixture of real AppData↔registry pairs. Threshold tuning is expected in v1.x after user feedback.
 
+### Phase 9: Programs Tab Real Uninstaller Assistant
+
+**Goal:** Transform the Programs tab into a Revo-Pro-style assisted uninstaller — real-time install tracker, native uninstaller driver with Job-Object cancellation, deep residue scanner across registry/filesystem/services/tasks/shell-extensions, publisher rule engine with embedded + user-extensible JSON rules, and a 6-step wizard UI with strict safety guards (whitelist enforcement, default-unchecked tree, irreversible-confirm modal). Suppression DIRECTE permanente (pas de quarantaine pour ce flow, par décision utilisateur).
+**Requirements**: Post-v1 — non mappés à REQUIREMENTS.md (phase ajoutée après création de la roadmap)
+**Depends on:** Phase 8
+**Plans:** 6 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Install Tracker (FileSystemWatcher + RegNotifyChangeKeyValue + JSON trace store)
+- [ ] 09-02-PLAN.md — Native Uninstaller Driver (parser MSI/Inno/NSIS + Job-Object tree-kill + 30 min timeout + IProgress<string> output streaming)
+- [ ] 09-03-PLAN.md — Residue Scanner (7 catégories : registre, FS, raccourcis, MSI patches, services, tâches planifiées, shell extensions) + ResiduePathSafety whitelist
+- [ ] 09-04-PLAN.md — Publisher Rule Engine (7 règles embarquées : Adobe, Autodesk, JetBrains, Mozilla, Microsoft, Steam, Epic + extensions utilisateur)
+- [ ] 09-05-PLAN.md — Wizard UI (5 étapes + 2 colonnes diagnostiques sur la DataGrid Programs + checkpoint UAT manuel)
+- [ ] 09-06-PLAN.md — Integration + Report (export JSON/HTML + annotation post-scan + UAT end-to-end)
+
 ---
 *Roadmap created: 2026-04-24*
-*Last updated: 2026-04-24 after initial creation*
+*Last updated: 2026-04-25 after Phase 9 plan-phase decomposition*
