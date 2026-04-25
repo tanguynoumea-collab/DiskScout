@@ -23,6 +23,7 @@ public partial class App : Application
     private IResidueScanner? _residueScanner;
     private IPublisherRuleEngine? _ruleEngine;
     private IFileDeletionService? _fileDeletion;
+    private IUninstallReportService? _uninstallReport;
 
     private static App? Instance;
 
@@ -72,9 +73,12 @@ public partial class App : Application
         _uninstallDriver = new NativeUninstallerDriver(_logger);
         _residueScanner = new ResidueScanner(_logger);
         _ruleEngine = new PublisherRuleEngine(_logger);
-        // Fire-and-forget rule load; Match() returns empty until LoadAsync completes.
-        _ = _ruleEngine.LoadAsync();
+        // Plan 06: load rules synchronously so Match() is ready before the wizard can be opened
+        // and before MainViewModel.OnScanCompleted's annotation flow runs. JSON files are tiny
+        // (7 embedded + any user files) — measured below 50 ms in practice.
+        _ruleEngine.LoadAsync().GetAwaiter().GetResult();
         _fileDeletion = fileDeletionService; // alias for the wizard
+        _uninstallReport = new UninstallReportService(_logger);
 
         // Housekeeping at startup: purge expired quarantine + old scan JSONs.
         _ = quarantineService.PurgeAsync(TimeSpan.FromDays(30));
@@ -89,6 +93,8 @@ public partial class App : Application
             persistenceService,
             fileDeletionService,
             quarantineService,
+            _installTraceStore,
+            _ruleEngine,
             pdfReport);
 
         var mainWindow = new MainWindow(mainViewModel);
@@ -110,7 +116,8 @@ public partial class App : Application
             || app._uninstallDriver is null
             || app._residueScanner is null
             || app._ruleEngine is null
-            || app._fileDeletion is null)
+            || app._fileDeletion is null
+            || app._uninstallReport is null)
         {
             throw new InvalidOperationException("Phase 9 services not yet wired.");
         }
@@ -123,7 +130,8 @@ public partial class App : Application
             app._uninstallDriver,
             app._residueScanner,
             app._ruleEngine,
-            app._fileDeletion);
+            app._fileDeletion,
+            app._uninstallReport);
 
         var window = new UninstallWizardWindow
         {

@@ -212,12 +212,13 @@ public sealed partial class ConfirmDeleteStepViewModel : ObservableObject
         {
             DeletionOutcome = await _deletion.DeleteAsync(paths, DeleteMode.Permanent, default).ConfigureAwait(true);
             _wizard.DeletionOutcome = DeletionOutcome;
-            _wizard.CurrentStep = WizardStep.Done;
             _logger.Information(
                 "Wizard deletion complete: {Success} succeeded, {Fail} failed, {Bytes} freed permanently",
                 DeletionOutcome.SuccessCount, DeletionOutcome.FailureCount, DeletionOutcome.TotalBytesFreed);
 
-            DeletePrompt.ShowResult(DeletionOutcome, DeleteMode.Permanent);
+            // Plan 06: advance to the Report step (replaces Plan 05's WizardStep.Done +
+            // DeletePrompt.ShowResult). The report VM aggregates the deletion outcome itself.
+            _wizard.GoToReportCommand.Execute(null);
         }
         catch (Exception ex)
         {

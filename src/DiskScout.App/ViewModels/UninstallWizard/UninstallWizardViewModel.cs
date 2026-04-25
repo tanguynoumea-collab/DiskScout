@@ -24,6 +24,7 @@ public sealed partial class UninstallWizardViewModel : ObservableObject
     private readonly IResidueScanner _residueScanner;
     private readonly IPublisherRuleEngine _ruleEngine;
     private readonly IFileDeletionService _deletion;
+    private readonly IUninstallReportService _reportService;
 
     /// <summary>Wizard-scoped CTS used by RunUninstall + ResidueScan steps. Cancel() tears it down.</summary>
     private CancellationTokenSource? _wizardCts;
@@ -73,7 +74,8 @@ public sealed partial class UninstallWizardViewModel : ObservableObject
         INativeUninstallerDriver driver,
         IResidueScanner residueScanner,
         IPublisherRuleEngine ruleEngine,
-        IFileDeletionService deletion)
+        IFileDeletionService deletion,
+        IUninstallReportService? reportService = null)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         Target = target ?? throw new ArgumentNullException(nameof(target));
@@ -83,6 +85,9 @@ public sealed partial class UninstallWizardViewModel : ObservableObject
         _residueScanner = residueScanner ?? throw new ArgumentNullException(nameof(residueScanner));
         _ruleEngine = ruleEngine ?? throw new ArgumentNullException(nameof(ruleEngine));
         _deletion = deletion ?? throw new ArgumentNullException(nameof(deletion));
+        // reportService is optional in the constructor signature so existing tests (no Plan 06 service)
+        // remain buildable. GoToReport will fall back gracefully when null.
+        _reportService = reportService ?? new DiskScout.Services.UninstallReportService(_logger);
 
         // Initial step: Selection. The view-model is constructed here so tests can assert
         // the initial CurrentStepViewModel type without spinning up a window.
@@ -128,6 +133,13 @@ public sealed partial class UninstallWizardViewModel : ObservableObject
     {
         CurrentStep = WizardStep.ConfirmDelete;
         CurrentStepViewModel = new ConfirmDeleteStepViewModel(this, _deletion, _logger);
+    }
+
+    [RelayCommand]
+    private void GoToReport()
+    {
+        CurrentStep = WizardStep.Report;
+        CurrentStepViewModel = new ReportStepViewModel(this, _reportService, _logger);
     }
 
     [RelayCommand]

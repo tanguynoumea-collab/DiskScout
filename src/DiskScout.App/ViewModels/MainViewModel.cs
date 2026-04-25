@@ -26,6 +26,8 @@ public sealed partial class MainViewModel : ObservableObject
 
     private readonly IDriveService _driveService;
     private readonly IPdfReportService _pdfReport;
+    private readonly IInstallTraceStore _installTraceStore;
+    private readonly IPublisherRuleEngine _ruleEngine;
     private ScanResult? _lastResult;
 
     [ObservableProperty]
@@ -43,11 +45,15 @@ public sealed partial class MainViewModel : ObservableObject
         IPersistenceService persistenceService,
         IFileDeletionService fileDeletionService,
         IQuarantineService quarantineService,
+        IInstallTraceStore installTraceStore,
+        IPublisherRuleEngine ruleEngine,
         IPdfReportService pdfReport)
     {
         _logger = logger;
         _driveService = driveService;
         _pdfReport = pdfReport;
+        _installTraceStore = installTraceStore;
+        _ruleEngine = ruleEngine;
 
         Health = new HealthViewModel();
         Programs = new ProgramsViewModel();
@@ -170,5 +176,34 @@ public sealed partial class MainViewModel : ObservableObject
         {
             dispatcher.Invoke(DoLoad);
         }
+
+        // Plan 09-06: annotate Programs with trace + publisher-rule data off the UI thread.
+        // Failures are non-fatal — diagnostic columns simply stay empty.
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var traces = await _installTraceStore.ListAsync().ConfigureAwait(false);
+                var traced = new Dictionary<string, bool>(StringComparer.Ordinal);
+                var rules = new Dictionary<string, string>(StringComparer.Ordinal);
+                foreach (var p in result.Programs)
+                {
+                    bool hasTrace = traces.Any(h =>
+                        !string.IsNullOrEmpty(h.InstallerProductHint) &&
+                        p.DisplayName.Contains(h.InstallerProductHint, StringComparison.OrdinalIgnoreCase));
+                    traced[p.RegistryKey] = hasTrace;
+                    var matches = _ruleEngine.Match(p.Publisher, p.DisplayName);
+                    if (matches.Count > 0)
+                        rules[p.DisplayName] = string.Join(",", matches.Select(m => m.Rule.Id));
+                }
+                var dispatcher2 = Application.Current?.Dispatcher;
+                if (dispatcher2 is not null) dispatcher2.Invoke(() => Programs.Annotate(traced, rules));
+                else Programs.Annotate(traced, rules);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warning(ex, "Programs annotation failed");
+            }
+        });
     }
 }

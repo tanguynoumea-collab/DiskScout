@@ -263,8 +263,127 @@ public class UninstallReportServiceTests
     }
 
     // ============================================================
+    // Plan 06 Task 2 — Integration tests appended below.
+    // ============================================================
+
+    // ---------- Test 7: ReportStepViewModel ctor invokes BuildFromWizard ----------
+    [Fact]
+    public void ReportStepViewModel_Constructor_BuildsReportViaService()
+    {
+        var wizard = BuildWizard();
+        var fakeSvc = new FakeReportService();
+
+        var step = new ReportStepViewModel(wizard, fakeSvc, Log);
+
+        fakeSvc.BuildCallCount.Should().Be(1);
+        step.Report.Should().NotBeNull();
+        step.Report!.ProgramName.Should().Be("Acme App");
+    }
+
+    // ---------- Test 8: Export commands exist + Report populated ----------
+    // The actual SaveFileDialog cannot be invoked from a unit test (UI thread).
+    // We assert the surface area is wired: commands present, BuildFromWizard ran,
+    // Report property holds a non-null instance. Real export-format selection is
+    // exercised through the service tests above (5 + 6).
+    [Fact]
+    public void ReportStepViewModel_HasExportCommands_AndReport()
+    {
+        var wizard = BuildWizard();
+        var fakeSvc = new FakeReportService();
+        var step = new ReportStepViewModel(wizard, fakeSvc, Log);
+
+        step.ExportJsonCommand.Should().NotBeNull();
+        step.ExportHtmlCommand.Should().NotBeNull();
+        step.CloseCommand.Should().NotBeNull();
+        step.Report.Should().NotBeNull();
+    }
+
+    // ---------- Test 9: ProgramsViewModel.Annotate populates HasInstallTrace + RuleIds ----------
+    [Fact]
+    public void ProgramsViewModel_Annotate_PopulatesTraceAndRuleIds()
+    {
+        var pgms = new DiskScout.ViewModels.ProgramsViewModel();
+        var p = new InstalledProgram(
+            RegistryKey: "AdobeAcrobat",
+            Hive: RegistryHive.LocalMachine64,
+            DisplayName: "Adobe Acrobat",
+            Publisher: "Adobe Inc.",
+            Version: "23.0",
+            InstallDate: null,
+            InstallLocation: null,
+            UninstallString: null,
+            RegistryEstimatedSizeBytes: 0,
+            ComputedSizeBytes: 0);
+
+        pgms.Load(new[] { p });
+
+        var traced = new Dictionary<string, bool>(StringComparer.Ordinal)
+        {
+            ["AdobeAcrobat"] = true,
+        };
+        var rules = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["Adobe Acrobat"] = "adobe",
+        };
+
+        pgms.Annotate(traced, rules);
+
+        pgms.Rows.Should().HaveCount(1);
+        pgms.Rows[0].HasInstallTrace.Should().BeTrue();
+        pgms.Rows[0].MatchedPublisherRuleIds.Should().Be("adobe");
+    }
+
+    // ---------- Test 10: Wizard.GoToReport sets CurrentStep + Report VM ----------
+    [Fact]
+    public void Wizard_GoToReport_SetsCurrentStepToReport_AndReportStepViewModel()
+    {
+        var wizard = BuildWizard();
+        wizard.GoToReportCommand.Execute(null);
+
+        wizard.CurrentStep.Should().Be(WizardStep.Report);
+        wizard.CurrentStepViewModel.Should().BeOfType<ReportStepViewModel>();
+    }
+
+    // ============================================================
     // Hand-written fakes (no Moq).
     // ============================================================
+
+    private sealed class FakeReportService : IUninstallReportService
+    {
+        public int BuildCallCount { get; private set; }
+        public int ExportCallCount { get; private set; }
+        public ReportFormat? LastExportFormat { get; private set; }
+
+        public UninstallReport BuildFromWizard(UninstallWizardViewModel wizard)
+        {
+            BuildCallCount++;
+            return new UninstallReport(
+                ProgramName: wizard.Target.DisplayName ?? "",
+                Publisher: wizard.Target.Publisher,
+                Version: wizard.Target.Version,
+                RegistryKey: wizard.Target.RegistryKey ?? "",
+                GeneratedUtc: DateTime.UtcNow,
+                UninstallOutcomeStatus: "NotRun",
+                UninstallExitCode: null,
+                UninstallElapsedSeconds: 0,
+                ResidueCount: 0,
+                ResidueBytes: 0,
+                ResidueByCategory: new Dictionary<string, CategoryTotals>(),
+                DeletedSuccessCount: 0,
+                DeletedFailureCount: 0,
+                DeletedBytesFreed: 0,
+                DeletedEntries: Array.Empty<DeletedEntrySnapshot>(),
+                MatchedPublisherRuleIds: Array.Empty<string>(),
+                HadInstallTrace: false);
+        }
+
+        public Task ExportAsync(UninstallReport report, string outputPath, ReportFormat format, CancellationToken ct = default)
+        {
+            ExportCallCount++;
+            LastExportFormat = format;
+            return Task.CompletedTask;
+        }
+    }
 
     private sealed class FakeInstallTracker : IInstallTracker
     {

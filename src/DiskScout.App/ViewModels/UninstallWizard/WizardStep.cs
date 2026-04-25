@@ -21,6 +21,9 @@ public enum WizardStep
     /// <summary>Step 5 — checkable tree + final irreversible-confirmation modal.</summary>
     ConfirmDelete,
 
-    /// <summary>Terminal state after a successful confirmed deletion (Plan 06 reaches this).</summary>
+    /// <summary>Step 6 — final report (HTML/JSON exportable). Reached after a successful confirmed deletion.</summary>
+    Report,
+
+    /// <summary>Terminal state after the user closes the report.</summary>
     Done,
 }

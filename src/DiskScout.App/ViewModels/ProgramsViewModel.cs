@@ -64,20 +64,23 @@ public sealed partial class ProgramsViewModel : ObservableObject
 
     /// <summary>
     /// Re-creates rows preserving the same source InstalledProgram with augmented metadata.
-    /// Plan 09-06 will wire trace/rule dictionaries; this plan stages the API.
+    /// Plan 09-06: MainViewModel.OnScanCompleted calls this with the trace/rule dictionaries
+    /// derived from <c>IInstallTraceStore.ListAsync()</c> + <c>IPublisherRuleEngine.Match(...)</c>.
     /// </summary>
-    public void Annotate(IDictionary<string, bool>? tracedByRegistryKey, IDictionary<string, string>? rulesByDisplayName)
+    public void Annotate(IDictionary<string, bool> tracedByRegistryKey, IDictionary<string, string> rulesByDisplayName)
     {
+        if (tracedByRegistryKey is null) throw new ArgumentNullException(nameof(tracedByRegistryKey));
+        if (rulesByDisplayName is null) throw new ArgumentNullException(nameof(rulesByDisplayName));
+
         var snapshot = Rows.Select(r => r.Source).ToList();
         Rows.Clear();
         foreach (var p in snapshot)
         {
-            bool hasTrace = tracedByRegistryKey is not null
-                && tracedByRegistryKey.TryGetValue(p.RegistryKey, out var t) && t;
-            string ruleIds = rulesByDisplayName is not null
-                && rulesByDisplayName.TryGetValue(p.DisplayName, out var r) ? r : string.Empty;
-            Rows.Add(new InstalledProgramRow(p, hasInstallTrace: hasTrace, matchedPublisherRuleIds: ruleIds));
+            tracedByRegistryKey.TryGetValue(p.RegistryKey, out var traced);
+            rulesByDisplayName.TryGetValue(p.DisplayName, out var ruleIds);
+            Rows.Add(new InstalledProgramRow(p, hasInstallTrace: traced, matchedPublisherRuleIds: ruleIds ?? ""));
         }
+        Count = Rows.Count;
         View.Refresh();
     }
 
