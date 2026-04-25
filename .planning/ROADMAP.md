@@ -154,8 +154,8 @@ Plans:
 - [x] 09-03-PLAN.md — Residue Scanner (7 catégories : registre, FS, raccourcis, MSI patches, services, tâches planifiées, shell extensions) + ResiduePathSafety whitelist ✅ 2026-04-25 (commits 3d12d9f / be47f5b / 238532d — 46 tests passing : 36 path-safety + 10 scanner)
 - [x] 09-04-PLAN.md — Publisher Rule Engine (7 règles embarquées : Adobe, Autodesk, JetBrains, Mozilla, Microsoft, Steam, Epic + extensions utilisateur) ✅ 2026-04-25 (commits 39568c9 / df8952e — 16 tests passing)
 - [x] 09-05-PLAN.md — Wizard UI (5 étapes + 2 colonnes diagnostiques sur la DataGrid Programs + checkpoint UAT auto-approuvé) ✅ 2026-04-25 (commits 6b92ae4 / 31ea66a / bf5bba0 — 19 tests passing : 10 wizard VM + 9 step business-logic)
-- [ ] 09-06-PLAN.md — Integration + Report (export JSON/HTML + annotation post-scan + UAT end-to-end)
+- [x] 09-06-PLAN.md — Integration + Report (export JSON/HTML + Programs annotation post-scan + UAT end-to-end auto-approuvé) ✅ 2026-04-25 (commits 0043ddd / 0cd0d5e — 10 tests passing : 6 service + 4 integration ; full suite 140/140 ; single-file Release publish 81.4 MB)
 
 ---
 *Roadmap created: 2026-04-24*
-*Last updated: 2026-04-25 after Plan 09-05 (Uninstall Wizard UI) execution*
+*Last updated: 2026-04-25 after Plan 09-06 (Integration + Report) execution — Phase 9 plans 6/6 complete*
