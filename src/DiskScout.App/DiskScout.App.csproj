@@ -12,9 +12,9 @@
     <ApplicationIcon>Assets\DiskScout.ico</ApplicationIcon>
     <AssemblyName>DiskScout</AssemblyName>
     <RootNamespace>DiskScout</RootNamespace>
-    <Version>1.1.0-alpha.1</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.2.0-alpha.1</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
