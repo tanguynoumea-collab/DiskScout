@@ -29,6 +29,7 @@
             </Border>
             <DataGrid ItemsSource="{Binding View}"
                       SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                      PreviewMouseRightButtonDown="OnDataGridPreviewMouseRightButtonDown"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       EnableRowVirtualization="True"

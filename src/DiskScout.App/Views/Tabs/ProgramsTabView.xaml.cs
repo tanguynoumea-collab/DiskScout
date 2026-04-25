@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using DiskScout.Models;
 using DiskScout.ViewModels;
 
@@ -43,5 +44,12 @@ public partial class ProgramsTabView : UserControl
     private void OnUninstallRequested(object? sender, InstalledProgram program)
     {
         DiskScout.App.OpenUninstallWizard(program);
+    }
+
+    private void OnDataGridPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not DataGrid grid) return;
+        var row = ItemsControl.ContainerFromElement(grid, e.OriginalSource as DependencyObject) as DataGridRow;
+        if (row is not null) row.IsSelected = true;
     }
 }
