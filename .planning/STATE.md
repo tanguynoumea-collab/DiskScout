@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-04-25T15:27:26.153Z"
+last_updated: "2026-04-25T15:35:42Z"
 progress:
   total_phases: 9
   completed_phases: 0
   total_plans: 6
-  completed_plans: 2
-  percent: 33
+  completed_plans: 3
+  percent: 50
 ---
 
 # STATE: DiskScout
@@ -25,13 +25,13 @@ progress:
 ## Current Position
 
 Phase: 09 (programs-tab-real-uninstaller-assistant) — EXECUTING
-Plan: 2 of 6 (next: 09-02 Native Uninstaller Driver)
+Plan: 3 of 6 (next: 09-03 Residue Scanner)
 
 - **Milestone:** v1.1 (post-v1, Programs-tab uninstaller assistant)
 - **Phase:** 9 of 9 — Programs Tab Real Uninstaller Assistant
-- **Plan:** 09-01 completed (Install Tracker)
+- **Plans:** 09-01 (Install Tracker) + 09-02 (Native Uninstaller Driver) completed
 - **Status:** Executing Phase 09
-- **Progress:** [███░░░░░░░] 33%
+- **Progress:** [█████░░░░░] 50%
 
 ```
 [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
@@ -77,6 +77,7 @@ Plan: 2 of 6 (next: 09-02 Native Uninstaller Driver)
 
 - Phase 9 added: Programs Tab Real Uninstaller Assistant (Revo-Pro-style — install tracker temps réel + native uninstaller driver + residue scanner + publisher rule engine + wizard UI). User decisions locked: extend registry scan, Revo-Pro level, direct delete (no quarantine).
 - 2026-04-25: Plan 09-01 (Install Tracker) completed — IInstallTracker + IInstallTraceStore contracts + JsonInstallTraceStore + InstallTracker (FileSystemWatcher + RegNotifyChangeKeyValue P/Invoke) + 12 passing tests. See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-01-SUMMARY.md`.
+- 2026-04-25: Plan 09-02 (Native Uninstaller Driver) completed — INativeUninstallerDriver with parser (MSI/Inno/NSIS/Generic) + RunAsync with Win32 Job Object KILL_ON_JOB_CLOSE tree-kill + 30-min timeout + IProgress<string> output streaming + 20 passing tests (14 parser + 6 RunAsync). See `.planning/phases/09-programs-tab-real-uninstaller-assistant/09-02-SUMMARY.md`.
 
 ### Blockers
 
@@ -93,13 +94,13 @@ None.
 ### Last Session
 
 - **Date:** 2026-04-25
-- **Action:** Executed Plan 09-01 (Install Tracker) — added InstallTrace models, IInstallTracker / IInstallTraceStore contracts, JsonInstallTraceStore, InstallTracker (FileSystemWatcher + RegNotifyChangeKeyValue), 12 unit tests, AppPaths.InstallTracesFolder helper.
-- **Outcome:** 3 task commits (342b7b7 / 94a1b89 / 4a39106), all 29 tests passing, build clean. Tracker ready to be consumed by plans 09-03 (Residue Scanner) and 09-05 (Wizard UI).
+- **Action:** Executed Plan 09-02 (Native Uninstaller Driver) — added UninstallExecution models, INativeUninstallerDriver contract, NativeUninstallerDriver implementation (parser for MSI/Inno/NSIS + RunAsync with Win32 Job Object KILL_ON_JOB_CLOSE tree-kill + 30-min hard timeout + IProgress<string> output streaming), 20 unit tests (14 parser + 6 RunAsync), [InternalsVisibleTo] for the test-only hardTimeout constructor.
+- **Outcome:** 3 task commits (ac27c65 / 4610b8d / 10efd7b), all 49 tests passing, build clean (0 warnings). Driver ready to be consumed by Plan 09-05 (Wizard UI step 3 "Run native uninstaller") and Plan 09-06 (final report).
 
 ### Next Session
 
-- **Next action:** Execute Plan 09-02 (Native Uninstaller Driver — parser MSI/Inno/NSIS + Job-Object tree-kill + IProgress<string> output streaming).
-- **Expected deliverable:** `INativeUninstallerDriver` service that runs `UninstallString` / `QuietUninstallString` with progress + cancellation + 30 min timeout, killing the entire process tree on cancel.
+- **Next action:** Execute Plan 09-03 (Residue Scanner — 7 catégories : registre, FS, raccourcis, MSI patches, services, tâches planifiées, shell extensions + ResiduePathSafety whitelist).
+- **Expected deliverable:** `IResidueScanner` service that consumes `IInstallTraceStore` traces (from 09-01) + publisher rules (from 09-04) to enumerate residual files/keys/services/tasks after uninstall, with strict whitelist enforcement to avoid false positives on system-critical paths.
 
 ### Files to Watch
 
