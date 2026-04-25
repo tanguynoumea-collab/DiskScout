@@ -1,0 +1,47 @@
+<Window x:Class="DiskScout.Views.UninstallWizard.UninstallWizardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:DiskScout.ViewModels.UninstallWizard"
+        xmlns:v="clr-namespace:DiskScout.Views.UninstallWizard"
+        Title="{Binding WindowTitle}"
+        Width="900" Height="650"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Background="{StaticResource BackgroundBrush}"
+        Foreground="{StaticResource ForegroundBrush}">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:SelectionStepViewModel}">
+            <v:SelectionStepView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PreviewStepViewModel}">
+            <v:PreviewStepView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:RunUninstallStepViewModel}">
+            <v:RunUninstallStepView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ResidueScanStepViewModel}">
+            <v:ResidueScanStepView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ConfirmDeleteStepViewModel}">
+            <v:ConfirmDeleteStepView />
+        </DataTemplate>
+    </Window.Resources>
+
+    <DockPanel>
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource BackgroundAltBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="14,10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Étape : " VerticalAlignment="Center"
+                           Foreground="{StaticResource ForegroundSubtleBrush}" />
+                <TextBlock Text="{Binding CurrentStep}" FontSize="16" FontWeight="SemiBold"
+                           VerticalAlignment="Center" Margin="6,0,0,0"
+                           Foreground="{StaticResource ForegroundBrush}" />
+            </StackPanel>
+        </Border>
+
+        <ContentControl Content="{Binding CurrentStepViewModel}" />
+    </DockPanel>
+</Window>

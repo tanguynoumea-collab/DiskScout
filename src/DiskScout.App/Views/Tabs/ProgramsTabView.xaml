@@ -28,6 +28,7 @@
                 </Grid>
             </Border>
             <DataGrid ItemsSource="{Binding View}"
+                      SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       EnableRowVirtualization="True"
@@ -40,9 +41,17 @@
                       RowBackground="Transparent"
                       AlternatingRowBackground="{StaticResource BackgroundAltBrush}"
                       HorizontalGridLinesBrush="{StaticResource BorderBrush}">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Désinstaller…"
+                                  Command="{Binding PlacementTarget.DataContext.UninstallSelectedCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Nom" Binding="{Binding DisplayName}" Width="2.5*" />
                     <DataGridTextColumn Header="Éditeur" Binding="{Binding Publisher}" Width="2*" />
+                    <DataGridTextColumn Header="Tracé ?" Binding="{Binding TracedDisplay}" Width="60" />
+                    <DataGridTextColumn Header="Règles éditeur" Binding="{Binding RuleDisplay}" Width="1.2*" />
                     <DataGridTextColumn Header="Version" Binding="{Binding Version}" Width="0.8*" />
                     <DataGridTextColumn Header="Installé" Binding="{Binding InstallDate}" Width="0.8*" />
                     <DataGridTextColumn Header="Taille" Binding="{Binding SizeDisplay}" Width="0.8*" SortMemberPath="SizeBytes" />

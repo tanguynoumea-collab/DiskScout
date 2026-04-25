@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using DiskScout.Models;
 
 namespace DiskScout.ViewModels;
@@ -21,9 +22,19 @@ public sealed partial class ProgramsViewModel : ObservableObject
     [ObservableProperty]
     private int _count;
 
+    /// <summary>Currently selected row in the Programs DataGrid (drives UninstallSelectedCommand).</summary>
+    [ObservableProperty]
+    private InstalledProgramRow? _selectedRow;
+
     public ObservableCollection<InstalledProgramRow> Rows { get; } = new();
 
     public ICollectionView View { get; }
+
+    /// <summary>
+    /// Raised when the user invokes Uninstall on a selected row. ProgramsTabView listens to this
+    /// and opens the Uninstall Wizard window via App.OpenUninstallWizard.
+    /// </summary>
+    public event EventHandler<InstalledProgram>? UninstallRequested;
 
     public ProgramsViewModel()
     {
@@ -33,6 +44,11 @@ public sealed partial class ProgramsViewModel : ObservableObject
     }
 
     partial void OnSearchTextChanged(string value) => View.Refresh();
+
+    partial void OnSelectedRowChanged(InstalledProgramRow? value)
+    {
+        UninstallSelectedCommand.NotifyCanExecuteChanged();
+    }
 
     public void Load(IEnumerable<InstalledProgram> programs)
     {
@@ -46,6 +62,25 @@ public sealed partial class ProgramsViewModel : ObservableObject
         View.Refresh();
     }
 
+    /// <summary>
+    /// Re-creates rows preserving the same source InstalledProgram with augmented metadata.
+    /// Plan 09-06 will wire trace/rule dictionaries; this plan stages the API.
+    /// </summary>
+    public void Annotate(IDictionary<string, bool>? tracedByRegistryKey, IDictionary<string, string>? rulesByDisplayName)
+    {
+        var snapshot = Rows.Select(r => r.Source).ToList();
+        Rows.Clear();
+        foreach (var p in snapshot)
+        {
+            bool hasTrace = tracedByRegistryKey is not null
+                && tracedByRegistryKey.TryGetValue(p.RegistryKey, out var t) && t;
+            string ruleIds = rulesByDisplayName is not null
+                && rulesByDisplayName.TryGetValue(p.DisplayName, out var r) ? r : string.Empty;
+            Rows.Add(new InstalledProgramRow(p, hasInstallTrace: hasTrace, matchedPublisherRuleIds: ruleIds));
+        }
+        View.Refresh();
+    }
+
     private bool FilterPredicate(object obj)
     {
         if (string.IsNullOrWhiteSpace(SearchText)) return true;
@@ -53,12 +88,22 @@ public sealed partial class ProgramsViewModel : ObservableObject
         return (r.DisplayName?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false)
             || (r.Publisher?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ?? false);
     }
+
+    [RelayCommand(CanExecute = nameof(CanUninstall))]
+    private void UninstallSelected()
+    {
+        if (SelectedRow is null) return;
+        UninstallRequested?.Invoke(this, SelectedRow.Source);
+    }
+
+    private bool CanUninstall() => SelectedRow is not null;
 }
 
 public sealed class InstalledProgramRow
 {
-    public InstalledProgramRow(InstalledProgram p)
+    public InstalledProgramRow(InstalledProgram p, bool hasInstallTrace = false, string matchedPublisherRuleIds = "")
     {
+        Source = p;
         DisplayName = p.DisplayName;
         Publisher = p.Publisher;
         Version = p.Version;
@@ -66,7 +111,12 @@ public sealed class InstalledProgramRow
         InstallLocation = p.InstallLocation;
         SizeBytes = p.ComputedSizeBytes > 0 ? p.ComputedSizeBytes : p.RegistryEstimatedSizeBytes;
         Hive = p.Hive.ToString();
+        HasInstallTrace = hasInstallTrace;
+        MatchedPublisherRuleIds = matchedPublisherRuleIds ?? string.Empty;
     }
+
+    /// <summary>The original InstalledProgram for re-annotation + Wizard launch.</summary>
+    internal InstalledProgram Source { get; }
 
     public string DisplayName { get; }
     public string? Publisher { get; }
@@ -76,6 +126,18 @@ public sealed class InstalledProgramRow
     public long SizeBytes { get; }
     public string SizeDisplay => FormatBytes(SizeBytes);
     public string Hive { get; }
+
+    /// <summary>True when an install trace exists for this program (Plan 09-01).</summary>
+    public bool HasInstallTrace { get; }
+
+    /// <summary>Comma-separated matched publisher-rule ids (Plan 09-04). Empty when no rule matches.</summary>
+    public string MatchedPublisherRuleIds { get; }
+
+    /// <summary>Display column for the "Tracé ?" DataGrid column.</summary>
+    public string TracedDisplay => HasInstallTrace ? "✓" : "";
+
+    /// <summary>Display column for the "Règles éditeur" DataGrid column.</summary>
+    public string RuleDisplay => MatchedPublisherRuleIds;
 
     private static string FormatBytes(long bytes)
     {
