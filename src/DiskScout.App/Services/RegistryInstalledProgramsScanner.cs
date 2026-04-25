@@ -86,8 +86,20 @@ public sealed class RegistryInstalledProgramsScanner : IInstalledProgramsScanner
             }
         }
 
-        _logger.Information("Enumerated {Count} installed programs across 4 registry views", results.Count);
-        return Task.FromResult<IReadOnlyList<InstalledProgram>>(results);
+        var dedup = results
+            .GroupBy(p => $"{p.DisplayName}|{p.Publisher}|{p.Version}|{p.InstallLocation}",
+                StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.First())
+            .ToList();
+
+        var dropped = results.Count - dedup.Count;
+        _logger.Information(
+            "Enumerated {Count} installed programs across 4 registry views ({Dropped} duplicate{Plural} removed)",
+            dedup.Count,
+            dropped,
+            dropped == 1 ? "" : "s");
+
+        return Task.FromResult<IReadOnlyList<InstalledProgram>>(dedup);
     }
 
     private static Dictionary<string, long> BuildPathIndex(IReadOnlyList<FileSystemNode> nodes)
