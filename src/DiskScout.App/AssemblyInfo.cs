@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 [assembly:ThemeInfo(
@@ -8,3 +9,7 @@ using System.Windows;
                                                 //(used if a resource is not found in the page,
                                                 // app, or any theme specific resource dictionaries)
 )]
+
+// Allow the test project to reach into internal members (e.g. NativeUninstallerDriver's
+// test-only constructor that accepts a custom hardTimeout for Timeout test coverage).
+[assembly: InternalsVisibleTo("DiskScout.Tests")]

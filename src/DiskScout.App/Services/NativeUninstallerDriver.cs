@@ -1,4 +1,7 @@
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 using DiskScout.Models;
 using Serilog;
 
@@ -310,12 +313,294 @@ public sealed partial class NativeUninstallerDriver : INativeUninstallerDriver
     }
 
     /// <inheritdoc />
-    public Task<UninstallOutcome> RunAsync(
+    public async Task<UninstallOutcome> RunAsync(
         UninstallCommand command,
         IProgress<string>? output,
         CancellationToken cancellationToken)
     {
-        // RunAsync implementation lands in Task 3.
-        throw new NotImplementedException("See task 3 of plan 09-02.");
+        ArgumentNullException.ThrowIfNull(command);
+
+        // 1. Pre-flight: refuse to start a process whose executable does not exist on disk.
+        //    MsiExec.exe is the one acceptable bare filename — Process resolves it via PATH.
+        if (!IsLikelyResolvableExecutable(command.ExecutablePath))
+        {
+            return new UninstallOutcome(
+                UninstallStatus.ExecutionFailure,
+                ExitCode: null,
+                Elapsed: TimeSpan.Zero,
+                CapturedOutputLineCount: 0,
+                ErrorMessage: $"Executable not found: {command.ExecutablePath}");
+        }
+
+        // 2. Create a Job Object with KILL_ON_JOB_CLOSE so any child processes spawned by the
+        //    uninstaller die when we close the handle. This is the linchpin of safe cancellation.
+        var hJob = CreateJobObject(IntPtr.Zero, lpName: null);
+        if (hJob == IntPtr.Zero)
+        {
+            var err = Marshal.GetLastWin32Error();
+            return new UninstallOutcome(
+                UninstallStatus.ExecutionFailure,
+                ExitCode: null,
+                Elapsed: TimeSpan.Zero,
+                CapturedOutputLineCount: 0,
+                ErrorMessage: $"CreateJobObject failed (Win32 error {err})");
+        }
+
+        var jobObjectClosed = false;
+
+        try
+        {
+            // 3. Tell the Job Object to kill all assigned processes when its handle closes.
+            if (!ConfigureJobKillOnClose(hJob, out var jobErr))
+            {
+                _logger.Warning(
+                    "SetInformationJobObject(KILL_ON_JOB_CLOSE) failed for {Exe} (Win32 error {Err}); falling back to Process.Kill(entireProcessTree)",
+                    command.ExecutablePath,
+                    jobErr);
+            }
+
+            var lineCount = 0;
+            var stopwatch = Stopwatch.StartNew();
+
+            using var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = command.ExecutablePath,
+                    Arguments = command.Arguments ?? string.Empty,
+                    WorkingDirectory = command.WorkingDirectory ?? string.Empty,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = command.IsSilent,
+                },
+                EnableRaisingEvents = false,
+            };
+
+            process.OutputDataReceived += (_, e) =>
+            {
+                if (e.Data is null) return;
+                Interlocked.Increment(ref lineCount);
+                output?.Report(e.Data);
+            };
+            process.ErrorDataReceived += (_, e) =>
+            {
+                if (e.Data is null) return;
+                Interlocked.Increment(ref lineCount);
+                output?.Report(e.Data);
+            };
+
+            try
+            {
+                process.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.Warning(ex, "Failed to start uninstaller {Exe}", command.ExecutablePath);
+                return new UninstallOutcome(
+                    UninstallStatus.ExecutionFailure,
+                    ExitCode: null,
+                    Elapsed: stopwatch.Elapsed,
+                    CapturedOutputLineCount: 0,
+                    ErrorMessage: ex.Message);
+            }
+
+            // 4. Assign the freshly-started process to our Job Object IMMEDIATELY so any
+            //    descendants (also assigned automatically by Windows) die with us on cancel.
+            //    On failure we keep going — Process.Kill(entireProcessTree:true) is the fallback.
+            try
+            {
+                if (!AssignProcessToJobObject(hJob, process.Handle))
+                {
+                    var assignErr = Marshal.GetLastWin32Error();
+                    _logger.Warning(
+                        "AssignProcessToJobObject failed for PID {Pid} ({Exe}) — Win32 error {Err}; relying on Process.Kill fallback",
+                        process.Id,
+                        command.ExecutablePath,
+                        assignErr);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Warning(ex, "AssignProcessToJobObject threw for PID {Pid}", process.Id);
+            }
+
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeoutCts.CancelAfter(_hardTimeout);
+
+            try
+            {
+                await process.WaitForExitAsync(timeoutCts.Token).ConfigureAwait(false);
+                stopwatch.Stop();
+
+                // Drain output streams (BeginOutputReadLine guarantees flush after WaitForExit).
+                try { process.WaitForExit(2000); } catch { /* best-effort */ }
+
+                var exitCode = SafeReadExitCode(process);
+                var status = exitCode == 0 ? UninstallStatus.Success : UninstallStatus.NonZeroExit;
+                _logger.Information(
+                    "Uninstaller exited: {Status} code={Code} elapsed={Sec}s lines={Lines} exe={Exe}",
+                    status, exitCode, stopwatch.Elapsed.TotalSeconds, lineCount, command.ExecutablePath);
+
+                return new UninstallOutcome(
+                    status,
+                    ExitCode: exitCode,
+                    Elapsed: stopwatch.Elapsed,
+                    CapturedOutputLineCount: lineCount,
+                    ErrorMessage: null);
+            }
+            catch (OperationCanceledException)
+            {
+                stopwatch.Stop();
+
+                var userCancelled = cancellationToken.IsCancellationRequested;
+                var status = userCancelled ? UninstallStatus.Cancelled : UninstallStatus.Timeout;
+
+                // Tree-kill: closing the job handle fires KILL_ON_JOB_CLOSE on every assigned process.
+                // CloseHandle(hJob) below (in finally) ultimately does this; we additionally call
+                // Process.Kill(entireProcessTree:true) as belt-and-braces in case the Job assign failed.
+                TreeKillBestEffort(process, command.ExecutablePath);
+
+                // Wait briefly for the child to actually exit so we can drain output streams.
+                try { process.WaitForExit(2000); } catch { /* best-effort */ }
+
+                _logger.Information(
+                    "Uninstaller {Status} after {Sec}s lines={Lines} exe={Exe}",
+                    status, stopwatch.Elapsed.TotalSeconds, lineCount, command.ExecutablePath);
+
+                return new UninstallOutcome(
+                    status,
+                    ExitCode: SafeReadExitCode(process),
+                    Elapsed: stopwatch.Elapsed,
+                    CapturedOutputLineCount: lineCount,
+                    ErrorMessage: null);
+            }
+        }
+        finally
+        {
+            // Closing the Job handle fires KILL_ON_JOB_CLOSE for any still-running assigned
+            // processes (children spawned after we set the limit flag).
+            if (!jobObjectClosed)
+            {
+                CloseHandle(hJob);
+                jobObjectClosed = true;
+            }
+        }
+    }
+
+    private static bool IsLikelyResolvableExecutable(string exePath)
+    {
+        if (string.IsNullOrWhiteSpace(exePath)) return false;
+        if (File.Exists(exePath)) return true;
+
+        // For non-rooted commands, assume Windows can resolve them via PATH.
+        // (MsiExec.exe is the canonical case; cmd.exe is similar in tests.)
+        return !Path.IsPathRooted(exePath);
+    }
+
+    private static int? SafeReadExitCode(Process p)
+    {
+        try
+        {
+            return p.HasExited ? p.ExitCode : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private void TreeKillBestEffort(Process process, string exeForLog)
+    {
+        try
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Warning(ex, "Process.Kill(entireProcessTree) failed for {Exe}", exeForLog);
+        }
+    }
+
+    private static bool ConfigureJobKillOnClose(IntPtr hJob, out int win32Error)
+    {
+        var info = new JOBOBJECT_EXTENDED_LIMIT_INFORMATION
+        {
+            BasicLimitInformation = new JOBOBJECT_BASIC_LIMIT_INFORMATION
+            {
+                LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE,
+            },
+        };
+        var size = Marshal.SizeOf<JOBOBJECT_EXTENDED_LIMIT_INFORMATION>();
+        var ptr = Marshal.AllocHGlobal(size);
+        try
+        {
+            Marshal.StructureToPtr(info, ptr, fDeleteOld: false);
+            var ok = SetInformationJobObject(hJob, JobObjectExtendedLimitInformation, ptr, (uint)size);
+            win32Error = ok ? 0 : Marshal.GetLastWin32Error();
+            return ok;
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(ptr);
+        }
+    }
+
+    // ----- Win32 P/Invoke for Job Object lifecycle ---------------------------------------
+
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    private static extern IntPtr CreateJobObject(IntPtr lpJobAttributes, string? lpName);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool SetInformationJobObject(IntPtr hJob, int infoClass, IntPtr lpJobObjectInfo, uint cbJobObjectInfoLength);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool AssignProcessToJobObject(IntPtr hJob, IntPtr hProcess);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool CloseHandle(IntPtr hObject);
+
+    private const int JobObjectExtendedLimitInformation = 9;
+    private const uint JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct JOBOBJECT_BASIC_LIMIT_INFORMATION
+    {
+        public long PerProcessUserTimeLimit;
+        public long PerJobUserTimeLimit;
+        public uint LimitFlags;
+        public UIntPtr MinimumWorkingSetSize;
+        public UIntPtr MaximumWorkingSetSize;
+        public uint ActiveProcessLimit;
+        public UIntPtr Affinity;
+        public uint PriorityClass;
+        public uint SchedulingClass;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct IO_COUNTERS
+    {
+        public ulong ReadOperationCount, WriteOperationCount, OtherOperationCount;
+        public ulong ReadTransferCount, WriteTransferCount, OtherTransferCount;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct JOBOBJECT_EXTENDED_LIMIT_INFORMATION
+    {
+        public JOBOBJECT_BASIC_LIMIT_INFORMATION BasicLimitInformation;
+        public IO_COUNTERS IoInfo;
+        public UIntPtr ProcessMemoryLimit;
+        public UIntPtr JobMemoryLimit;
+        public UIntPtr PeakProcessMemoryUsed;
+        public UIntPtr PeakJobMemoryUsed;
     }
 }

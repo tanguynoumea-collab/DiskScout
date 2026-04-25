@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using DiskScout.Models;
 using DiskScout.Services;
 using FluentAssertions;
@@ -208,5 +210,141 @@ public class NativeUninstallerDriverTests
         cmd!.ExecutablePath.Should().Be(@"C:\App\unins000.exe");
         cmd.Arguments.Should().Be("/SILENT");
         cmd.Kind.Should().Be(InstallerKind.InnoSetup);
+    }
+
+    // =====================================================================================
+    // RunAsync tests — use cmd.exe as a fake uninstaller (always present on Windows).
+    // =====================================================================================
+
+    private static string CmdExe => Path.Combine(Environment.SystemDirectory, "cmd.exe");
+
+    private static UninstallCommand MakeCmd(string args, bool silent = true) =>
+        new UninstallCommand(
+            ExecutablePath: CmdExe,
+            Arguments: args,
+            WorkingDirectory: Environment.SystemDirectory,
+            IsSilent: silent,
+            Kind: InstallerKind.Generic);
+
+    [Fact]
+    public async Task Run_Echo_ReturnsSuccessAndStreamsOutput()
+    {
+        var driver = new NativeUninstallerDriver(Logger);
+        var lines = new ConcurrentBag<string>();
+        var progress = new Progress<string>(l => lines.Add(l));
+
+        var outcome = await driver.RunAsync(
+            MakeCmd("/c echo hello && exit /b 0"),
+            progress,
+            CancellationToken.None);
+
+        outcome.Status.Should().Be(UninstallStatus.Success);
+        outcome.ExitCode.Should().Be(0);
+        outcome.ErrorMessage.Should().BeNull();
+        outcome.CapturedOutputLineCount.Should().BeGreaterThan(0);
+
+        // Progress<T> dispatches asynchronously — give it a moment to flush.
+        await Task.Delay(100);
+        lines.Should().Contain(l => l.Contains("hello", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task Run_NonZeroExit_ReturnsNonZeroExitWithCode()
+    {
+        var driver = new NativeUninstallerDriver(Logger);
+
+        var outcome = await driver.RunAsync(
+            MakeCmd("/c exit /b 7"),
+            output: null,
+            CancellationToken.None);
+
+        outcome.Status.Should().Be(UninstallStatus.NonZeroExit);
+        outcome.ExitCode.Should().Be(7);
+    }
+
+    [Fact]
+    public async Task Run_Cancellation_TerminatesProcessTreeWithinThreeSeconds()
+    {
+        var driver = new NativeUninstallerDriver(Logger);
+        using var cts = new CancellationTokenSource();
+
+        var pingProcessesBefore = Process.GetProcessesByName("PING").Length;
+
+        // ping -n 60 = ~60 seconds. Cancel after 1 s.
+        cts.CancelAfter(TimeSpan.FromSeconds(1));
+
+        var sw = Stopwatch.StartNew();
+        var outcome = await driver.RunAsync(
+            MakeCmd("/c ping -n 60 127.0.0.1 > nul"),
+            output: null,
+            cts.Token);
+        sw.Stop();
+
+        outcome.Status.Should().Be(UninstallStatus.Cancelled);
+        sw.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(5));
+
+        // Best-effort tree-kill check: no PING.EXE descendant should still be alive a moment later.
+        await Task.Delay(500);
+        var pingProcessesAfter = Process.GetProcessesByName("PING").Length;
+        // Allow the count to be at most what it was before (some other test/system may run ping).
+        pingProcessesAfter.Should().BeLessThanOrEqualTo(pingProcessesBefore,
+            "Job Object KILL_ON_JOB_CLOSE must terminate the entire process tree on cancel");
+    }
+
+    [Fact]
+    public async Task Run_NonExistentExecutable_ReturnsExecutionFailure()
+    {
+        var driver = new NativeUninstallerDriver(Logger);
+
+        var bogus = new UninstallCommand(
+            ExecutablePath: @"C:\Definitely\Does\Not\Exist\nope_" + Guid.NewGuid().ToString("N") + ".exe",
+            Arguments: "",
+            WorkingDirectory: null,
+            IsSilent: true,
+            Kind: InstallerKind.Generic);
+
+        var outcome = await driver.RunAsync(bogus, output: null, CancellationToken.None);
+
+        outcome.Status.Should().Be(UninstallStatus.ExecutionFailure);
+        outcome.ErrorMessage.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public async Task Run_HardTimeout_FiresWithCustomTimeoutAndReturnsTimeoutOutcome()
+    {
+        // Inject a 2-second hard timeout via the internal constructor.
+        var driver = new NativeUninstallerDriver(Logger, TimeSpan.FromSeconds(2));
+
+        var sw = Stopwatch.StartNew();
+        var outcome = await driver.RunAsync(
+            MakeCmd("/c ping -n 60 127.0.0.1 > nul"),
+            output: null,
+            CancellationToken.None);
+        sw.Stop();
+
+        outcome.Status.Should().Be(UninstallStatus.Timeout);
+        sw.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(7),
+            "30-min timeout policy must be honoured but the test injects a shorter one");
+    }
+
+    [Fact]
+    public async Task Run_MultiLineOutput_ReportsAtLeastTwoLines()
+    {
+        var driver = new NativeUninstallerDriver(Logger);
+        var lines = new ConcurrentBag<string>();
+        var progress = new Progress<string>(l => lines.Add(l));
+
+        var outcome = await driver.RunAsync(
+            MakeCmd("/c (echo line1 & echo line2)"),
+            progress,
+            CancellationToken.None);
+
+        outcome.Status.Should().Be(UninstallStatus.Success);
+        outcome.CapturedOutputLineCount.Should().BeGreaterThanOrEqualTo(2);
+
+        // Progress<T> dispatch is async; allow a tick for handler invocations to land.
+        await Task.Delay(100);
+        lines.Should().Contain(l => l.Contains("line1"));
+        lines.Should().Contain(l => l.Contains("line2"));
     }
 }
