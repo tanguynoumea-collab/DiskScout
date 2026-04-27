@@ -1,6 +1,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using DiskScout.Helpers;
 using DiskScout.Models;
 using Serilog;
@@ -24,6 +25,7 @@ public sealed class PathRuleEngine : IPathRuleEngine
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter(allowIntegerValues: false) },
     };
 
     private readonly ILogger _logger;
