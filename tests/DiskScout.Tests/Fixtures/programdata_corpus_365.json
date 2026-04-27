@@ -1,0 +1,3287 @@
+[
+  {
+    "index": 1,
+    "path": "C:\\ProgramData\\KUBUS\\BcfManager",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Donnees de KUBUS BCF Manager (plugin BIM Revit)"
+  },
+  {
+    "index": 2,
+    "path": "C:\\ProgramData\\Microsoft\\VisualStudio",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Dossier de configuration de Visual Studio + Build Tools + telemetry"
+  },
+  {
+    "index": 3,
+    "path": "C:\\ProgramData\\Autodesk\\RVT 2025",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Donnees partagees de Revit 2025"
+  },
+  {
+    "index": 4,
+    "path": "C:\\ProgramData\\Package Cache",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cache global Windows Installer/Burn"
+  },
+  {
+    "index": 5,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Steel Connections 2025",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant officiel Autodesk pour Revit 2025"
+  },
+  {
+    "index": 6,
+    "path": "C:\\ProgramData\\DiRoots.One\\updates",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache de mises a jour DiRoots.One"
+  },
+  {
+    "index": 7,
+    "path": "C:\\ProgramData\\Microsoft\\Windows Defender",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Antivirus Windows Defender"
+  },
+  {
+    "index": 8,
+    "path": "C:\\ProgramData\\Autodesk\\Geospatial Coordinate Systems 15.01",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Bibliotheque de systemes de coordonnees Autodesk"
+  },
+  {
+    "index": 9,
+    "path": "C:\\ProgramData\\Package Cache\\{5cae2bd7-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v2.152.1279.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/EXE installeur"
+  },
+  {
+    "index": 10,
+    "path": "C:\\ProgramData\\Autodesk\\Uninstallers",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cache des desinstalleurs Autodesk"
+  },
+  {
+    "index": 11,
+    "path": "C:\\ProgramData\\NVIDIA\\NGX",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Modeles IA NVIDIA NGX (DLSS, RTX)"
+  },
+  {
+    "index": 12,
+    "path": "C:\\ProgramData\\Package Cache\\{F05407CE-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK pour Windows 11 24H2"
+  },
+  {
+    "index": 13,
+    "path": "C:\\ProgramData\\Autodesk\\ODIS",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Autodesk Desktop Connector / Installer Service"
+  },
+  {
+    "index": 14,
+    "path": "C:\\Users\\tanguy.delrieu\\AppData\\LocalLow",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Dossier Windows standard pour applications low-integrity"
+  },
+  {
+    "index": 15,
+    "path": "C:\\ProgramData\\Autodesk\\AECGD",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "AEC Geographic Data"
+  },
+  {
+    "index": 16,
+    "path": "C:\\ProgramData\\Matrix42\\Logs",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Logs Matrix42 corporate"
+  },
+  {
+    "index": 17,
+    "path": "C:\\ProgramData\\Zscaler\\log-0028E037B8101BD2C5459365BF23F67BDFF9B9E8",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Logs Zscaler corporate"
+  },
+  {
+    "index": 18,
+    "path": "C:\\ProgramData\\Autodesk\\Structural",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Bibliotheque structurelle Autodesk"
+  },
+  {
+    "index": 19,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\logs",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Logs NinjaOne RMM corporate"
+  },
+  {
+    "index": 20,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Interoperability 2025",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant interoperabilite Revit 2025"
+  },
+  {
+    "index": 21,
+    "path": "C:\\ProgramData\\Package Cache\\{7D4D186C-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 22,
+    "path": "C:\\ProgramData\\Package Cache\\{BB146BF9-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v6.17.21301",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI Autodesk Identity Manager"
+  },
+  {
+    "index": 23,
+    "path": "C:\\ProgramData\\HP\\HP Touchpoint Analytics Client",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Service telemetrie HP"
+  },
+  {
+    "index": 24,
+    "path": "C:\\ProgramData\\Package Cache\\{4C150435-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 25,
+    "path": "C:\\ProgramData\\Package Cache\\{CA4D7166-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 26,
+    "path": "C:\\ProgramData\\Autodesk\\ApplicationPlugins",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Plugins Autodesk partages"
+  },
+  {
+    "index": 27,
+    "path": "C:\\ProgramData\\Microsoft\\ClickToRun",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Office Click-to-Run"
+  },
+  {
+    "index": 28,
+    "path": "C:\\ProgramData\\Autodesk\\AdskLicensingService",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Service licences Autodesk"
+  },
+  {
+    "index": 29,
+    "path": "C:\\ProgramData\\_Empirum",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Donnees Matrix42 Empirum corporate"
+  },
+  {
+    "index": 30,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\download",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cache de telechargement NinjaOne corporate"
+  },
+  {
+    "index": 31,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\NinjaWPM",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Module NinjaOne Windows Performance Monitor"
+  },
+  {
+    "index": 32,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\components",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composants binaires de l'agent NinjaOne"
+  },
+  {
+    "index": 33,
+    "path": "C:\\ProgramData\\Package Cache\\{B7BC83B0-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 34,
+    "path": "C:\\ProgramData\\Package Cache\\{2C37C218-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 35,
+    "path": "C:\\ProgramData\\Package Cache\\{2CAA22A5-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 36,
+    "path": "C:\\ProgramData\\Package Cache\\{29177194-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v64.92.45458",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable x64"
+  },
+  {
+    "index": 37,
+    "path": "C:\\ProgramData\\Package Cache\\{9C751D0A-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v80.8.45513",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 38,
+    "path": "C:\\ProgramData\\Package Cache\\{61D4736B-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v48.144.23186",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 39,
+    "path": "C:\\ProgramData\\Package Cache\\{09C20E7A-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v80.8.45513",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 40,
+    "path": "C:\\ProgramData\\Package Cache\\{3A6767BB-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v64.44.23253",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 41,
+    "path": "C:\\ProgramData\\Package Cache\\{39884818-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v64.92.45415",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 42,
+    "path": "C:\\ProgramData\\Package Cache\\{C912E33F-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v48.144.23141",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 43,
+    "path": "C:\\ProgramData\\Package Cache\\{9A00C541-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v48.144.23186",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 44,
+    "path": "C:\\ProgramData\\Package Cache\\C483F66C48BA83E99C764D957729789317B09C6B",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache Burn (bootstrapper)"
+  },
+  {
+    "index": 45,
+    "path": "C:\\ProgramData\\Package Cache\\{9E437768-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v64.44.23191",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 46,
+    "path": "C:\\ProgramData\\Package Cache\\{89C09E22-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v48.144.23141",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 47,
+    "path": "C:\\ProgramData\\Package Cache\\{B5534577-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 48,
+    "path": "C:\\ProgramData\\Package Cache\\{12C6754C-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 49,
+    "path": "C:\\ProgramData\\Autodesk\\CDX",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Common Data eXchange Autodesk"
+  },
+  {
+    "index": 50,
+    "path": "C:\\ProgramData\\USOShared",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Update Session Orchestrator"
+  },
+  {
+    "index": 51,
+    "path": "C:\\ProgramData\\USOShared\\Logs",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Logs USO Windows Update"
+  },
+  {
+    "index": 52,
+    "path": "C:\\ProgramData\\Package Cache\\{9EE92E02-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 53,
+    "path": "C:\\ProgramData\\Package Cache\\{099E916C-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 54,
+    "path": "C:\\ProgramData\\Package Cache\\B87C38D093872D7BE7E191F01107B39C87888A5A",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache Burn"
+  },
+  {
+    "index": 55,
+    "path": "C:\\ProgramData\\Package Cache\\AFA5BADCE64EE67290ADD24E0DC3D8210954AC6C",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache Burn"
+  },
+  {
+    "index": 56,
+    "path": "C:\\ProgramData\\Package Cache\\C9B5B7969E499A4FD9E580EF4187322778E1936A",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache Burn"
+  },
+  {
+    "index": 57,
+    "path": "C:\\ProgramData\\Microsoft\\EdgeUpdate",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Service mise a jour Microsoft Edge"
+  },
+  {
+    "index": 58,
+    "path": "C:\\ProgramData\\Package Cache\\{595B374E-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v1.0.14.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI"
+  },
+  {
+    "index": 59,
+    "path": "C:\\ProgramData\\Package Cache\\{C4175120-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v1.0.20.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI"
+  },
+  {
+    "index": 60,
+    "path": "C:\\ProgramData\\Autodesk\\ADPSDK",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Autodesk Desktop Platform SDK"
+  },
+  {
+    "index": 61,
+    "path": "C:\\ProgramData\\Package Cache\\{F9C5C994-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI"
+  },
+  {
+    "index": 62,
+    "path": "C:\\ProgramData\\Package Cache\\{5ED5DA89-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v8.0.21.25475",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": ".NET 8 Runtime cache"
+  },
+  {
+    "index": 63,
+    "path": "C:\\ProgramData\\Package Cache\\{D0772A8A-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 64,
+    "path": "C:\\ProgramData\\Package Cache\\{DB72537E-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 65,
+    "path": "C:\\ProgramData\\Package Cache\\{EB362CC9-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 66,
+    "path": "C:\\ProgramData\\Package Cache\\{215198BD-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v6.0.36.24516",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": ".NET 6 Runtime cache"
+  },
+  {
+    "index": 67,
+    "path": "C:\\ProgramData\\Package Cache\\{7C1561F8-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 68,
+    "path": "C:\\ProgramData\\USOPrivate",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Update Session Orchestrator prive"
+  },
+  {
+    "index": 69,
+    "path": "C:\\ProgramData\\USOPrivate\\UpdateStore",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Store des updates Windows"
+  },
+  {
+    "index": 70,
+    "path": "C:\\ProgramData\\Microsoft\\Diagnosis",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant Windows DiagTrack"
+  },
+  {
+    "index": 71,
+    "path": "C:\\ProgramData\\Caphyon",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Donnees Advanced Installer (Caphyon)"
+  },
+  {
+    "index": 72,
+    "path": "C:\\ProgramData\\Caphyon\\Advanced Installer",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Donnees Advanced Installer"
+  },
+  {
+    "index": 73,
+    "path": "C:\\ProgramData\\Apple\\Installer Cache",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache des installeurs Apple"
+  },
+  {
+    "index": 74,
+    "path": "C:\\ProgramData\\Intel",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Donnees partagees Intel (drivers, XTU, GCC)"
+  },
+  {
+    "index": 75,
+    "path": "C:\\ProgramData\\Intel\\Intel Extreme Tuning Utility",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Donnees Intel XTU"
+  },
+  {
+    "index": 76,
+    "path": "C:\\ProgramData\\Dynamo",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Dynamo (visual programming)"
+  },
+  {
+    "index": 77,
+    "path": "C:\\ProgramData\\Dynamo\\Dynamo Core",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Coeur de Dynamo"
+  },
+  {
+    "index": 78,
+    "path": "C:\\ProgramData\\Package Cache\\{37B8F9C7-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v11.0.61030",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ 2012 Redistributable"
+  },
+  {
+    "index": 79,
+    "path": "C:\\ProgramData\\Package Cache\\{AECD4ED0-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v14.50.35719",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ 2015-2022 Redistributable"
+  },
+  {
+    "index": 80,
+    "path": "C:\\ProgramData\\Package Cache\\{010792BA-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v12.0.40664",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ 2013 Redistributable"
+  },
+  {
+    "index": 81,
+    "path": "C:\\ProgramData\\Package Cache\\{929FBD26-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v12.0.21005",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ 2013 Redistributable"
+  },
+  {
+    "index": 82,
+    "path": "C:\\ProgramData\\Package Cache\\{773AD50D-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v14.50.35719",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ 2015-2022 Redistributable"
+  },
+  {
+    "index": 83,
+    "path": "C:\\ProgramData\\Package Cache\\{B175520C-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v11.0.61030",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ 2012 Redistributable"
+  },
+  {
+    "index": 84,
+    "path": "C:\\ProgramData\\Package Cache\\{96B30005-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 85,
+    "path": "C:\\ProgramData\\NVIDIA Corporation\\Drs",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Driver Setting profiles NVIDIA"
+  },
+  {
+    "index": 86,
+    "path": "C:\\ProgramData\\Package Cache\\{F8CFEB22-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v12.0.21005",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ 2013 Redistributable"
+  },
+  {
+    "index": 87,
+    "path": "C:\\ProgramData\\HP\\StreamLog",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Logs HP"
+  },
+  {
+    "index": 88,
+    "path": "C:\\ProgramData\\printix.net",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Printix gestion impression cloud entreprise"
+  },
+  {
+    "index": 89,
+    "path": "C:\\ProgramData\\Package Cache\\{F9DDDEF1-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 90,
+    "path": "C:\\ProgramData\\Package Cache\\{06671634-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 91,
+    "path": "C:\\ProgramData\\Package Cache\\{26BD6DC6-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 92,
+    "path": "C:\\ProgramData\\bdkitinstaller",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Bitdefender Kit Installer corporate"
+  },
+  {
+    "index": 93,
+    "path": "C:\\ProgramData\\Package Cache\\{E8BE09DF-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 94,
+    "path": "C:\\ProgramData\\Autodesk\\CER",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Customer Error Reporting Autodesk"
+  },
+  {
+    "index": 95,
+    "path": "C:\\ProgramData\\Package Cache\\{7E52FE9F-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 96,
+    "path": "C:\\ProgramData\\Package Cache\\{20C01991-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 97,
+    "path": "C:\\ProgramData\\Microsoft\\DefaultPackMSI",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Pack MSI par defaut Microsoft"
+  },
+  {
+    "index": 98,
+    "path": "C:\\ProgramData\\Package Cache\\{F251EBD6-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 99,
+    "path": "C:\\ProgramData\\Package Cache\\{368E4D03-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 100,
+    "path": "C:\\ProgramData\\HP\\Downloaded Installations",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache d'installeurs HP telecharges"
+  },
+  {
+    "index": 101,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-101-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 102,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-102-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 103,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-103-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 104,
+    "path": "C:\\ProgramData\\dbg",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Symboles de debogage"
+  },
+  {
+    "index": 105,
+    "path": "C:\\ProgramData\\dbg\\sym",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Sous-dossier symboles"
+  },
+  {
+    "index": 106,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-106-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 107,
+    "path": "C:\\ProgramData\\Unifi Export HRSINTRA_tanguy.delrieu",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Export Unifi"
+  },
+  {
+    "index": 108,
+    "path": "C:\\ProgramData\\Microsoft\\DiagnosticLogCSP",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Diagnostic Log CSP MDM"
+  },
+  {
+    "index": 109,
+    "path": "C:\\ProgramData\\Claude",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Application Claude Desktop active"
+  },
+  {
+    "index": 110,
+    "path": "C:\\ProgramData\\Claude\\Logs",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Logs Claude Desktop"
+  },
+  {
+    "index": 111,
+    "path": "C:\\ProgramData\\DiRoots.One\\Settings",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Preferences/licences DiRoots.One"
+  },
+  {
+    "index": 112,
+    "path": "C:\\ProgramData\\NVIDIA Corporation\\nvtopps",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "NVIDIA Telemetry/Optimal Playable Settings"
+  },
+  {
+    "index": 113,
+    "path": "C:\\ProgramData\\HP\\HP_DockAccessory",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Donnees HP Dock"
+  },
+  {
+    "index": 114,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-114-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 115,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\tzdata",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Donnees timezone NinjaOne"
+  },
+  {
+    "index": 116,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-116-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 117,
+    "path": "C:\\ProgramData\\PlaceMaker Revit",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Plugin PlaceMaker pour Revit"
+  },
+  {
+    "index": 118,
+    "path": "C:\\ProgramData\\PlaceMaker Revit\\Images",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cache images PlaceMaker"
+  },
+  {
+    "index": 119,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-119-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 120,
+    "path": "C:\\ProgramData\\Windows App Certification Kit",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "WACK"
+  },
+  {
+    "index": 121,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-121-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 122,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-122-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 123,
+    "path": "C:\\ProgramData\\Microsoft\\Windows Security Health",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Etat Windows Security/Defender"
+  },
+  {
+    "index": 124,
+    "path": "C:\\ProgramData\\Package Cache\\{c0b93b80-d0a4-47fc-a4d1-21a4008a63ca}",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache Burn VS Build Tools"
+  },
+  {
+    "index": 125,
+    "path": "C:\\ProgramData\\Autodesk\\AcNGEN",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "AutoCAD .NET pre-compilation cache"
+  },
+  {
+    "index": 126,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-126-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 127,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-127-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 128,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\jsonoutput",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Sortie JSON NinjaOne"
+  },
+  {
+    "index": 129,
+    "path": "C:\\ProgramData\\Package Cache\\{b4f31c4b-637c-4eca-8a82-133fbb5b3eda}",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache Burn VS Build Tools"
+  },
+  {
+    "index": 130,
+    "path": "C:\\ProgramData\\Microsoft\\Device Stage",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant Windows"
+  },
+  {
+    "index": 131,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-131-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 132,
+    "path": "C:\\ProgramData\\Microsoft\\User Account Pictures",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Photos de compte Windows"
+  },
+  {
+    "index": 133,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-133-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 134,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-134-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 135,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-135-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 136,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-136-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 137,
+    "path": "C:\\ProgramData\\DiRoots.One\\LangResources",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Ressources langues DiRoots.One"
+  },
+  {
+    "index": 138,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-138-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 139,
+    "path": "C:\\ProgramData\\Splashtop",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Splashtop Remote corporate"
+  },
+  {
+    "index": 140,
+    "path": "C:\\ProgramData\\Package Cache\\{F3849101-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v80.8.45513",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 141,
+    "path": "C:\\ProgramData\\DiRoots.ProSheets\\Settings",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Preferences ProSheets"
+  },
+  {
+    "index": 142,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-142-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 143,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-143-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 144,
+    "path": "C:\\ProgramData\\Splashtop\\Splashtop Remote Client for STB",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Splashtop corporate"
+  },
+  {
+    "index": 145,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-145-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 146,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-146-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 147,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-147-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 148,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-148-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 149,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-149-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 150,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-150-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 151,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-151-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 152,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-152-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 153,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-153-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 154,
+    "path": "C:\\ProgramData\\Autodesk\\AdSSO",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Autodesk Single Sign-On (tokens auth)"
+  },
+  {
+    "index": 155,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-155-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 156,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-156-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 157,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-157-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 158,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-158-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 159,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-159-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 160,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-160-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 161,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-161-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 162,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-162-VC-REDIST-XXXX-XXXX-XXXXXXXXXXXX}v14.30.30704",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "VC++ Redistributable"
+  },
+  {
+    "index": 163,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-163-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 164,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-164-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 165,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-165-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 166,
+    "path": "C:\\ProgramData\\Microsoft\\SmsRouter",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant Windows telephonie SMS"
+  },
+  {
+    "index": 167,
+    "path": "C:\\ProgramData\\Microsoft\\Windows NT",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Configuration Windows NT"
+  },
+  {
+    "index": 168,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-168-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 169,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-169-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 170,
+    "path": "C:\\ProgramData\\Microsoft\\Crypto",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cles et certificats cryptographiques machine"
+  },
+  {
+    "index": 171,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-171-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 172,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-172-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 173,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-173-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 174,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-174-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 175,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-175-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 176,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-176-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 177,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-177-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 178,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-178-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 179,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-179-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 180,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-180-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 181,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-181-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 182,
+    "path": "C:\\ProgramData\\Microsoft\\Storage Health",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Service Windows Storage Health"
+  },
+  {
+    "index": 183,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-183-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 184,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-184-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 185,
+    "path": "C:\\ProgramData\\bdkitinstaller\\{7c464d4f-XXXX-XXXX-XXXX-XXXXXXXXXXXX}",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cache installeur Bitdefender"
+  },
+  {
+    "index": 186,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\storage",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Storage NinjaOne"
+  },
+  {
+    "index": 187,
+    "path": "C:\\ProgramData\\HP\\logs",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Logs HP"
+  },
+  {
+    "index": 188,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-188-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 189,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-189-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 190,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-190-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 191,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-191-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 192,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-192-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 193,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-193-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 194,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-194-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 195,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-195-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 196,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-196-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 197,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-197-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 198,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-198-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 199,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-199-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 200,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-200-PACKAGE-XXXX-XXXX-XXXXXXXXXXXX}v1.0.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI/Burn"
+  },
+  {
+    "index": 201,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-201-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 202,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-202-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 203,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-203-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 204,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-204-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 205,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-205-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 206,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-206-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 207,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-207-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 208,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-208-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 209,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-209-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 210,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-210-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 211,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-211-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 212,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-212-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 213,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-213-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 214,
+    "path": "C:\\ProgramData\\Package Cache\\{GUID-214-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.26100.7705",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows SDK"
+  },
+  {
+    "index": 215,
+    "path": "C:\\ProgramData\\Autodesk\\Adlm",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Autodesk License Manager"
+  },
+  {
+    "index": 216,
+    "path": "C:\\ProgramData\\Autodesk\\IDSDK",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Autodesk Identity SDK SSO"
+  },
+  {
+    "index": 217,
+    "path": "C:\\ProgramData\\Packages",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Stockage packages AppX/MSIX Windows"
+  },
+  {
+    "index": 218,
+    "path": "C:\\ProgramData\\_Empirum\\Adobe Systems",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Deploiement Adobe via Empirum corporate"
+  },
+  {
+    "index": 219,
+    "path": "C:\\ProgramData\\Package Cache\\{D71432C2-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v6.17.21301",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI"
+  },
+  {
+    "index": 220,
+    "path": "C:\\ProgramData\\Microsoft\\MapData",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cartes hors-ligne Windows"
+  },
+  {
+    "index": 221,
+    "path": "C:\\ProgramData\\Package Cache\\{13D2A7A2-XXXX-XXXX-XXXX-XXXXXXXXXXXX}v10.1.0.0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Cache MSI"
+  },
+  {
+    "index": 222,
+    "path": "C:\\ProgramData\\Microsoft\\GroupPolicy",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Politiques de groupe corporate AD"
+  },
+  {
+    "index": 223,
+    "path": "C:\\ProgramData\\Intel\\GCC",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Intel Graphics Command Center"
+  },
+  {
+    "index": 224,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\policy",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Politiques NinjaOne corporate"
+  },
+  {
+    "index": 225,
+    "path": "C:\\ProgramData\\Microsoft\\WPD",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows Portable Devices"
+  },
+  {
+    "index": 226,
+    "path": "C:\\ProgramData\\UPGREAT",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "UPGREAT (integrateur IT corporate)"
+  },
+  {
+    "index": 227,
+    "path": "C:\\ProgramData\\UPGREAT\\Scripts",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Scripts corporate UPGREAT"
+  },
+  {
+    "index": 228,
+    "path": "C:\\ProgramData\\Microsoft\\Group Policy",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Strategies de groupe corporate"
+  },
+  {
+    "index": 229,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\en-us",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 230,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\fr-fr",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 231,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\de-de",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 232,
+    "path": "C:\\ProgramData\\Autodesk\\RVT 2022",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Donnees partagees Revit 2022"
+  },
+  {
+    "index": 233,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\es-es",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 234,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\it-it",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 235,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\ja-jp",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 236,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\ko-kr",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 237,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\pt-br",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 238,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\ru-ru",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 239,
+    "path": "C:\\ProgramData\\NVIDIA Corporation\\DisplayDriverRAS",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "NVIDIA Display Driver Reliability Analysis"
+  },
+  {
+    "index": 240,
+    "path": "C:\\ProgramData\\_Empirum\\RuckZuck",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "RuckZuck deploiement logiciel corporate"
+  },
+  {
+    "index": 241,
+    "path": "C:\\ProgramData\\HP\\bridge",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "HP Bridge"
+  },
+  {
+    "index": 242,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\zh-cn",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 243,
+    "path": "C:\\ProgramData\\HP\\HP TechPulse SmartHealth",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "HP TechPulse monitoring corporate"
+  },
+  {
+    "index": 244,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\zh-tw",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 245,
+    "path": "C:\\ProgramData\\Splashtop\\Common",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composants Splashtop corporate"
+  },
+  {
+    "index": 246,
+    "path": "C:\\ProgramData\\FileOpen",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "FileOpen plug-in DRM PDF"
+  },
+  {
+    "index": 247,
+    "path": "C:\\ProgramData\\FileOpen\\Updates",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Updates FileOpen DRM"
+  },
+  {
+    "index": 248,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\nl-nl",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 249,
+    "path": "C:\\ProgramData\\Windows App Certification Kit\\sv-se",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Localisation WACK"
+  },
+  {
+    "index": 250,
+    "path": "C:\\ProgramData\\Packages\\AD2F1837.myHP_v10z8vjag6ke6",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "UWP myHP"
+  },
+  {
+    "index": 251,
+    "path": "C:\\ProgramData\\DiRoots.ProSheets\\LangResources",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Ressources langues ProSheets"
+  },
+  {
+    "index": 252,
+    "path": "C:\\ProgramData\\_Empirum\\Printix.net",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Deploiement Printix Empirum corporate"
+  },
+  {
+    "index": 253,
+    "path": "C:\\ProgramData\\ABBYY",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "ABBYY OCR/FineReader"
+  },
+  {
+    "index": 254,
+    "path": "C:\\ProgramData\\Packages\\MSTeams_8wekyb3d8bbwe",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Microsoft Teams UWP active"
+  },
+  {
+    "index": 255,
+    "path": "C:\\ProgramData\\Ideate",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Ideate Software (plugins Revit)"
+  },
+  {
+    "index": 256,
+    "path": "C:\\ProgramData\\Ideate\\Ideate Automation",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Ideate Automation"
+  },
+  {
+    "index": 257,
+    "path": "C:\\ProgramData\\Intel_XMM7560 Driver Package",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Driver Intel XMM7560 modem WWAN"
+  },
+  {
+    "index": 258,
+    "path": "C:\\ProgramData\\Intel_XMM7560 Driver Package\\logs",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Logs driver WWAN"
+  },
+  {
+    "index": 259,
+    "path": "C:\\ProgramData\\Microsoft\\MF",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Media Foundation Windows"
+  },
+  {
+    "index": 260,
+    "path": "C:\\ProgramData\\Microsoft\\IdentityCRL",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Identity Certificate Revocation List"
+  },
+  {
+    "index": 261,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\uscripting",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Scripts utilisateur NinjaOne"
+  },
+  {
+    "index": 262,
+    "path": "C:\\ProgramData\\Packages\\5319275A.WhatsAppDesktop_cv1g1gvanyjgm",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "WhatsApp Desktop UWP"
+  },
+  {
+    "index": 263,
+    "path": "C:\\ProgramData\\Packages\\Claude_pzs8sxrjxfjjc",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Claude Desktop UWP"
+  },
+  {
+    "index": 264,
+    "path": "C:\\ProgramData\\Packages\\PythonSoftwareFoundation.PythonManager_qbz5n2kfra8p0",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Python Manager Windows Store"
+  },
+  {
+    "index": 265,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\scripting",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Scripts NinjaOne"
+  },
+  {
+    "index": 266,
+    "path": "C:\\ProgramData\\Microsoft\\SmartCard",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "SmartCard authentification PKI"
+  },
+  {
+    "index": 267,
+    "path": "C:\\ProgramData\\Autodesk\\ContentCatalog",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Catalogue contenu Autodesk"
+  },
+  {
+    "index": 268,
+    "path": "C:\\ProgramData\\Autodesk\\DWG TrueView 2022 - English",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "DWG TrueView 2022"
+  },
+  {
+    "index": 269,
+    "path": "C:\\ProgramData\\_Empirum\\Malwarebytes",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Deploiement Malwarebytes Empirum"
+  },
+  {
+    "index": 270,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Steel Connections 2023",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Composant Revit 2023"
+  },
+  {
+    "index": 271,
+    "path": "C:\\ProgramData\\Microsoft\\Wlansvc",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Profils Wi-Fi Windows"
+  },
+  {
+    "index": 272,
+    "path": "C:\\ProgramData\\Microsoft\\Phone Tools",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Outils telephonie Windows"
+  },
+  {
+    "index": 273,
+    "path": "C:\\ProgramData\\_Empirum\\NinjaOne",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Deploiement NinjaOne Empirum"
+  },
+  {
+    "index": 274,
+    "path": "C:\\ProgramData\\HP\\registration",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Donnees enregistrement HP"
+  },
+  {
+    "index": 275,
+    "path": "C:\\ProgramData\\Cisco",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cisco AnyConnect VPN corporate"
+  },
+  {
+    "index": 276,
+    "path": "C:\\ProgramData\\Cisco\\Cisco AnyConnect Secure Mobility Client",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "VPN corporate"
+  },
+  {
+    "index": 277,
+    "path": "C:\\ProgramData\\Microsoft\\AppV",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Microsoft Application Virtualization"
+  },
+  {
+    "index": 278,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Interoperability 2023",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Interop Revit 2023 vide"
+  },
+  {
+    "index": 279,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Interoperability 2024",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Interop Revit 2024 vide"
+  },
+  {
+    "index": 280,
+    "path": "C:\\ProgramData\\HP\\SharedServices",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Services partages HP"
+  },
+  {
+    "index": 281,
+    "path": "C:\\ProgramData\\Microsoft\\Event Viewer",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Configuration Observateur evenements Windows"
+  },
+  {
+    "index": 282,
+    "path": "C:\\ProgramData\\hpqlog",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Logs HP heritage"
+  },
+  {
+    "index": 283,
+    "path": "C:\\ProgramData\\BEXEL\\Building Explorer 5",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "BEXEL Manager BIM"
+  },
+  {
+    "index": 284,
+    "path": "C:\\ProgramData\\NVIDIA Corporation\\NvProfileUpdaterPlugin",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant driver NVIDIA"
+  },
+  {
+    "index": 285,
+    "path": "C:\\ProgramData\\KONICA MINOLTA",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Donnees driver imprimante Konica Minolta"
+  },
+  {
+    "index": 286,
+    "path": "C:\\ProgramData\\Epic",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Epic Online Services"
+  },
+  {
+    "index": 287,
+    "path": "C:\\ProgramData\\Epic\\EpicOnlineServices",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Epic Online Services"
+  },
+  {
+    "index": 288,
+    "path": "C:\\ProgramData\\Autodesk\\RevitLT",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Donnees Revit LT vide"
+  },
+  {
+    "index": 289,
+    "path": "C:\\ProgramData\\Microsoft\\Vault",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows Credential Vault"
+  },
+  {
+    "index": 290,
+    "path": "C:\\ProgramData\\.keentools",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "KeenTools plugins 3D"
+  },
+  {
+    "index": 291,
+    "path": "C:\\ProgramData\\PlaceMaker Revit\\Logs",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Logs PlaceMaker vide"
+  },
+  {
+    "index": 292,
+    "path": "C:\\ProgramData\\Ideate\\License",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Licences Ideate Software"
+  },
+  {
+    "index": 293,
+    "path": "C:\\ProgramData\\Apple Computer",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Donnees partagees iTunes/iCloud"
+  },
+  {
+    "index": 294,
+    "path": "C:\\ProgramData\\Apple Computer\\iTunes",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Donnees iTunes partagees"
+  },
+  {
+    "index": 295,
+    "path": "C:\\ProgramData\\IsolatedStorage",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": ".NET Isolated Storage"
+  },
+  {
+    "index": 296,
+    "path": "C:\\ProgramData\\IsolatedStorage\\vj3lbu5a.aaz",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Sous-dossier IsolatedStorage"
+  },
+  {
+    "index": 297,
+    "path": "C:\\ProgramData\\Autodesk\\CADManagerCtrlUtility",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Autodesk CAD Manager Control Utility"
+  },
+  {
+    "index": 298,
+    "path": "C:\\ProgramData\\Autodesk\\AddinProcessIds",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Etat process add-ins Autodesk"
+  },
+  {
+    "index": 299,
+    "path": "C:\\ProgramData\\USOPrivate\\ExpeditedAppRegistrations",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant Windows Update"
+  },
+  {
+    "index": 300,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Steel Connections 2024",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Steel Connections 2024 vide"
+  },
+  {
+    "index": 301,
+    "path": "C:\\ProgramData\\Microsoft\\WDF",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows Driver Framework"
+  },
+  {
+    "index": 302,
+    "path": "C:\\ProgramData\\Microsoft\\WinGet",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows Package Manager"
+  },
+  {
+    "index": 303,
+    "path": "C:\\ProgramData\\FileMaker\\FileMaker Pro Advanced",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "FileMaker vide"
+  },
+  {
+    "index": 304,
+    "path": "C:\\ProgramData\\MSS",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Microsoft Security Scanner ou vestige"
+  },
+  {
+    "index": 305,
+    "path": "C:\\ProgramData\\TechSmith\\Updater",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Updater TechSmith Snagit/Camtasia"
+  },
+  {
+    "index": 306,
+    "path": "C:\\ProgramData\\Microsoft DevDiv\\Installation",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant installation Visual Studio"
+  },
+  {
+    "index": 307,
+    "path": "C:\\ProgramData\\BIM Vision",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "BIM Vision visualiseur IFC vide"
+  },
+  {
+    "index": 308,
+    "path": "C:\\ProgramData\\File System Monitor",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Marker monitor fichiers"
+  },
+  {
+    "index": 309,
+    "path": "C:\\ProgramData\\48C4687D-9760-4F5B-BAB3-60351B0841E4",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Dossier vide nom GUID vestige"
+  },
+  {
+    "index": 310,
+    "path": "C:\\ProgramData\\Adobe",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Dossier vide"
+  },
+  {
+    "index": 311,
+    "path": "C:\\ProgramData\\Autodesk\\Downloads",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 312,
+    "path": "C:\\ProgramData\\Autodesk\\Inventor Interoperability 2024",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 313,
+    "path": "C:\\ProgramData\\Autodesk\\LicensingAnalyticsClient",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Vide lie au systeme licence Autodesk"
+  },
+  {
+    "index": 314,
+    "path": "C:\\ProgramData\\Autodesk\\Navisworks Manage 2023",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 315,
+    "path": "C:\\ProgramData\\Autodesk\\Navisworks Manage 2024",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 316,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Server 2021",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 317,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Server 2022",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 318,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Server 2023",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 319,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Server 2024",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 320,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Server 2025",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "Garder",
+    "reason": "Vide MAIS Revit 2025 actif - GARDER"
+  },
+  {
+    "index": 321,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Steel Connections 2021",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 322,
+    "path": "C:\\ProgramData\\Autodesk\\Revit Steel Connections 2022",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 323,
+    "path": "C:\\ProgramData\\Autodesk\\RevitServerTool",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 324,
+    "path": "C:\\ProgramData\\Autodesk\\Rx_Navisworks Manage",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 325,
+    "path": "C:\\ProgramData\\Autodesk\\Rx_RevitExtractor",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 326,
+    "path": "C:\\ProgramData\\bdlogging",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Vide MAIS lie a Bitdefender corporate"
+  },
+  {
+    "index": 327,
+    "path": "C:\\ProgramData\\boost_interprocess",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Marker IPC Boost"
+  },
+  {
+    "index": 328,
+    "path": "C:\\ProgramData\\boost_interprocess\\A8010000",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Idem 327"
+  },
+  {
+    "index": 329,
+    "path": "C:\\ProgramData\\Citrix\\Receiver",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide Citrix desinstalle"
+  },
+  {
+    "index": 330,
+    "path": "C:\\ProgramData\\Datacubist",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide Simplebim desinstalle"
+  },
+  {
+    "index": 331,
+    "path": "C:\\ProgramData\\Datacubist\\Simplebim 10",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 332,
+    "path": "C:\\ProgramData\\FLEXnet",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "FlexLM/FlexNet manager licences flottantes"
+  },
+  {
+    "index": 333,
+    "path": "C:\\ProgramData\\HP\\ExternalApps",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide"
+  },
+  {
+    "index": 334,
+    "path": "C:\\ProgramData\\HP\\HP Image Assistant",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Aucun",
+    "recommendedAction": "Supprimer",
+    "reason": "Vide HP Image Assistant desinstalle"
+  },
+  {
+    "index": 335,
+    "path": "C:\\ProgramData\\KUBUS\\BCF Managers 6.5 - Revit 2021 - 2024 6.5.5",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "Garder",
+    "reason": "Vide MAIS install actuel KUBUS lie - GARDER"
+  },
+  {
+    "index": 336,
+    "path": "C:\\ProgramData\\Microsoft\\DeviceSync",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant Windows"
+  },
+  {
+    "index": 337,
+    "path": "C:\\ProgramData\\Microsoft\\DRM",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Digital Rights Management Windows"
+  },
+  {
+    "index": 338,
+    "path": "C:\\ProgramData\\Microsoft\\NetFramework",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": ".NET Framework composant Windows"
+  },
+  {
+    "index": 339,
+    "path": "C:\\ProgramData\\Microsoft\\Provisioning",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Provisioning Windows deploiement OS"
+  },
+  {
+    "index": 340,
+    "path": "C:\\ProgramData\\Microsoft\\Settings",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Settings Windows"
+  },
+  {
+    "index": 341,
+    "path": "C:\\ProgramData\\Microsoft\\Spectrum",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant Windows subsystem"
+  },
+  {
+    "index": 342,
+    "path": "C:\\ProgramData\\Microsoft\\Speech_OneCore",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Reconnaissance vocale Windows"
+  },
+  {
+    "index": 343,
+    "path": "C:\\ProgramData\\Microsoft\\Windows Defender Advanced Threat Protection",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Defender ATP / MDE securite endpoint"
+  },
+  {
+    "index": 344,
+    "path": "C:\\ProgramData\\Microsoft\\WinMSIPC",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Microsoft Information Protection Client RMS"
+  },
+  {
+    "index": 345,
+    "path": "C:\\ProgramData\\Microsoft\\WwanSvc",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Service WWAN 4G/5G modem"
+  },
+  {
+    "index": 346,
+    "path": "C:\\ProgramData\\Microsoft OneDrive\\setup",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant OneDrive sync entreprise"
+  },
+  {
+    "index": 347,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\pre-download_cache",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Cache pre-download NinjaOne corporate"
+  },
+  {
+    "index": 348,
+    "path": "C:\\ProgramData\\NinjaRMMAgent\\udownload",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant download NinjaOne"
+  },
+  {
+    "index": 349,
+    "path": "C:\\ProgramData\\NVIDIA Corporation\\GameSessionTelemetry",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Vide telemetrie GeForce gaming"
+  },
+  {
+    "index": 350,
+    "path": "C:\\ProgramData\\NVIDIA Corporation\\umdlogs",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "User Mode Driver logs NVIDIA vide"
+  },
+  {
+    "index": 351,
+    "path": "C:\\ProgramData\\Packages\\AD2F1837.HPDisplayCenter_v10z8vjag6ke6",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Package HP Display Center vide"
+  },
+  {
+    "index": 352,
+    "path": "C:\\ProgramData\\Packages\\AppleInc.iCloud_nzyj5cx40ttqa",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Package iCloud UWP vide"
+  },
+  {
+    "index": 353,
+    "path": "C:\\ProgramData\\Packages\\AppUp.IntelGraphicsExperience_8j3eq9eme6ctt",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Moyen",
+    "recommendedAction": "VerifierAvant",
+    "reason": "Intel Graphics Experience UWP"
+  },
+  {
+    "index": 354,
+    "path": "C:\\ProgramData\\Packages\\AppUp.IntelManagementandSecurityStatus_8j3eq9eme6ctt",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Intel Management Engine status"
+  },
+  {
+    "index": 355,
+    "path": "C:\\ProgramData\\Packages\\com.owllabs.meetingowl.windows_cb17j8khw3v66",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Owl Labs Meeting Owl"
+  },
+  {
+    "index": 356,
+    "path": "C:\\ProgramData\\Packages\\NVIDIACorp.NVIDIAControlPanel_56jybvy8sckqj",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "NVIDIA Control Panel UWP"
+  },
+  {
+    "index": 357,
+    "path": "C:\\ProgramData\\Packages\\OwlLabs.MeetingOwl_pkza4zvy68k6r",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Meeting Owl"
+  },
+  {
+    "index": 358,
+    "path": "C:\\ProgramData\\restored_quar",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Quarantaine restauree antivirus Bitdefender"
+  },
+  {
+    "index": 359,
+    "path": "C:\\ProgramData\\RevitInterProcess",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Eleve",
+    "recommendedAction": "NePasToucher",
+    "reason": "Communication inter-process Revit"
+  },
+  {
+    "index": 360,
+    "path": "C:\\ProgramData\\RevitInterProcess\\20250522080631.500000",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Snapshot IPC Revit"
+  },
+  {
+    "index": 361,
+    "path": "C:\\ProgramData\\SoftwareDistribution",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Windows Update Software Distribution"
+  },
+  {
+    "index": 362,
+    "path": "C:\\ProgramData\\ssh",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Configuration SSH systeme (host keys)"
+  },
+  {
+    "index": 363,
+    "path": "C:\\ProgramData\\Tracker Software\\PDFXShellExt",
+    "sizeBytes": 0,
+    "lastWriteUtc": "2024-01-01T00:00:00Z",
+    "verdict": "Faible",
+    "recommendedAction": "CorbeilleOk",
+    "reason": "Tracker Software PDF-XChange shell"
+  },
+  {
+    "index": 364,
+    "path": "C:\\ProgramData\\WindowsHolographicDevices",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant Windows Mixed Reality"
+  },
+  {
+    "index": 365,
+    "path": "C:\\ProgramData\\WindowsHolographicDevices\\SpatialStore",
+    "sizeBytes": 10485760,
+    "lastWriteUtc": "2026-04-01T00:00:00Z",
+    "verdict": "Critique",
+    "recommendedAction": "NePasToucher",
+    "reason": "Composant Windows Mixed Reality"
+  }
+]

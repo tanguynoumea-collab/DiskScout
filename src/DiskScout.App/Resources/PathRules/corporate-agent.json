@@ -35,6 +35,62 @@
     "reason": "Matrix42 Empirum software distribution agent — agent corporate."
   },
   {
+    "id": "corp-agent-empirum-underscore",
+    "pathPattern": "%ProgramData%\\_Empirum",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Matrix42 Empirum (_Empirum variant) — agent corporate."
+  },
+  {
+    "id": "corp-agent-bdkitinstaller",
+    "pathPattern": "%ProgramData%\\bdkitinstaller",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Bitdefender Kit Installer corporate."
+  },
+  {
+    "id": "corp-agent-bdlogging",
+    "pathPattern": "%ProgramData%\\bdlogging",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Bitdefender logging - agent corporate."
+  },
+  {
+    "id": "corp-agent-cisco",
+    "pathPattern": "%ProgramData%\\Cisco",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Cisco AnyConnect / VPN corporate."
+  },
+  {
+    "id": "corp-agent-printix",
+    "pathPattern": "%ProgramData%\\printix.net",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Printix gestion impression cloud entreprise."
+  },
+  {
+    "id": "corp-agent-restored-quar",
+    "pathPattern": "%ProgramData%\\restored_quar",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Quarantaine restauree antivirus Bitdefender - jamais supprimer."
+  },
+  {
+    "id": "corp-agent-upgreat",
+    "pathPattern": "%ProgramData%\\UPGREAT",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "UPGREAT integrateur IT corporate."
+  },
+  {
+    "id": "corp-agent-hp-techpulse",
+    "pathPattern": "%ProgramData%\\HP\\HP TechPulse SmartHealth",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "HP TechPulse monitoring corporate."
+  },
+  {
     "id": "corp-agent-splashtop",
     "pathPattern": "%ProgramData%\\Splashtop",
     "category": "CorporateAgent",

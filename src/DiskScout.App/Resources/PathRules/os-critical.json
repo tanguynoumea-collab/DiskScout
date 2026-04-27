@@ -358,17 +358,38 @@
   },
   {
     "id": "os-critical-pd-msdevdiv",
-    "pathPattern": "%ProgramData%\\Microsoft\\Microsoft DevDiv",
+    "pathPattern": "%ProgramData%\\Microsoft DevDiv",
     "category": "OsCriticalDoNotPropose",
     "minRiskFloor": null,
-    "reason": "Microsoft DevDiv shared cache — jamais proposer."
+    "reason": "Microsoft DevDiv shared cache (Visual Studio installer) — jamais proposer."
   },
   {
-    "id": "os-critical-pd-softwaredist",
+    "id": "os-critical-applocallow",
+    "pathPattern": "%UserProfile%\\AppData\\LocalLow",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Dossier Windows standard pour applications low-integrity — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-ideate-license",
+    "pathPattern": "%ProgramData%\\Ideate\\License",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Licences Ideate Software (BIM plugins) — jamais proposer."
+  },
+  {
+    "id": "os-critical-windir-softwaredist",
     "pathPattern": "%WinDir%\\SoftwareDistribution",
     "category": "OsCriticalDoNotPropose",
     "minRiskFloor": null,
-    "reason": "Windows Update download cache — jamais proposer."
+    "reason": "Windows Update download cache (Windows\\SoftwareDistribution) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-softwaredist",
+    "pathPattern": "%ProgramData%\\SoftwareDistribution",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Update Software Distribution shared cache — jamais proposer."
   },
   {
     "id": "os-critical-pd-usoshared",
@@ -406,13 +427,6 @@
     "reason": "Windows OpenSSH server config — jamais proposer."
   },
   {
-    "id": "os-critical-pd-packages",
-    "pathPattern": "%ProgramData%\\Packages",
-    "category": "OsCriticalDoNotPropose",
-    "minRiskFloor": null,
-    "reason": "Appx package store (ProgramData\\Packages) — jamais proposer."
-  },
-  {
     "id": "os-critical-pf-windowsapps",
     "pathPattern": "%ProgramFiles%\\WindowsApps",
     "category": "OsCriticalDoNotPropose",
@@ -432,13 +446,6 @@
     "category": "OsCriticalDoNotPropose",
     "minRiskFloor": null,
     "reason": "Composants partagés Windows (x86) — jamais proposer."
-  },
-  {
-    "id": "os-critical-pd-pkgcache",
-    "pathPattern": "%ProgramData%\\Package Cache",
-    "category": "OsCriticalDoNotPropose",
-    "minRiskFloor": null,
-    "reason": "Burn/WiX bundle cache (Package Cache) — gestion automatique."
   },
   {
     "id": "os-critical-pd-flexnet",

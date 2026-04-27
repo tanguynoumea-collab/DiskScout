@@ -7,6 +7,13 @@
     "reason": "Cache MSI Burn/WiX (Visual C++ Redistributable, .NET, etc.) — utilisé par les désinstallateurs."
   },
   {
+    "id": "pkg-cache-pd-packages",
+    "pathPattern": "%ProgramData%\\Packages",
+    "category": "PackageCache",
+    "minRiskFloor": "Eleve",
+    "reason": "Appx package store (ProgramData\\Packages) — sous-dossiers UWP gérés par le Store."
+  },
+  {
     "id": "pkg-cache-vs-packages",
     "pathPattern": "%ProgramData%\\Microsoft\\VisualStudio\\Packages",
     "category": "PackageCache",

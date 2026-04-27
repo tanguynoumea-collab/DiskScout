@@ -57,11 +57,12 @@ public class ConfidenceScorerTests
     }
 
     // -------------------------------------------------------------------------
-    // Test 3: multiple matchers stack additively.
-    //   Registry (-50) + Service (-45) = -95 -> 100 - 95 = 5.
+    // Test 3: multiple matchers stack additively up to the per-aggregate cap.
+    //   Registry (-50) + Service (-45) = -95 raw, but the Phase-10-05 cap
+    //   limits aggregate matcher penalty to 50 -> 100 - 50 = 50.
     // -------------------------------------------------------------------------
     [Fact]
-    public void Compute_MultipleMatcherHits_StackAdditively()
+    public void Compute_MultipleMatcherHits_StackAdditively_CappedAt50()
     {
         var input = Build(
             hits: new[]
@@ -69,22 +70,24 @@ public class ConfidenceScorerTests
                 new MatcherHit("Registry", "Registry:Foo", -50),
                 new MatcherHit("Service", "Service:Bar", -45),
             });
-        _scorer.Compute(input).Should().Be(5);
+        _scorer.Compute(input).Should().Be(50);
     }
 
     // -------------------------------------------------------------------------
     // Test 4: PathCategory adjustments (no matchers, no bonuses).
-    //   PackageCache    -> 100 - 90 = 10
-    //   DriverData      -> 100 - 70 = 30
-    //   CorporateAgent  -> 100 - 80 = 20
-    //   VendorShared    -> 100 - 50 = 50
+    //   Phase-10-05 corpus tuning softened these deltas to avoid forcing
+    //   Critique on items the human audit graded Moyen/Eleve.
+    //   PackageCache    -> 100 - 60 = 40
+    //   DriverData      -> 100 - 50 = 50
+    //   CorporateAgent  -> 100 - 60 = 40
+    //   VendorShared    -> 100 - 40 = 60
     //   Generic         -> 100  (no adjustment)
     // -------------------------------------------------------------------------
     [Theory]
-    [InlineData(PathCategory.PackageCache, 10)]
-    [InlineData(PathCategory.DriverData, 30)]
-    [InlineData(PathCategory.CorporateAgent, 20)]
-    [InlineData(PathCategory.VendorShared, 50)]
+    [InlineData(PathCategory.PackageCache, 40)]
+    [InlineData(PathCategory.DriverData, 50)]
+    [InlineData(PathCategory.CorporateAgent, 40)]
+    [InlineData(PathCategory.VendorShared, 60)]
     [InlineData(PathCategory.Generic, 100)]
     public void Compute_PathCategoryAdjustment(PathCategory category, int expected)
     {
@@ -157,11 +160,30 @@ public class ConfidenceScorerTests
     }
 
     // -------------------------------------------------------------------------
-    // Test 7: clamp at 0 — overshoot due to many matchers can't go negative.
-    //   3 Registry hits (3 * -50 = -150) -> 100 - 150 = -50 -> clamped to 0.
+    // Test 7: matcher cap — many hits saturate at -50 aggregate, then optional
+    //   PathCategory penalty + bonuses can drive the score lower / clamp to 0.
+    //   3 hits (3 * -50 = -150) raw, capped at -50 -> 100 - 50 = 50.
+    //   Plus PackageCache (-60) -> 50 - 60 = -10 -> clamped to 0.
     // -------------------------------------------------------------------------
     [Fact]
-    public void Compute_ManyMatchers_ClampedAt0()
+    public void Compute_ManyMatchers_CappedAt50_ThenCategory_ClampsAt0()
+    {
+        var input = Build(
+            pathRuleCategory: PathCategory.PackageCache,
+            hits: new[]
+            {
+                new MatcherHit("Registry", "a", -50),
+                new MatcherHit("Registry", "b", -50),
+                new MatcherHit("Service", "c", -45),
+            });
+        _scorer.Compute(input).Should().Be(0);
+    }
+
+    // -------------------------------------------------------------------------
+    // Test 7-bis: matcher cap alone (no category) — many hits saturate at -50.
+    // -------------------------------------------------------------------------
+    [Fact]
+    public void Compute_ManyMatchers_CapsAt50_NoCategory()
     {
         var input = Build(
             hits: new[]
@@ -170,7 +192,8 @@ public class ConfidenceScorerTests
                 new MatcherHit("Registry", "b", -50),
                 new MatcherHit("Service", "c", -45),
             });
-        _scorer.Compute(input).Should().Be(0);
+        // 3 hits sum to -145 raw, capped at -50 -> 100 - 50 = 50.
+        _scorer.Compute(input).Should().Be(50);
     }
 
     // -------------------------------------------------------------------------
@@ -189,9 +212,10 @@ public class ConfidenceScorerTests
 
     // -------------------------------------------------------------------------
     // Test 9: PackageCache combined with size=0 bonus.
-    //   100 - 90 + 20 = 30. Verifies category and bonus interact correctly
+    //   100 - 60 + 20 = 60. Verifies category and bonus interact correctly
     //   (no clamp here, no matchers). MinRiskFloor=Eleve enforced separately
-    //   in the classifier, but the score itself is still 30.
+    //   in the classifier, but the score itself is still 60.
+    //   (Phase-10-05 tuning: PackageCache delta softened from -90 to -60.)
     // -------------------------------------------------------------------------
     [Fact]
     public void Compute_PackageCacheWithSizeZeroBonus()
@@ -199,12 +223,12 @@ public class ConfidenceScorerTests
         var input = Build(
             size: 0,
             pathRuleCategory: PathCategory.PackageCache);
-        _scorer.Compute(input).Should().Be(30);
+        _scorer.Compute(input).Should().Be(60);
     }
 
     // -------------------------------------------------------------------------
-    // Test 10: Registry + PackageCache stack to clamp at 0.
-    //   100 - 50 (registry) - 90 (PackageCache) = -40 -> clamped at 0.
+    // Test 10: Registry + PackageCache combined.
+    //   100 - 50 (registry) - 60 (PackageCache, softened) = -10 -> clamped at 0.
     // -------------------------------------------------------------------------
     [Fact]
     public void Compute_RegistryPlusPackageCache_ClampedAt0()

@@ -14,6 +14,125 @@
     "reason": "Autodesk shared workspace (AutoCAD, Revit, etc.) — exclusions adlm/license dans os-critical."
   },
   {
+    "id": "vendor-autodesk-odis",
+    "pathPattern": "%ProgramData%\\Autodesk\\ODIS",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Autodesk Desktop Connector / Installer Service - actif."
+  },
+  {
+    "id": "vendor-autodesk-aecgd",
+    "pathPattern": "%ProgramData%\\Autodesk\\AECGD",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "AEC Geographic Data partage Autodesk."
+  },
+  {
+    "id": "vendor-autodesk-structural",
+    "pathPattern": "%ProgramData%\\Autodesk\\Structural",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Bibliotheque structurelle Autodesk."
+  },
+  {
+    "id": "vendor-autodesk-applicationplugins",
+    "pathPattern": "%ProgramData%\\Autodesk\\ApplicationPlugins",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Plugins Autodesk partages."
+  },
+  {
+    "id": "vendor-autodesk-cdx",
+    "pathPattern": "%ProgramData%\\Autodesk\\CDX",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Common Data eXchange Autodesk."
+  },
+  {
+    "id": "vendor-autodesk-adpsdk",
+    "pathPattern": "%ProgramData%\\Autodesk\\ADPSDK",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Autodesk Desktop Platform SDK."
+  },
+  {
+    "id": "vendor-autodesk-cer",
+    "pathPattern": "%ProgramData%\\Autodesk\\CER",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Customer Error Reporting Autodesk."
+  },
+  {
+    "id": "vendor-autodesk-acngen",
+    "pathPattern": "%ProgramData%\\Autodesk\\AcNGEN",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "AutoCAD .NET pre-compilation cache."
+  },
+  {
+    "id": "vendor-autodesk-addinprocessids",
+    "pathPattern": "%ProgramData%\\Autodesk\\AddinProcessIds",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Etat process add-ins Autodesk."
+  },
+  {
+    "id": "vendor-autodesk-contentcatalog",
+    "pathPattern": "%ProgramData%\\Autodesk\\ContentCatalog",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Catalogue de contenu Autodesk."
+  },
+  {
+    "id": "vendor-autodesk-cadmanager",
+    "pathPattern": "%ProgramData%\\Autodesk\\CADManagerCtrlUtility",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Autodesk CAD Manager Control Utility."
+  },
+  {
+    "id": "vendor-autodesk-rvt-2025",
+    "pathPattern": "%ProgramData%\\Autodesk\\RVT 2025",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Donnees Revit 2025 actives (templates, families)."
+  },
+  {
+    "id": "vendor-autodesk-rvt-2022",
+    "pathPattern": "%ProgramData%\\Autodesk\\RVT 2022",
+    "category": "VendorShared",
+    "minRiskFloor": "Faible",
+    "reason": "Donnees Revit 2022 archivees."
+  },
+  {
+    "id": "vendor-autodesk-revit-interop-2025",
+    "pathPattern": "%ProgramData%\\Autodesk\\Revit Interoperability 2025",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Composant interoperabilite Revit 2025."
+  },
+  {
+    "id": "vendor-autodesk-revit-steel-2025",
+    "pathPattern": "%ProgramData%\\Autodesk\\Revit Steel Connections 2025",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Composant officiel Autodesk pour Revit 2025."
+  },
+  {
+    "id": "vendor-autodesk-geospatial",
+    "pathPattern": "%ProgramData%\\Autodesk\\Geospatial Coordinate Systems",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Bibliotheque de systemes de coordonnees Autodesk - composant officiel."
+  },
+  {
+    "id": "vendor-autodesk-dwg-trueview",
+    "pathPattern": "%ProgramData%\\Autodesk\\DWG TrueView",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "DWG TrueView visualisateur Autodesk."
+  },
+  {
     "id": "vendor-jetbrains",
     "pathPattern": "%ProgramData%\\JetBrains",
     "category": "VendorShared",
@@ -47,5 +166,89 @@
     "category": "VendorShared",
     "minRiskFloor": null,
     "reason": "Oracle Java / VirtualBox shared data."
+  },
+  {
+    "id": "vendor-apple",
+    "pathPattern": "%ProgramData%\\Apple",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Apple iTunes/iCloud shared cache."
+  },
+  {
+    "id": "vendor-apple-computer",
+    "pathPattern": "%ProgramData%\\Apple Computer",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Apple Computer shared data (iTunes legacy path)."
+  },
+  {
+    "id": "vendor-claude",
+    "pathPattern": "%ProgramData%\\Claude",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "Claude Desktop application active."
+  },
+  {
+    "id": "vendor-bexel",
+    "pathPattern": "%ProgramData%\\BEXEL",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "BEXEL Manager BIM."
+  },
+  {
+    "id": "vendor-konica",
+    "pathPattern": "%ProgramData%\\KONICA MINOLTA",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Konica Minolta printer drivers."
+  },
+  {
+    "id": "vendor-ideate",
+    "pathPattern": "%ProgramData%\\Ideate",
+    "category": "VendorShared",
+    "minRiskFloor": "Eleve",
+    "reason": "Ideate Software (plugins Revit)."
+  },
+  {
+    "id": "vendor-revit-interprocess",
+    "pathPattern": "%ProgramData%\\RevitInterProcess",
+    "category": "VendorShared",
+    "minRiskFloor": "Eleve",
+    "reason": "Revit Inter-Process Communication."
+  },
+  {
+    "id": "vendor-dynamo",
+    "pathPattern": "%ProgramData%\\Dynamo",
+    "category": "VendorShared",
+    "minRiskFloor": "Eleve",
+    "reason": "Dynamo (visual programming pour Revit/Civil 3D)."
+  },
+  {
+    "id": "vendor-placemaker",
+    "pathPattern": "%ProgramData%\\PlaceMaker Revit",
+    "category": "VendorShared",
+    "minRiskFloor": "Eleve",
+    "reason": "PlaceMaker plugin Revit."
+  },
+  {
+    "id": "vendor-diroots",
+    "pathPattern": "%ProgramData%\\DiRoots.One",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "DiRoots.One plugins BIM."
+  },
+  {
+    "id": "vendor-diroots-prosheets",
+    "pathPattern": "%ProgramData%\\DiRoots.ProSheets",
+    "category": "VendorShared",
+    "minRiskFloor": "Eleve",
+    "reason": "DiRoots ProSheets plugin Revit."
+  },
+  {
+    "id": "vendor-kubus",
+    "pathPattern": "%ProgramData%\\KUBUS",
+    "category": "VendorShared",
+    "minRiskFloor": "Moyen",
+    "reason": "KUBUS BCF Manager (plugin BIM Revit)."
   }
 ]

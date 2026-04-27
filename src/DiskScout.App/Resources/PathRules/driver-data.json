@@ -3,35 +3,35 @@
     "id": "driver-data-intel",
     "pathPattern": "%ProgramData%\\Intel",
     "category": "DriverData",
-    "minRiskFloor": null,
+    "minRiskFloor": "Moyen",
     "reason": "Intel driver / management data (graphics, network, chipset)."
   },
   {
     "id": "driver-data-nvidia",
     "pathPattern": "%ProgramData%\\NVIDIA",
     "category": "DriverData",
-    "minRiskFloor": null,
+    "minRiskFloor": "Moyen",
     "reason": "NVIDIA driver data (GeForce, Quadro)."
   },
   {
     "id": "driver-data-nvidia-corp",
     "pathPattern": "%ProgramData%\\NVIDIA Corporation",
     "category": "DriverData",
-    "minRiskFloor": null,
+    "minRiskFloor": "Moyen",
     "reason": "NVIDIA Corporation telemetry / driver data."
   },
   {
     "id": "driver-data-amd",
     "pathPattern": "%ProgramData%\\AMD",
     "category": "DriverData",
-    "minRiskFloor": null,
+    "minRiskFloor": "Moyen",
     "reason": "AMD GPU/CPU driver data (Radeon, Catalyst, Adrenalin)."
   },
   {
     "id": "driver-data-realtek",
     "pathPattern": "%ProgramData%\\Realtek",
     "category": "DriverData",
-    "minRiskFloor": null,
+    "minRiskFloor": "Moyen",
     "reason": "Realtek audio / network driver data."
   },
   {
@@ -42,17 +42,66 @@
     "reason": "HP OEM tools / driver data."
   },
   {
+    "id": "driver-data-hp-touchpoint",
+    "pathPattern": "%ProgramData%\\HP\\HP Touchpoint Analytics Client",
+    "category": "DriverData",
+    "minRiskFloor": "Moyen",
+    "reason": "HP Touchpoint Analytics actif."
+  },
+  {
+    "id": "driver-data-hp-streamlog",
+    "pathPattern": "%ProgramData%\\HP\\StreamLog",
+    "category": "DriverData",
+    "minRiskFloor": "Moyen",
+    "reason": "HP StreamLog logs actifs."
+  },
+  {
+    "id": "driver-data-hp-dock",
+    "pathPattern": "%ProgramData%\\HP\\HP_DockAccessory",
+    "category": "DriverData",
+    "minRiskFloor": "Moyen",
+    "reason": "HP Dock Accessory data."
+  },
+  {
+    "id": "driver-data-hp-installations",
+    "pathPattern": "%ProgramData%\\HP\\Downloaded Installations",
+    "category": "DriverData",
+    "minRiskFloor": "Moyen",
+    "reason": "Cache d'installeurs HP."
+  },
+  {
+    "id": "driver-data-hp-bridge",
+    "pathPattern": "%ProgramData%\\HP\\bridge",
+    "category": "DriverData",
+    "minRiskFloor": "Moyen",
+    "reason": "HP Bridge."
+  },
+  {
+    "id": "driver-data-hp-shared",
+    "pathPattern": "%ProgramData%\\HP\\SharedServices",
+    "category": "DriverData",
+    "minRiskFloor": "Moyen",
+    "reason": "Services partages HP."
+  },
+  {
+    "id": "driver-data-hp-registration",
+    "pathPattern": "%ProgramData%\\HP\\registration",
+    "category": "DriverData",
+    "minRiskFloor": "Moyen",
+    "reason": "Donnees enregistrement HP."
+  },
+  {
     "id": "driver-data-dell",
     "pathPattern": "%ProgramData%\\Dell",
     "category": "DriverData",
-    "minRiskFloor": null,
+    "minRiskFloor": "Moyen",
     "reason": "Dell OEM tools / driver data."
   },
   {
     "id": "driver-data-lenovo",
     "pathPattern": "%ProgramData%\\Lenovo",
     "category": "DriverData",
-    "minRiskFloor": null,
+    "minRiskFloor": "Moyen",
     "reason": "Lenovo OEM tools / driver data."
   }
 ]

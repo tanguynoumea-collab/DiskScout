@@ -19,8 +19,6 @@ public class ParentContextAnalyzerTests
     [InlineData(@"C:\ProgramData\Adobe\Logs", @"C:\ProgramData\Adobe")]
     [InlineData(@"C:\ProgramData\Adobe\Cache", @"C:\ProgramData\Adobe")]
     [InlineData(@"C:\ProgramData\Adobe\Settings", @"C:\ProgramData\Adobe")]
-    [InlineData(@"C:\ProgramData\Adobe\Updates", @"C:\ProgramData\Adobe")]
-    [InlineData(@"C:\ProgramData\Adobe\Downloads", @"C:\ProgramData\Adobe")]
     [InlineData(@"C:\ProgramData\Adobe\Resources", @"C:\ProgramData\Adobe")]
     [InlineData(@"C:\ProgramData\Adobe\en-us", @"C:\ProgramData\Adobe")]
     [InlineData(@"C:\ProgramData\Adobe\fr-fr", @"C:\ProgramData\Adobe")]

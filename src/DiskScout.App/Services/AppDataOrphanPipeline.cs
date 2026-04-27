@@ -74,7 +74,29 @@ public sealed class AppDataOrphanPipeline : IAppDataOrphanPipeline
         // Step 3: KnownPathRules — match against the engine. The hits are
         // sorted by specificity DESC by the engine; the first hit (most
         // specific) drives the path category and the floor lookup.
-        var ruleHits = _pathRuleEngine.Match(significantPath);
+        //
+        // Phase-10-05: match against BOTH the original full path AND the
+        // walked-up significantPath. ParentContextAnalyzer might walk up
+        // a generic leaf like "Settings" to its parent "Microsoft" — and the
+        // os-critical rule (e.g., %ProgramData%\Microsoft\Settings) would
+        // miss the walked-up "C:\ProgramData\Microsoft". By matching the
+        // original full path too, we keep HardBlacklist coverage even when
+        // the user audit path crosses a generic-leaf boundary.
+        var ruleHitsOriginal = _pathRuleEngine.Match(node.FullPath);
+        var ruleHitsParent = _pathRuleEngine.Match(significantPath);
+        // Merge — preserve specificity DESC by concatenating original-first
+        // (more specific) then deduping by RuleId.
+        var seenIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var ruleHitsList = new List<RuleHit>(ruleHitsOriginal.Count + ruleHitsParent.Count);
+        foreach (var hit in ruleHitsOriginal)
+        {
+            if (seenIds.Add(hit.RuleId)) ruleHitsList.Add(hit);
+        }
+        foreach (var hit in ruleHitsParent)
+        {
+            if (seenIds.Add(hit.RuleId)) ruleHitsList.Add(hit);
+        }
+        IReadOnlyList<RuleHit> ruleHits = ruleHitsList;
 
         // Step 1: HardBlacklist gate (intentionally executed AFTER the engine
         // call so we get the rule hits in one pass). If ANY hit has category

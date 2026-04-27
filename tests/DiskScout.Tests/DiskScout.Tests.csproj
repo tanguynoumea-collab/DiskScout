@@ -25,4 +25,10 @@
     <ProjectReference Include="..\..\src\DiskScout.App\DiskScout.App.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Fixtures\programdata_corpus_365.json">
+      <LogicalName>DiskScout.Tests.Fixtures.programdata_corpus_365.json</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

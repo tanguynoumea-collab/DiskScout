@@ -254,12 +254,13 @@ public class AppDataOrphanPipelineTests
     }
 
     // -------------------------------------------------------------------------
-    // Test 5: Registry + Service matchers cumulate.
-    //   Both fire on the same Acme folder -> -50 -45 = -95 -> 100-95+10(no exe) = 15.
-    //   Score < 20 -> Critique / NePasToucher.
+    // Test 5: Registry + Service matchers both fire on same Acme folder.
+    //   Phase-10-05: matcher penalty capped at -50 aggregate.
+    //   Raw: -50 (Registry) - 45 (Service) = -95, capped at -50.
+    //   Score: 100 - 50 + 10 (no exe) = 60 -> Faible (Score 60-79 -> Faible).
     // -------------------------------------------------------------------------
     [Fact]
-    public async Task EvaluateAsync_RegistryPlusServiceMatcher_Critique()
+    public async Task EvaluateAsync_RegistryPlusServiceMatcher_Faible()
     {
         var snapshot = new MachineSnapshot(
             CapturedUtc: DateTime.UtcNow,
@@ -295,8 +296,8 @@ public class AppDataOrphanPipelineTests
         result.Should().NotBeNull();
         result!.MatchedSources.Should().Contain(h => h.Source == "Registry");
         result.MatchedSources.Should().Contain(h => h.Source == "Service");
-        result.Risk.Should().Be(RiskLevel.Critique);
-        result.Action.Should().Be(RecommendedAction.NePasToucher);
+        result.Risk.Should().Be(RiskLevel.Faible);
+        result.Action.Should().Be(RecommendedAction.CorbeilleOk);
     }
 
     // -------------------------------------------------------------------------

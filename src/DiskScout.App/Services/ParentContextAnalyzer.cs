@@ -19,8 +19,12 @@ public sealed class ParentContextAnalyzer : IParentContextAnalyzer
     private static readonly HashSet<string> GenericLeaves = new(StringComparer.OrdinalIgnoreCase)
     {
         // Volatile subfolders.
+        // Note: "Downloads", "Update", "Updates" intentionally NOT included —
+        // empirically (Phase 10 corpus 365 audit), walking up from these
+        // vendor sub-paths over-matches the parent vendor's services / drivers,
+        // collapsing the score to Critique when the human verdict is Aucun
+        // (vendor's Downloads folder happens to be empty residue).
         "Logs", "Log", "Cache", "Caches", "Settings", "Setting", "Config",
-        "Updates", "Update", "Download", "Downloads",
         "Installer", "Installers", "Components",
         "sym", "Symbols",
         "jsonoutput", "output", "storage",
