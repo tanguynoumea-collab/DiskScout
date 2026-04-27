@@ -161,10 +161,10 @@ Plans:
 **Goal:** Refondre le moteur de détection des rémanents AppData (>90 % de FP mesurés sur corpus de 365 items dans `C:\ProgramData`) pour atteindre <5 % de FP sans dégrader le rappel. Pipeline 7 étapes : HardBlacklist → ParentContextAnalyzer → KnownPathRules → MultiSourceMatcher (Service / Driver / Appx / Registry / ScheduledTask) → PublisherAliasResolver → ConfidenceScorer → RiskLevelClassifier. Nouveau modèle `AppDataOrphanCandidate` avec ConfidenceScore 0-100, RiskLevel + RecommendedAction, traçabilité des règles déclenchées (champ `Diagnostics` rétro-compatible sur `OrphanCandidate`). Mode `--audit` CLI exportant CSV. Acceptance gate ≥95 % concordance + 0 % CRITIQUE→Supprimer/CorbeilleOk sur le corpus 365.
 **Requirements**: Post-v1 — non mappés à REQUIREMENTS.md (phase ajoutée après création de la roadmap)
 **Depends on:** Phase 9
-**Plans:** 1/6 plans executed
+**Plans:** 2/6 plans executed
 
 Plans:
-- [ ] 10-01-PLAN.md — PathRule + PathRuleEngine + ParentContextAnalyzer + 5 embedded JSON catalogs (os-critical / package-cache / driver-data / corporate-agent / vendor-shared) + AppPaths.PathRulesFolder/AuditFolder
+- [x] 10-01-PLAN.md — PathRule + PathRuleEngine + ParentContextAnalyzer + 5 embedded JSON catalogs (os-critical / package-cache / driver-data / corporate-agent / vendor-shared) + AppPaths.PathRulesFolder/AuditFolder
 - [x] 10-02-PLAN.md — Promote IServiceEnumerator + IScheduledTaskEnumerator to public; add IDriverEnumerator + IAppxEnumerator + impls; MachineSnapshot model + MachineSnapshotProvider (lazy TTL 5min, parallel population)
 - [ ] 10-03-PLAN.md — PublisherAliasResolver + ~30-entry aliases.json embedded resource + FuzzyMatcher fallback
 - [ ] 10-04-PLAN.md — AppDataOrphanCandidate model + 4 matchers (Service/Driver/Appx/Registry) + ConfidenceScorer + RiskLevelClassifier + AppDataOrphanPipeline orchestrator + OrphanDetectorService AppData-branch integration + App.xaml.cs DI wiring
