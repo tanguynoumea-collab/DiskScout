@@ -9,6 +9,8 @@ public static class AppPaths
     public const string ScansFolderName = "scans";
     public const string InstallTracesFolderName = "install-traces";
     public const string PublisherRulesFolderName = "publisher-rules";
+    public const string PathRulesFolderName = "path-rules";
+    public const string AuditsFolderName = "audits";
 
     public static string AppDataFolder
     {
@@ -48,6 +50,26 @@ public static class AppPaths
         get
         {
             var path = Path.Combine(AppDataFolder, PublisherRulesFolderName);
+            Directory.CreateDirectory(path);
+            return path;
+        }
+    }
+
+    public static string PathRulesFolder
+    {
+        get
+        {
+            var path = Path.Combine(AppDataFolder, PathRulesFolderName);
+            Directory.CreateDirectory(path);
+            return path;
+        }
+    }
+
+    public static string AuditFolder
+    {
+        get
+        {
+            var path = Path.Combine(AppDataFolder, AuditsFolderName);
             Directory.CreateDirectory(path);
             return path;
         }
