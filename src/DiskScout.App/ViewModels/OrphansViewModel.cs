@@ -202,6 +202,28 @@ public sealed partial class OrphansViewModel : ObservableObject
         try { Clipboard.SetText(row.FullPath); } catch { /* clipboard busy */ }
     }
 
+    /// <summary>
+    /// Phase 10-06 — "Pourquoi ?" button on AppData rows. Opens the
+    /// <c>OrphanDiagnosticsWindow</c> bound to a fresh
+    /// <see cref="OrphanDiagnosticsViewModel"/> wrapping the row's
+    /// <see cref="AppDataOrphanCandidate"/>. No-op for non-AppData rows
+    /// (Diagnostics is null) — XAML hides the button via <c>HasDiagnostics</c>
+    /// so this guard is purely defensive.
+    /// </summary>
+    [RelayCommand]
+    private void ShowDiagnostics(OrphanRow? row)
+    {
+        if (row?.Diagnostics is null) return;
+
+        var vm = new OrphanDiagnosticsViewModel(row.Diagnostics);
+        var window = new Views.OrphanDiagnosticsWindow
+        {
+            DataContext = vm,
+            Owner = Application.Current?.MainWindow,
+        };
+        window.ShowDialog();
+    }
+
     [RelayCommand]
     private async Task DeleteAsync(OrphanRow? row)
     {

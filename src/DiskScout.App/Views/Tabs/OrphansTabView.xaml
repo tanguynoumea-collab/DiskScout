@@ -145,6 +145,8 @@
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
                                                     <CheckBox Grid.Column="0"
                                                               IsChecked="{Binding IsSelected, Mode=TwoWay}"
@@ -154,9 +156,57 @@
                                                         <TextBlock Text="{Binding Reason}" FontSize="11"
                                                                    Foreground="{StaticResource ForegroundSubtleBrush}" />
                                                     </StackPanel>
-                                                    <TextBlock Grid.Column="2" Text="{Binding SizeDisplay}"
+
+                                                    <!-- Phase 10-06: Score badge — only when Diagnostics present (AppData rows). -->
+                                                    <Border Grid.Column="2"
+                                                            Background="{Binding Risk, Converter={StaticResource RiskLevelToBrushConverter}}"
+                                                            CornerRadius="8" Padding="8,2"
+                                                            VerticalAlignment="Center" Margin="14,0,0,0"
+                                                            MinWidth="38"
+                                                            Visibility="{Binding HasDiagnostics, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <Border.ToolTip>
+                                                            <ToolTip MaxWidth="520">
+                                                                <StackPanel>
+                                                                    <TextBlock FontWeight="SemiBold">
+                                                                        <Run Text="Score : " />
+                                                                        <Run Text="{Binding ConfidenceScore, Mode=OneWay}" />
+                                                                        <Run Text=" / 100  •  Risque : " />
+                                                                        <Run Text="{Binding Risk, Mode=OneWay}" />
+                                                                    </TextBlock>
+                                                                    <TextBlock Text="{Binding Diagnostics.Reason}"
+                                                                               TextWrapping="Wrap" Margin="0,4,0,0" />
+                                                                    <ItemsControl ItemsSource="{Binding Diagnostics.TriggeredRules}" Margin="0,4,0,0">
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <TextBlock FontSize="11" Margin="0,1">
+                                                                                    <Run Text="• " />
+                                                                                    <Run Text="{Binding RuleId, Mode=OneWay}" />
+                                                                                    <Run Text=" — " />
+                                                                                    <Run Text="{Binding Reason, Mode=OneWay}" />
+                                                                                </TextBlock>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                </StackPanel>
+                                                            </ToolTip>
+                                                        </Border.ToolTip>
+                                                        <TextBlock Text="{Binding ScoreBadgeText}"
+                                                                   Foreground="White" FontWeight="SemiBold"
+                                                                   FontSize="11" HorizontalAlignment="Center" />
+                                                    </Border>
+
+                                                    <TextBlock Grid.Column="3" Text="{Binding SizeDisplay}"
                                                                FontWeight="SemiBold" VerticalAlignment="Center"
                                                                Margin="14,0,0,0" />
+
+                                                    <!-- Phase 10-06: "Pourquoi ?" button — only when Diagnostics present. -->
+                                                    <Button Grid.Column="4" Content="Pourquoi ?"
+                                                            Padding="8,2" FontSize="11" Margin="10,0,0,0"
+                                                            VerticalAlignment="Center"
+                                                            ToolTip="Détailler les règles et signaux ayant produit ce score"
+                                                            Command="{Binding DataContext.ShowDiagnosticsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}"
+                                                            Visibility="{Binding HasDiagnostics, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>

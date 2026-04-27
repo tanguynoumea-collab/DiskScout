@@ -13,6 +13,7 @@
             <helpers:BytesFormatConverter x:Key="BytesFormatConverter" />
             <helpers:ZeroToBoolInverseConverter x:Key="ZeroToBoolInverseConverter" />
             <helpers:PercentToStarGridLengthConverter x:Key="PercentToStarGridLengthConverter" />
+            <helpers:RiskLevelToBrushConverter x:Key="RiskLevelToBrushConverter" />
             <!-- Document type palette -->
             <SolidColorBrush x:Key="DocPdfBrush" Color="#FFE74C3C" />
             <SolidColorBrush x:Key="DocXlsxBrush" Color="#FF27AE60" />
