@@ -156,6 +156,21 @@ Plans:
 - [x] 09-05-PLAN.md — Wizard UI (5 étapes + 2 colonnes diagnostiques sur la DataGrid Programs + checkpoint UAT auto-approuvé) ✅ 2026-04-25 (commits 6b92ae4 / 31ea66a / bf5bba0 — 19 tests passing : 10 wizard VM + 9 step business-logic)
 - [x] 09-06-PLAN.md — Integration + Report (export JSON/HTML + Programs annotation post-scan + UAT end-to-end auto-approuvé) ✅ 2026-04-25 (commits 0043ddd / 0cd0d5e — 10 tests passing : 6 service + 4 integration ; full suite 140/140 ; single-file Release publish 81.4 MB)
 
+### Phase 10: Orphan Detection Precision Refactor
+
+**Goal:** Refondre le moteur de détection des rémanents AppData (>90 % de FP mesurés sur corpus de 365 items dans `C:\ProgramData`) pour atteindre <5 % de FP sans dégrader le rappel. Pipeline 7 étapes : HardBlacklist → ParentContextAnalyzer → KnownPathRules → MultiSourceMatcher (Service / Driver / Appx / Registry / ScheduledTask) → PublisherAliasResolver → ConfidenceScorer → RiskLevelClassifier. Nouveau modèle `AppDataOrphanCandidate` avec ConfidenceScore 0-100, RiskLevel + RecommendedAction, traçabilité des règles déclenchées (champ `Diagnostics` rétro-compatible sur `OrphanCandidate`). Mode `--audit` CLI exportant CSV. Acceptance gate ≥95 % concordance + 0 % CRITIQUE→Supprimer/CorbeilleOk sur le corpus 365.
+**Requirements**: Post-v1 — non mappés à REQUIREMENTS.md (phase ajoutée après création de la roadmap)
+**Depends on:** Phase 9
+**Plans:** 6 plans
+
+Plans:
+- [ ] 10-01-PLAN.md — PathRule + PathRuleEngine + ParentContextAnalyzer + 5 embedded JSON catalogs (os-critical / package-cache / driver-data / corporate-agent / vendor-shared) + AppPaths.PathRulesFolder/AuditFolder
+- [ ] 10-02-PLAN.md — Promote IServiceEnumerator + IScheduledTaskEnumerator to public; add IDriverEnumerator + IAppxEnumerator + impls; MachineSnapshot model + MachineSnapshotProvider (lazy TTL 5min, parallel population)
+- [ ] 10-03-PLAN.md — PublisherAliasResolver + ~30-entry aliases.json embedded resource + FuzzyMatcher fallback
+- [ ] 10-04-PLAN.md — AppDataOrphanCandidate model + 4 matchers (Service/Driver/Appx/Registry) + ConfidenceScorer + RiskLevelClassifier + AppDataOrphanPipeline orchestrator + OrphanDetectorService AppData-branch integration + App.xaml.cs DI wiring
+- [ ] 10-05-PLAN.md — 365-item corpus fixture + acceptance test (>=95% concordance + 0% Critique misclass) + --audit CLI mode + AuditCsvWriter
+- [ ] 10-06-PLAN.md — UI Score column + tooltip + "Pourquoi ?" modal + RiskLevelToBrushConverter + docs/heuristics.md + visual UAT
+
 ---
 *Roadmap created: 2026-04-24*
-*Last updated: 2026-04-25 after Plan 09-06 (Integration + Report) execution — Phase 9 plans 6/6 complete*
+*Last updated: 2026-04-27 after `/gsd:plan-phase 10` — Phase 10 broken into 6 plans across 4 waves (10-01 + 10-02 wave 1 parallel, 10-03 wave 2, 10-04 wave 3, 10-05 + 10-06 wave 4 parallel).*
