@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using DiskScout.Helpers;
 using DiskScout.Models;
@@ -128,6 +129,60 @@ public partial class App : Application
         _ = quarantineService.PurgeAsync(TimeSpan.FromDays(30));
         _ = PurgeOldScansAsync(10);
 
+        // Phase-10-05: --audit headless CLI mode. Runs the orphan detector
+        // pipeline once, writes a CSV under %LocalAppData%\DiskScout\audits,
+        // and exits without showing the WPF shell. Used for repeatable offline
+        // precision review on any machine.
+        var args = e.Args ?? Array.Empty<string>();
+        if (args.Length > 0 && args[0].Equals("--audit", StringComparison.OrdinalIgnoreCase))
+        {
+            // Attach to the parent console (PowerShell / cmd) so Console.WriteLine
+            // surfaces the CSV path. If launched from Explorer (no parent console),
+            // AttachConsole returns false — we fall back to a sibling audit_path.txt
+            // next to the CSV.
+            bool hasConsole = AttachConsole(-1);
+
+            _logger.Information("DiskScout running in --audit mode (no UI). HasConsole={HasConsole}", hasConsole);
+            try
+            {
+                var auditWriter = new AuditCsvWriter(_logger);
+                var auditPath = RunHeadlessAuditAsync(
+                    driveService,
+                    fileSystemScanner,
+                    installedProgramsScanner,
+                    orphanDetectorService,
+                    auditWriter)
+                    .GetAwaiter().GetResult();
+
+                _logger.Information("Audit complete: {Path}", auditPath);
+                if (hasConsole)
+                {
+                    Console.WriteLine(auditPath);
+                }
+                else
+                {
+                    try
+                    {
+                        var sidecar = Path.Combine(Path.GetDirectoryName(auditPath)!, "audit_path.txt");
+                        File.WriteAllText(sidecar, auditPath);
+                    }
+                    catch (Exception sex)
+                    {
+                        _logger.Warning(sex, "Audit-mode: failed to write sidecar audit_path.txt");
+                    }
+                }
+                Shutdown(0);
+                return;
+            }
+            catch (Exception ex)
+            {
+                _logger.Fatal(ex, "Audit-mode failure");
+                if (hasConsole) Console.Error.WriteLine($"Audit failed: {ex.Message}");
+                Shutdown(1);
+                return;
+            }
+        }
+
         var mainViewModel = new MainViewModel(
             _logger,
             driveService,
@@ -146,6 +201,59 @@ public partial class App : Application
 
         _logger.Information("DiskScout shell shown.");
     }
+
+    /// <summary>
+    /// Phase-10-05: headless audit flow. Picks the first ready fixed drive,
+    /// runs the same scan + orphan-detect pipeline as the UI flow, then writes
+    /// the AppData candidates' diagnostics to a CSV via <see cref="IAuditCsvWriter"/>.
+    /// Returns the full path to the CSV. The composition is identical to the UI
+    /// path — this keeps a single execution flow under test.
+    /// </summary>
+    private async Task<string> RunHeadlessAuditAsync(
+        IDriveService driveService,
+        IFileSystemScanner fileSystemScanner,
+        IInstalledProgramsScanner installedProgramsScanner,
+        IOrphanDetectorService orphanDetectorService,
+        IAuditCsvWriter auditWriter)
+    {
+        var drives = driveService.GetFixedDrives()
+            .Where(d => d.IsReady)
+            .Select(d => d.RootPath)
+            .ToList();
+
+        if (drives.Count == 0)
+        {
+            _logger?.Warning("Audit-mode: no ready fixed drives found");
+            return await auditWriter.WriteAsync(Array.Empty<AppDataOrphanCandidate>());
+        }
+
+        // Limit to the first ready drive — the audit purpose is precision
+        // measurement on a representative sample, not exhaustive cross-disk
+        // enumeration. Keeps the run time bounded (target ≤ 30 s per audit).
+        var firstDrive = drives.Take(1).ToList();
+
+        var noopProgress = new Progress<ScanProgress>();
+        var nodes = await fileSystemScanner.ScanAsync(firstDrive, noopProgress, CancellationToken.None)
+            .ConfigureAwait(false);
+        var programs = await installedProgramsScanner.ScanAsync(nodes, CancellationToken.None)
+            .ConfigureAwait(false);
+        var orphans = await orphanDetectorService.DetectAsync(nodes, programs, CancellationToken.None)
+            .ConfigureAwait(false);
+
+        // Project to the AppData diagnostics — only the AppData branch sets
+        // the Diagnostics field (Plan 10-04). Other categories produce
+        // OrphanCandidate with Diagnostics=null and are skipped here.
+        var candidates = orphans
+            .Where(o => o.Category == OrphanCategory.AppDataOrphan && o.Diagnostics is not null)
+            .Select(o => o.Diagnostics!)
+            .ToList();
+
+        return await auditWriter.WriteAsync(candidates).ConfigureAwait(false);
+    }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool AttachConsole(int dwProcessId);
 
     /// <summary>
     /// Opens the Uninstall Wizard window modally for the given program.
