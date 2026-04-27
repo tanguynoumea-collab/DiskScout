@@ -7,25 +7,14 @@ using Serilog;
 
 namespace DiskScout.Services;
 
-/// <summary>
-/// Abstraction over the Windows service enumerator. Lets tests inject deterministic
-/// service fixtures without spinning up real services. The default implementation
-/// (<see cref="WmiServiceEnumerator"/>) reads <see cref="ServiceController.GetServices"/>.
-/// </summary>
-internal interface IServiceEnumerator
-{
-    IEnumerable<(string Name, string DisplayName, string? BinaryPath)> EnumerateServices();
-}
-
-/// <summary>
-/// Abstraction over the scheduled-task enumerator. Lets tests inject deterministic
-/// task fixtures without launching schtasks.exe. The default implementation
-/// (<see cref="SchTasksEnumerator"/>) shells out to schtasks /query /fo CSV /v.
-/// </summary>
-internal interface IScheduledTaskEnumerator
-{
-    IEnumerable<(string TaskPath, string? Author, string? ActionPath)> EnumerateTasks();
-}
+// NOTE (Plan 10-02): the public interfaces IServiceEnumerator and IScheduledTaskEnumerator
+// were promoted from internal nested types here to dedicated files
+// (Services/IServiceEnumerator.cs, Services/IScheduledTaskEnumerator.cs) so the new
+// Phase-10 MachineSnapshotProvider + matchers can consume them as first-class injectable
+// seams. The concrete production implementations (WmiServiceEnumerator,
+// SchTasksEnumerator) remain package-private inside this file and are exposed via the
+// static factory methods CreateDefaultServiceEnumerator() / CreateDefaultScheduledTaskEnumerator()
+// for App.xaml.cs DI wiring (Plan 10-04).
 
 /// <summary>
 /// Post-uninstall residue scanner — scans seven surfaces for artifacts left behind by a uninstalled
@@ -135,6 +124,26 @@ public sealed class ResidueScanner : IResidueScanner
         _scheduledTaskEnumerator = scheduledTaskEnumerator ?? new SchTasksEnumerator(logger);
         _shellExtensionTestPrefix = shellExtensionTestPrefix;
     }
+
+    /// <summary>
+    /// Returns the default production <see cref="IServiceEnumerator"/> (registry-backed
+    /// enumeration of <c>HKLM\SYSTEM\CurrentControlSet\Services</c>). Wraps the
+    /// package-private <c>WmiServiceEnumerator</c> nested type so App.xaml.cs (Plan
+    /// 10-04) can inject the same default the scanner uses without creating a
+    /// duplicate concrete class.
+    /// </summary>
+    public static IServiceEnumerator CreateDefaultServiceEnumerator(ILogger logger)
+        => new WmiServiceEnumerator(logger);
+
+    /// <summary>
+    /// Returns the default production <see cref="IScheduledTaskEnumerator"/> (shells
+    /// out to <c>schtasks.exe /query /fo CSV /v</c> with a 10s timeout). Wraps the
+    /// package-private <c>SchTasksEnumerator</c> nested type so App.xaml.cs (Plan
+    /// 10-04) can inject the same default the scanner uses without creating a
+    /// duplicate concrete class.
+    /// </summary>
+    public static IScheduledTaskEnumerator CreateDefaultScheduledTaskEnumerator(ILogger logger)
+        => new SchTasksEnumerator(logger);
 
     public Task<IReadOnlyList<ResidueFinding>> ScanAsync(
         ResidueScanTarget target,
