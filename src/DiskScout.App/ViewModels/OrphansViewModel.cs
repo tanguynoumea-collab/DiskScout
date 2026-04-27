@@ -376,12 +376,33 @@ public sealed partial class OrphanRow : ObservableObject
         SizeBytes = c.SizeBytes;
         Reason = c.Reason;
         Category = c.Category;
+        Diagnostics = c.Diagnostics;
     }
 
     public string FullPath { get; }
     public long SizeBytes { get; }
     public string Reason { get; }
     public OrphanCategory Category { get; }
+
+    /// <summary>
+    /// Phase 10 rich diagnostics — populated only for AppData rows by
+    /// <c>AppDataOrphanPipeline</c>. Null for every other category, which
+    /// drives the Score badge / "Pourquoi ?" button visibility in XAML.
+    /// </summary>
+    public AppDataOrphanCandidate? Diagnostics { get; }
+
+    /// <summary>True when <see cref="Diagnostics"/> is set; bound to badge + button visibility.</summary>
+    public bool HasDiagnostics => Diagnostics is not null;
+
+    /// <summary>0-100 confidence score, or null when no diagnostics attached.</summary>
+    public int? ConfidenceScore => Diagnostics?.ConfidenceScore;
+
+    /// <summary>Risk band, or null when no diagnostics attached.</summary>
+    public RiskLevel? Risk => Diagnostics?.Risk;
+
+    /// <summary>Score formatted as a string for the badge TextBlock; null when no diagnostics.</summary>
+    public string? ScoreBadgeText =>
+        Diagnostics is null ? null : Diagnostics.ConfidenceScore.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
     [ObservableProperty]
     private bool _isSelected;
