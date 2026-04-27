@@ -38,7 +38,13 @@ public class PathRuleEngineTests : IDisposable
         new PathRuleEngine(_logger, _tempUserRulesFolder, _appAssembly);
 
     // -------------------------------------------------------------------------
-    // Test 1: Embedded resource enumeration finds 5 PathRules JSONs.
+    // Test 1: Embedded resource enumeration finds the 5 PathRules JSONs (the
+    //         sibling aliases.json — added by Plan 10-03 — shares the same
+    //         Resources/PathRules folder via the .csproj glob but is structurally
+    //         a PublisherAlias[] catalog, not a PathRule[] catalog. The
+    //         PathRuleEngine's defensive JsonException catch + empty-Id skip
+    //         absorbs it gracefully (verified by the LoadAsync_NoUserFolder…
+    //         test below). Here we assert the 5 *PathRule* JSONs are present.
     // -------------------------------------------------------------------------
     [Fact]
     public void ManifestResources_ContainExactly5PathRules()
@@ -46,7 +52,8 @@ public class PathRuleEngineTests : IDisposable
         var pathRulesResources = _appAssembly
             .GetManifestResourceNames()
             .Where(n => n.StartsWith("DiskScout.Resources.PathRules.", StringComparison.Ordinal)
-                && n.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                && n.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
+                && !n.EndsWith("aliases.json", StringComparison.OrdinalIgnoreCase))
             .ToArray();
 
         pathRulesResources.Should().HaveCount(5);

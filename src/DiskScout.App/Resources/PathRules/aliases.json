@@ -1,0 +1,18 @@
+[
+  { "canonical": "Autodesk", "aliases": ["ADSK", "Autodesk Inc.", "Autodesk, Inc."], "type": "publisher" },
+  { "canonical": "Microsoft", "aliases": ["Microsoft Corporation"], "type": "publisher" },
+  { "canonical": "NVIDIA", "aliases": ["NVIDIA Corporation"], "type": "publisher" },
+
+  { "canonical": "Revit", "aliases": ["RVT", "Autodesk Revit", "Revit Architecture", "Revit Structure", "Revit MEP", "Revit LT"], "type": "product" },
+  { "canonical": "BCF Manager", "aliases": ["BcfManager", "BCF Managers", "KUBUS BCF"], "type": "product" },
+  { "canonical": "Visual Studio", "aliases": ["VS", "VisualStudio", "Microsoft Visual Studio"], "type": "product" },
+  { "canonical": "Navisworks", "aliases": ["NW", "Navisworks Manage", "Navisworks Simulate"], "type": "product" },
+  { "canonical": "Geospatial Coordinate Systems", "aliases": ["GCS", "Geospatial"], "type": "product" },
+  { "canonical": "DiRoots", "aliases": ["DiRoots.One", "DiRoots.ProSheets"], "type": "product" },
+  { "canonical": "DWG TrueView", "aliases": ["DWG TrueView 2022", "DWG TrueView 2023", "DWG TrueView 2024"], "type": "product" },
+  { "canonical": "Dynamo", "aliases": ["Dynamo Core", "Autodesk Dynamo"], "type": "product" },
+  { "canonical": "PlaceMaker", "aliases": ["PlaceMaker Revit"], "type": "product" },
+  { "canonical": "Steel Connections", "aliases": ["Revit Steel Connections"], "type": "product" },
+  { "canonical": "iCloud", "aliases": ["AppleInc.iCloud"], "type": "product" },
+  { "canonical": "iTunes", "aliases": ["Apple Computer iTunes"], "type": "product" }
+]
