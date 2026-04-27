@@ -61,7 +61,51 @@ public partial class App : Application
         IDriveService driveService = new DriveService();
         IFileSystemScanner fileSystemScanner = new NativeFileSystemScanner(_logger);
         IInstalledProgramsScanner installedProgramsScanner = new RegistryInstalledProgramsScanner(_logger);
-        IOrphanDetectorService orphanDetectorService = new OrphanDetectorService(_logger);
+
+        // Phase 10 — Orphan Detection Precision Refactor.
+        // Build the AppData pipeline foundations: PathRule engine + parent
+        // analyzer, machine snapshot (services + drivers + appx + sched tasks),
+        // publisher alias resolver, then the four matchers + scorer + classifier.
+        // All wired into IAppDataOrphanPipeline; OrphanDetectorService owns it.
+        IPathRuleEngine pathRuleEngine = new PathRuleEngine(_logger);
+        // Eager-load like the Phase 9 PublisherRuleEngine — JSON is tiny (5 embedded
+        // catalogs, ~100 rules total) and Match() must be ready before scans run.
+        pathRuleEngine.LoadAsync().GetAwaiter().GetResult();
+        IParentContextAnalyzer parentAnalyzer = new ParentContextAnalyzer();
+
+        IServiceEnumerator serviceEnumerator =
+            ResidueScanner.CreateDefaultServiceEnumerator(_logger);
+        IScheduledTaskEnumerator scheduledTaskEnumerator =
+            ResidueScanner.CreateDefaultScheduledTaskEnumerator(_logger);
+        IDriverEnumerator driverEnumerator = new DriverEnumerator(_logger);
+        IAppxEnumerator appxEnumerator = new AppxEnumerator(_logger);
+        IMachineSnapshotProvider snapshotProvider = new MachineSnapshotProvider(
+            _logger, serviceEnumerator, driverEnumerator, appxEnumerator, scheduledTaskEnumerator);
+
+        IPublisherAliasResolver aliasResolver = new PublisherAliasResolver(_logger);
+        // Resolver auto-loads on first ResolveAsync — no startup wait.
+
+        IConfidenceScorer confidenceScorer = new ConfidenceScorer();
+        IRiskLevelClassifier riskClassifier = new RiskLevelClassifier();
+        IServiceMatcher serviceMatcher = new ServiceMatcher(_logger);
+        IDriverMatcher driverMatcher = new DriverMatcher(_logger);
+        IAppxMatcher appxMatcher = new AppxMatcher(_logger);
+        IRegistryMatcher registryMatcher = new RegistryMatcher(_logger);
+
+        IAppDataOrphanPipeline appDataPipeline = new AppDataOrphanPipeline(
+            _logger,
+            pathRuleEngine,
+            parentAnalyzer,
+            snapshotProvider,
+            aliasResolver,
+            confidenceScorer,
+            riskClassifier,
+            serviceMatcher,
+            driverMatcher,
+            appxMatcher,
+            registryMatcher);
+
+        IOrphanDetectorService orphanDetectorService = new OrphanDetectorService(_logger, appDataPipeline);
         IPersistenceService persistenceService = new JsonPersistenceService(_logger);
         IQuarantineService quarantineService = new QuarantineService(_logger);
         IFileDeletionService fileDeletionService = new FileDeletionService(_logger, quarantineService);

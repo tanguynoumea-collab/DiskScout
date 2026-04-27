@@ -7,7 +7,6 @@ namespace DiskScout.Services;
 
 public sealed class OrphanDetectorService : IOrphanDetectorService
 {
-    private const double FuzzyThreshold = 0.7;
     private const long EmptyProgramFilesThresholdBytes = 1 * 1024 * 1024;
     private const int StaleTempDays = 30;
     private const long MinSystemArtifactBytes = 50 * 1024 * 1024; // ignore tiny artefacts
@@ -51,13 +50,15 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
     };
 
     private readonly ILogger _logger;
+    private readonly IAppDataOrphanPipeline _appDataPipeline;
 
-    public OrphanDetectorService(ILogger logger)
+    public OrphanDetectorService(ILogger logger, IAppDataOrphanPipeline appDataPipeline)
     {
-        _logger = logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _appDataPipeline = appDataPipeline ?? throw new ArgumentNullException(nameof(appDataPipeline));
     }
 
-    public Task<IReadOnlyList<OrphanCandidate>> DetectAsync(
+    public async Task<IReadOnlyList<OrphanCandidate>> DetectAsync(
         IReadOnlyList<FileSystemNode> nodes,
         IReadOnlyList<InstalledProgram> programs,
         CancellationToken cancellationToken)
@@ -128,14 +129,27 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
             if (node.Kind == FileSystemNodeKind.Directory && IsUnderAny(node.FullPath, appDataRoots))
             {
                 if (node.Depth > 4) continue;
-                if (IsAppDataOrphanRoot(node, appDataRoots) && !MatchesAnyProgram(node, programs))
+                if (!IsAppDataOrphanRoot(node, appDataRoots)) continue;
+
+                // Phase 10 — replace the legacy MatchesAnyProgram heuristic with the
+                // 7-step pipeline (HardBlacklist + ParentContext + KnownPathRules +
+                // MultiSourceMatcher + Alias + Score + Risk). Pipeline returns null
+                // ONLY on HardBlacklist suppression (OsCriticalDoNotPropose), in
+                // which case the candidate must NOT be emitted to the UI.
+                var diagnostics = await _appDataPipeline
+                    .EvaluateAsync(node, programs, cancellationToken)
+                    .ConfigureAwait(false);
+                if (diagnostics is null) continue;
+
+                orphans.Add(new OrphanCandidate(
+                    node.Id, diagnostics.FullPath, diagnostics.SizeBytes,
+                    OrphanCategory.AppDataOrphan,
+                    diagnostics.Reason,
+                    MatchScore: null)
                 {
-                    orphans.Add(new OrphanCandidate(
-                        node.Id, node.FullPath, node.SizeBytes,
-                        OrphanCategory.AppDataOrphan,
-                        $"Aucun programme installé ne correspond à '{node.Name}'.",
-                        MatchScore: null));
-                }
+                    Diagnostics = diagnostics,
+                });
+                continue;
             }
             else if (node.Kind == FileSystemNodeKind.Directory && IsUnderAny(node.FullPath, programFilesRoots))
             {
@@ -200,7 +214,7 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
         }
 
         _logger.Information("Detected {Count} orphan candidates", orphans.Count);
-        return Task.FromResult<IReadOnlyList<OrphanCandidate>>(orphans);
+        return orphans;
     }
 
     private static bool TryClassifySystemArtifact(FileSystemNode node, out string reason)
@@ -358,24 +372,6 @@ public sealed class OrphanDetectorService : IOrphanDetectorService
                 var remainder = node.FullPath.Substring(normalized.Length).TrimStart('\\');
                 var depth = remainder.Count(c => c == '\\') + (remainder.Length > 0 ? 1 : 0);
                 return depth is 1 or 2;
-            }
-        }
-        return false;
-    }
-
-    private static bool MatchesAnyProgram(FileSystemNode node, IReadOnlyList<InstalledProgram> programs)
-    {
-        foreach (var program in programs)
-        {
-            if (!string.IsNullOrWhiteSpace(program.InstallLocation) &&
-                node.FullPath.StartsWith(program.InstallLocation!, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (FuzzyMatcher.IsMatch(node.Name, program.Publisher, program.DisplayName, FuzzyThreshold))
-            {
-                return true;
             }
         }
         return false;
