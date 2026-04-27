@@ -1,0 +1,51 @@
+[
+  {
+    "id": "vendor-adobe",
+    "pathPattern": "%ProgramData%\\Adobe",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Adobe Creative Cloud / Acrobat shared workspace."
+  },
+  {
+    "id": "vendor-autodesk",
+    "pathPattern": "%ProgramData%\\Autodesk",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Autodesk shared workspace (AutoCAD, Revit, etc.) — exclusions adlm/license dans os-critical."
+  },
+  {
+    "id": "vendor-jetbrains",
+    "pathPattern": "%ProgramData%\\JetBrains",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "JetBrains shared workspace (IDE settings)."
+  },
+  {
+    "id": "vendor-microsoft-onedrive",
+    "pathPattern": "%ProgramData%\\Microsoft OneDrive",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Microsoft OneDrive shared install / cache."
+  },
+  {
+    "id": "vendor-google",
+    "pathPattern": "%ProgramData%\\Google",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Google updater + Chrome shared data."
+  },
+  {
+    "id": "vendor-mozilla",
+    "pathPattern": "%ProgramData%\\Mozilla",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Mozilla Firefox / Thunderbird shared cache."
+  },
+  {
+    "id": "vendor-oracle",
+    "pathPattern": "%ProgramData%\\Oracle",
+    "category": "VendorShared",
+    "minRiskFloor": null,
+    "reason": "Oracle Java / VirtualBox shared data."
+  }
+]

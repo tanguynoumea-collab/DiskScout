@@ -45,6 +45,9 @@
     <EmbeddedResource Include="Resources\PublisherRules\*.json">
       <LogicalName>DiskScout.Resources.PublisherRules.%(Filename).json</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PathRules\*.json">
+      <LogicalName>DiskScout.Resources.PathRules.%(Filename).json</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

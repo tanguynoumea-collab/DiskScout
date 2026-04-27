@@ -1,0 +1,492 @@
+[
+  {
+    "id": "os-critical-system32",
+    "pathPattern": "%WinDir%\\System32",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Composant Windows OS (System32) — jamais proposer."
+  },
+  {
+    "id": "os-critical-syswow64",
+    "pathPattern": "%WinDir%\\SysWOW64",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Composant Windows OS (SysWOW64 32-bit) — jamais proposer."
+  },
+  {
+    "id": "os-critical-winsxs",
+    "pathPattern": "%WinDir%\\WinSxS",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Side-by-side component store (WinSxS) — géré par TrustedInstaller."
+  },
+  {
+    "id": "os-critical-drivers",
+    "pathPattern": "%WinDir%\\drivers",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Pilotes système (Windows\\drivers) — jamais proposer."
+  },
+  {
+    "id": "os-critical-msnet",
+    "pathPattern": "%WinDir%\\Microsoft.NET",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Runtime .NET Framework (Microsoft.NET) — jamais proposer."
+  },
+  {
+    "id": "os-critical-servicing",
+    "pathPattern": "%WinDir%\\servicing",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows servicing stack — jamais proposer."
+  },
+  {
+    "id": "os-critical-assembly",
+    "pathPattern": "%WinDir%\\assembly",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "GAC (Global Assembly Cache) — jamais proposer."
+  },
+  {
+    "id": "os-critical-boot",
+    "pathPattern": "%WinDir%\\Boot",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Bootloader Windows — jamais proposer."
+  },
+  {
+    "id": "os-critical-fonts",
+    "pathPattern": "%WinDir%\\Fonts",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Polices système Windows — jamais proposer."
+  },
+  {
+    "id": "os-critical-installer",
+    "pathPattern": "%WinDir%\\Installer",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Cache MSI Windows (Windows\\Installer) — gestion automatique des paquets MSI."
+  },
+  {
+    "id": "os-critical-pd-crypto",
+    "pathPattern": "%ProgramData%\\Microsoft\\Crypto",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Magasins cryptographiques Windows (Crypto) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-vault",
+    "pathPattern": "%ProgramData%\\Microsoft\\Vault",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Magasin de credentials (Vault) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-smartcard",
+    "pathPattern": "%ProgramData%\\Microsoft\\SmartCard",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Smart card cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-identitycrl",
+    "pathPattern": "%ProgramData%\\Microsoft\\IdentityCRL",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Identity CRL cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-wlansvc",
+    "pathPattern": "%ProgramData%\\Microsoft\\Wlansvc",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Service WLAN — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-wwansvc",
+    "pathPattern": "%ProgramData%\\Microsoft\\WwanSvc",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Service WWAN — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-grouppolicy",
+    "pathPattern": "%ProgramData%\\Microsoft\\Group Policy",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Group Policy cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-grouppolicy2",
+    "pathPattern": "%ProgramData%\\Microsoft\\GroupPolicy",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "GroupPolicy machine cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-defender",
+    "pathPattern": "%ProgramData%\\Microsoft\\Windows Defender",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Defender — antivirus système, jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-defenderatp",
+    "pathPattern": "%ProgramData%\\Microsoft\\Windows Defender Advanced Threat Protection",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Defender ATP — antivirus système, jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-windows-security",
+    "pathPattern": "%ProgramData%\\Microsoft\\Windows Security",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Security Center — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-windows-security-health",
+    "pathPattern": "%ProgramData%\\Microsoft\\Windows Security Health",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Security Health — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-windows-nt",
+    "pathPattern": "%ProgramData%\\Microsoft\\Windows NT",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows NT shared data — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-wer",
+    "pathPattern": "%ProgramData%\\Microsoft\\Windows\\WER",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Error Reporting — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-winmsipc",
+    "pathPattern": "%ProgramData%\\Microsoft\\WinMSIPC",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "WinMSIPC RMS client — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-wdf",
+    "pathPattern": "%ProgramData%\\Microsoft\\WDF",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Driver Framework — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-winget",
+    "pathPattern": "%ProgramData%\\Microsoft\\WinGet",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "WinGet package manager — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-netfw",
+    "pathPattern": "%ProgramData%\\Microsoft\\NetFramework",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": ".NET Framework machine data — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-appv",
+    "pathPattern": "%ProgramData%\\Microsoft\\AppV",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Microsoft App-V — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-provisioning",
+    "pathPattern": "%ProgramData%\\Microsoft\\Provisioning",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Provisioning packages — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-drm",
+    "pathPattern": "%ProgramData%\\Microsoft\\DRM",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows DRM data — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-mf",
+    "pathPattern": "%ProgramData%\\Microsoft\\MF",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Media Foundation cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-diagnosticlog",
+    "pathPattern": "%ProgramData%\\Microsoft\\DiagnosticLogCSP",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Diagnostic Log CSP (MDM) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-diagnosis",
+    "pathPattern": "%ProgramData%\\Microsoft\\Diagnosis",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Diagnosis telemetry — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-devicesync",
+    "pathPattern": "%ProgramData%\\Microsoft\\DeviceSync",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows DeviceSync — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-spectrum",
+    "pathPattern": "%ProgramData%\\Microsoft\\Spectrum",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Mixed Reality (Spectrum) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-speech",
+    "pathPattern": "%ProgramData%\\Microsoft\\Speech_OneCore",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Speech OneCore — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-storagehealth",
+    "pathPattern": "%ProgramData%\\Microsoft\\Storage Health",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Storage Health (S.M.A.R.T.) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-phonetools",
+    "pathPattern": "%ProgramData%\\Microsoft\\Phone Tools",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Phone Link Tools — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-smsrouter",
+    "pathPattern": "%ProgramData%\\Microsoft\\SmsRouter",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "SMS Router — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-mapdata",
+    "pathPattern": "%ProgramData%\\Microsoft\\MapData",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Maps offline data — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-wpd",
+    "pathPattern": "%ProgramData%\\Microsoft\\WPD",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Portable Devices — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-eventviewer",
+    "pathPattern": "%ProgramData%\\Microsoft\\Event Viewer",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Event Viewer custom views — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-userpics",
+    "pathPattern": "%ProgramData%\\Microsoft\\User Account Pictures",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "User Account Pictures — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-settings",
+    "pathPattern": "%ProgramData%\\Microsoft\\Settings",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Settings shared store — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-defaultpackmsi",
+    "pathPattern": "%ProgramData%\\Microsoft\\DefaultPackMSI",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Default MSI Pack — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-devicestage",
+    "pathPattern": "%ProgramData%\\Microsoft\\Device Stage",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Device Stage — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-clicktorun",
+    "pathPattern": "%ProgramData%\\Microsoft\\ClickToRun",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Office Click-to-Run shared cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-edgeupdate",
+    "pathPattern": "%ProgramData%\\Microsoft\\EdgeUpdate",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Microsoft Edge updater — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-onedrive",
+    "pathPattern": "%ProgramData%\\Microsoft OneDrive",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Microsoft OneDrive shared install — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-vs",
+    "pathPattern": "%ProgramData%\\Microsoft\\VisualStudio",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Visual Studio shared cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-msdevdiv",
+    "pathPattern": "%ProgramData%\\Microsoft\\Microsoft DevDiv",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Microsoft DevDiv shared cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-softwaredist",
+    "pathPattern": "%WinDir%\\SoftwareDistribution",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Update download cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-usoshared",
+    "pathPattern": "%ProgramData%\\USOShared",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Update Session Orchestrator (shared) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-usoprivate",
+    "pathPattern": "%ProgramData%\\USOPrivate",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Update Session Orchestrator (private) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-holographic",
+    "pathPattern": "%ProgramData%\\WindowsHolographicDevices",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows Holographic devices — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-caphyon",
+    "pathPattern": "%ProgramData%\\Caphyon\\Advanced Installer",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Advanced Installer machine cache — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-ssh",
+    "pathPattern": "%ProgramData%\\ssh",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Windows OpenSSH server config — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-packages",
+    "pathPattern": "%ProgramData%\\Packages",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Appx package store (ProgramData\\Packages) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pf-windowsapps",
+    "pathPattern": "%ProgramFiles%\\WindowsApps",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Appx package install root — jamais proposer."
+  },
+  {
+    "id": "os-critical-pf-commonfiles",
+    "pathPattern": "%ProgramFiles%\\Common Files",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Composants partagés Windows — jamais proposer."
+  },
+  {
+    "id": "os-critical-pf86-commonfiles",
+    "pathPattern": "%ProgramFiles(x86)%\\Common Files",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Composants partagés Windows (x86) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-pkgcache",
+    "pathPattern": "%ProgramData%\\Package Cache",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Burn/WiX bundle cache (Package Cache) — gestion automatique."
+  },
+  {
+    "id": "os-critical-pd-flexnet",
+    "pathPattern": "%ProgramData%\\FLEXnet",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "FLEXnet licensing data (Adobe/Autodesk) — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-autodesk-adlm",
+    "pathPattern": "%ProgramData%\\Autodesk\\Adlm",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Autodesk License Manager — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-autodesk-adsso",
+    "pathPattern": "%ProgramData%\\Autodesk\\AdSSO",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Autodesk SSO — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-autodesk-adsklicensing",
+    "pathPattern": "%ProgramData%\\Autodesk\\AdskLicensingService",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Autodesk Licensing Service — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-autodesk-uninstallers",
+    "pathPattern": "%ProgramData%\\Autodesk\\Uninstallers",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Autodesk Uninstallers store — jamais proposer (utilisé par désinstallateur officiel)."
+  },
+  {
+    "id": "os-critical-pd-autodesk-idsdk",
+    "pathPattern": "%ProgramData%\\Autodesk\\IDSDK",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "Autodesk Identity SDK — jamais proposer."
+  },
+  {
+    "id": "os-critical-pd-regid",
+    "pathPattern": "%ProgramData%\\regid.",
+    "category": "OsCriticalDoNotPropose",
+    "minRiskFloor": null,
+    "reason": "ISO/IEC 19770-2 SWID tags (regid.*) — jamais proposer."
+  }
+]

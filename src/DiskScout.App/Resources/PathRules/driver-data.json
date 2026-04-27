@@ -1,0 +1,58 @@
+[
+  {
+    "id": "driver-data-intel",
+    "pathPattern": "%ProgramData%\\Intel",
+    "category": "DriverData",
+    "minRiskFloor": null,
+    "reason": "Intel driver / management data (graphics, network, chipset)."
+  },
+  {
+    "id": "driver-data-nvidia",
+    "pathPattern": "%ProgramData%\\NVIDIA",
+    "category": "DriverData",
+    "minRiskFloor": null,
+    "reason": "NVIDIA driver data (GeForce, Quadro)."
+  },
+  {
+    "id": "driver-data-nvidia-corp",
+    "pathPattern": "%ProgramData%\\NVIDIA Corporation",
+    "category": "DriverData",
+    "minRiskFloor": null,
+    "reason": "NVIDIA Corporation telemetry / driver data."
+  },
+  {
+    "id": "driver-data-amd",
+    "pathPattern": "%ProgramData%\\AMD",
+    "category": "DriverData",
+    "minRiskFloor": null,
+    "reason": "AMD GPU/CPU driver data (Radeon, Catalyst, Adrenalin)."
+  },
+  {
+    "id": "driver-data-realtek",
+    "pathPattern": "%ProgramData%\\Realtek",
+    "category": "DriverData",
+    "minRiskFloor": null,
+    "reason": "Realtek audio / network driver data."
+  },
+  {
+    "id": "driver-data-hp",
+    "pathPattern": "%ProgramData%\\HP",
+    "category": "DriverData",
+    "minRiskFloor": null,
+    "reason": "HP OEM tools / driver data."
+  },
+  {
+    "id": "driver-data-dell",
+    "pathPattern": "%ProgramData%\\Dell",
+    "category": "DriverData",
+    "minRiskFloor": null,
+    "reason": "Dell OEM tools / driver data."
+  },
+  {
+    "id": "driver-data-lenovo",
+    "pathPattern": "%ProgramData%\\Lenovo",
+    "category": "DriverData",
+    "minRiskFloor": null,
+    "reason": "Lenovo OEM tools / driver data."
+  }
+]

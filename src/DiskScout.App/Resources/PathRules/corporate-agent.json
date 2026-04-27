@@ -1,0 +1,79 @@
+[
+  {
+    "id": "corp-agent-ninjarmm",
+    "pathPattern": "%ProgramData%\\NinjaRMMAgent",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "NinjaRMM remote-management agent — supprime = perte du contrôle IT."
+  },
+  {
+    "id": "corp-agent-bitdefender",
+    "pathPattern": "%ProgramData%\\Bitdefender",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Bitdefender antivirus — supprime = vulnérabilité sécurité."
+  },
+  {
+    "id": "corp-agent-zscaler",
+    "pathPattern": "%ProgramData%\\Zscaler",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Zscaler ZIA/ZPA agent — supprime = perte d'accès réseau d'entreprise."
+  },
+  {
+    "id": "corp-agent-matrix42",
+    "pathPattern": "%ProgramData%\\Matrix42",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Matrix42 IT service management — agent corporate."
+  },
+  {
+    "id": "corp-agent-empirum",
+    "pathPattern": "%ProgramData%\\Empirum",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Matrix42 Empirum software distribution agent — agent corporate."
+  },
+  {
+    "id": "corp-agent-splashtop",
+    "pathPattern": "%ProgramData%\\Splashtop",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Splashtop remote-access agent — agent corporate."
+  },
+  {
+    "id": "corp-agent-crowdstrike",
+    "pathPattern": "%ProgramData%\\CrowdStrike",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "CrowdStrike Falcon EDR — supprime = vulnérabilité sécurité."
+  },
+  {
+    "id": "corp-agent-sentinelone",
+    "pathPattern": "%ProgramData%\\SentinelOne",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "SentinelOne EDR — supprime = vulnérabilité sécurité."
+  },
+  {
+    "id": "corp-agent-symantec",
+    "pathPattern": "%ProgramData%\\Symantec",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Symantec Endpoint Protection — supprime = vulnérabilité sécurité."
+  },
+  {
+    "id": "corp-agent-kaspersky",
+    "pathPattern": "%ProgramData%\\Kaspersky Lab",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "Kaspersky Lab antivirus — supprime = vulnérabilité sécurité."
+  },
+  {
+    "id": "corp-agent-mcafee",
+    "pathPattern": "%ProgramData%\\McAfee",
+    "category": "CorporateAgent",
+    "minRiskFloor": "Eleve",
+    "reason": "McAfee antivirus — supprime = vulnérabilité sécurité."
+  }
+]

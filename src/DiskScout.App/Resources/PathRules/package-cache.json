@@ -1,0 +1,37 @@
+[
+  {
+    "id": "pkg-cache-pd-pkgcache",
+    "pathPattern": "%ProgramData%\\Package Cache",
+    "category": "PackageCache",
+    "minRiskFloor": "Eleve",
+    "reason": "Cache MSI Burn/WiX (Visual C++ Redistributable, .NET, etc.) — utilisé par les désinstallateurs."
+  },
+  {
+    "id": "pkg-cache-vs-packages",
+    "pathPattern": "%ProgramData%\\Microsoft\\VisualStudio\\Packages",
+    "category": "PackageCache",
+    "minRiskFloor": "Eleve",
+    "reason": "Cache VSIX / payload Visual Studio Installer."
+  },
+  {
+    "id": "pkg-cache-vs-setup",
+    "pathPattern": "%ProgramData%\\Microsoft\\VisualStudio\\Setup",
+    "category": "PackageCache",
+    "minRiskFloor": "Eleve",
+    "reason": "Visual Studio Installer setup cache."
+  },
+  {
+    "id": "pkg-cache-windows-installer",
+    "pathPattern": "%WinDir%\\Installer",
+    "category": "PackageCache",
+    "minRiskFloor": "Eleve",
+    "reason": "Cache MSI système (Windows\\Installer) — requis par tous les MSI installés."
+  },
+  {
+    "id": "pkg-cache-onedrive-setup",
+    "pathPattern": "%ProgramData%\\Microsoft OneDrive\\setup",
+    "category": "PackageCache",
+    "minRiskFloor": "Eleve",
+    "reason": "OneDrive setup payload."
+  }
+]
