@@ -86,11 +86,11 @@
                                   SelectedValuePath="Key"
                                   DisplayMemberPath="Value"
                                   SelectedValue="{Binding SortKey, Mode=TwoWay}"
-                                  MinWidth="80" Margin="0,0,4,0"
+                                  MinWidth="76" Margin="0,0,4,0"
                                   ToolTip="Critère de tri appliqué à chaque catégorie de rémanents" />
                         <Button Content="{Binding SortDirectionLabel}"
                                 Command="{Binding ToggleSortDirectionCommand}"
-                                MinWidth="32" Margin="0,0,14,0"
+                                MinWidth="30" Margin="0,0,12,0"
                                 ToolTip="{Binding SortDirectionTooltip}" />
 
                         <!-- Phase 10 (post-launch tweak): risk filter. -->
@@ -101,7 +101,7 @@
                                   SelectedValuePath="Key"
                                   DisplayMemberPath="Value"
                                   SelectedValue="{Binding FilterMode, Mode=TwoWay}"
-                                  MinWidth="180" Margin="0,0,14,0"
+                                  MinWidth="160" Margin="0,0,12,0"
                                   ToolTip="Filtre les rangs par seuil de score (= niveau de risque)" />
 
                         <Button Content="Tout sélectionner" Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
