@@ -35,6 +35,24 @@ public sealed partial class OrphansViewModel : ObservableObject
     [ObservableProperty]
     private long _selectedBytes;
 
+    /// <summary>
+    /// Phase 10 — current row sort order. Cycles via <see cref="CycleSortModeCommand"/>:
+    /// SizeDesc (default, largest first) → ScoreDesc (highest confidence first → most
+    /// likely true residue) → ScoreAsc (lowest confidence first → least dangerous).
+    /// Re-sorts every group's <see cref="OrphanRow"/> collection in place.
+    /// </summary>
+    [ObservableProperty]
+    private OrphanSortMode _sortMode = OrphanSortMode.SizeDesc;
+
+    /// <summary>Bound to the toolbar sort button content — updates with <see cref="SortMode"/>.</summary>
+    public string SortLabel => SortMode switch
+    {
+        OrphanSortMode.SizeDesc => "Trier : Taille ↓",
+        OrphanSortMode.ScoreDesc => "Trier : Score ↓",
+        OrphanSortMode.ScoreAsc => "Trier : Score ↑",
+        _ => "Trier",
+    };
+
     public ObservableCollection<OrphanCategoryGroup> Groups { get; } = new();
 
     public OrphansViewModel(
@@ -71,7 +89,7 @@ public sealed partial class OrphansViewModel : ObservableObject
 
         foreach (var g in byCategory)
         {
-            var rows = g.OrderByDescending(c => c.SizeBytes).Select(c => new OrphanRow(c)).ToList();
+            var rows = SortRows(g.Select(c => new OrphanRow(c)), SortMode).ToList();
             var group = new OrphanCategoryGroup(g.Key, rows);
             foreach (var r in rows)
             {
@@ -146,6 +164,61 @@ public sealed partial class OrphansViewModel : ObservableObject
         var newValue = !group.AreAllSelected;
         foreach (var r in group.Rows) r.IsSelected = newValue;
     }
+
+    /// <summary>
+    /// Phase 10 — cycle the row sort mode: SizeDesc → ScoreDesc → ScoreAsc → SizeDesc.
+    /// Triggers re-sort of every group's <see cref="OrphanRow"/> collection in place.
+    /// </summary>
+    [RelayCommand]
+    private void CycleSortMode()
+    {
+        SortMode = SortMode switch
+        {
+            OrphanSortMode.SizeDesc => OrphanSortMode.ScoreDesc,
+            OrphanSortMode.ScoreDesc => OrphanSortMode.ScoreAsc,
+            OrphanSortMode.ScoreAsc => OrphanSortMode.SizeDesc,
+            _ => OrphanSortMode.SizeDesc,
+        };
+    }
+
+    partial void OnSortModeChanged(OrphanSortMode value)
+    {
+        OnPropertyChanged(nameof(SortLabel));
+        ApplySort();
+    }
+
+    /// <summary>Re-orders every group's Rows in place per the current <see cref="SortMode"/>.</summary>
+    private void ApplySort()
+    {
+        foreach (var g in Groups)
+        {
+            var sorted = SortRows(g.Rows, SortMode).ToList();
+            // Detach to avoid double RecomputeSelection/Totals during the rebuild;
+            // OrphanRow.PropertyChanged subscriptions persist (same instances).
+            g.Rows.CollectionChanged -= OnGroupRowsChanged;
+            g.Rows.Clear();
+            foreach (var r in sorted) g.Rows.Add(r);
+            g.Rows.CollectionChanged += OnGroupRowsChanged;
+        }
+    }
+
+    /// <summary>
+    /// Sort rows per the requested mode. Score sorts only re-order rows that have
+    /// diagnostics (AppData orphans); rows without diagnostics fall through to
+    /// SizeDesc as a tie-breaker so non-AppData groups stay readable.
+    /// </summary>
+    private static IEnumerable<OrphanRow> SortRows(IEnumerable<OrphanRow> rows, OrphanSortMode mode) => mode switch
+    {
+        OrphanSortMode.ScoreDesc => rows
+            .OrderByDescending(r => r.HasDiagnostics)
+            .ThenByDescending(r => r.ConfidenceScore ?? -1)
+            .ThenByDescending(r => r.SizeBytes),
+        OrphanSortMode.ScoreAsc => rows
+            .OrderByDescending(r => r.HasDiagnostics)
+            .ThenBy(r => r.ConfidenceScore ?? int.MaxValue)
+            .ThenByDescending(r => r.SizeBytes),
+        _ => rows.OrderByDescending(r => r.SizeBytes),
+    };
 
     [RelayCommand]
     private void SelectAll()
@@ -441,4 +514,18 @@ public sealed partial class OrphanRow : ObservableObject
             return $"{v:F1} {u[i]}";
         }
     }
+}
+
+/// <summary>
+/// Phase 10 — sort orders for the Rémanents tab rows.
+/// Cycled via <see cref="OrphansViewModel.CycleSortModeCommand"/>.
+/// </summary>
+public enum OrphanSortMode
+{
+    /// <summary>Default — largest first.</summary>
+    SizeDesc,
+    /// <summary>Highest confidence first → most likely true residue at the top.</summary>
+    ScoreDesc,
+    /// <summary>Lowest confidence first → least dangerous to leave alone.</summary>
+    ScoreAsc,
 }

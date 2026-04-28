@@ -78,6 +78,10 @@
                         </TextBlock>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Content="{Binding SortLabel}"
+                                Command="{Binding CycleSortModeCommand}"
+                                Margin="0,0,14,0"
+                                ToolTip="Cycle : Taille ↓ → Score ↓ (plus probable résidu en tête) → Score ↑ (moins risqué en tête)" />
                         <Button Content="Tout sélectionner" Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
                         <Button Content="Tout décocher" Command="{Binding ClearSelectionCommand}" Margin="0,0,14,0" />
                         <Button Content="🤖 Log IA"
