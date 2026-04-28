@@ -58,7 +58,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- ───  SELECTION BAR  ─── -->
+            <!-- ───  SELECTION + SORT/FILTER BAR  ─── -->
             <Border DockPanel.Dock="Top" Padding="14,8"
                     Background="{StaticResource BackgroundBrush}"
                     BorderBrush="{StaticResource BorderBrush}"
@@ -78,10 +78,32 @@
                         </TextBlock>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <Button Content="{Binding SortLabel}"
-                                Command="{Binding CycleSortModeCommand}"
-                                Margin="0,0,14,0"
-                                ToolTip="Cycle : Taille ↓ → Score ↓ (plus probable résidu en tête) → Score ↑ (moins risqué en tête)" />
+                        <!-- Phase 10 (post-launch tweak): sort key ComboBox + direction toggle. -->
+                        <TextBlock Text="Trier par :"
+                                   Foreground="{StaticResource ForegroundSubtleBrush}"
+                                   VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <ComboBox ItemsSource="{Binding SortKeyOptions}"
+                                  SelectedValuePath="Key"
+                                  DisplayMemberPath="Value"
+                                  SelectedValue="{Binding SortKey, Mode=TwoWay}"
+                                  MinWidth="80" Margin="0,0,4,0"
+                                  ToolTip="Critère de tri appliqué à chaque catégorie de rémanents" />
+                        <Button Content="{Binding SortDirectionLabel}"
+                                Command="{Binding ToggleSortDirectionCommand}"
+                                MinWidth="32" Margin="0,0,14,0"
+                                ToolTip="{Binding SortDirectionTooltip}" />
+
+                        <!-- Phase 10 (post-launch tweak): risk filter. -->
+                        <TextBlock Text="Filtre :"
+                                   Foreground="{StaticResource ForegroundSubtleBrush}"
+                                   VerticalAlignment="Center" Margin="0,0,6,0" />
+                        <ComboBox ItemsSource="{Binding FilterModeOptions}"
+                                  SelectedValuePath="Key"
+                                  DisplayMemberPath="Value"
+                                  SelectedValue="{Binding FilterMode, Mode=TwoWay}"
+                                  MinWidth="180" Margin="0,0,14,0"
+                                  ToolTip="Filtre les rangs par seuil de score (= niveau de risque)" />
+
                         <Button Content="Tout sélectionner" Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
                         <Button Content="Tout décocher" Command="{Binding ClearSelectionCommand}" Margin="0,0,14,0" />
                         <Button Content="🤖 Log IA"
@@ -138,7 +160,7 @@
                                     </Grid>
                                 </Expander.Header>
 
-                                <ItemsControl ItemsSource="{Binding Rows}" Margin="22,4,0,6">
+                                <ItemsControl ItemsSource="{Binding RowsView}" Margin="22,4,0,6">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate DataType="{x:Type vm:OrphanRow}">
                                             <Border Padding="10,6" Background="Transparent"
@@ -161,23 +183,32 @@
                                                                    Foreground="{StaticResource ForegroundSubtleBrush}" />
                                                     </StackPanel>
 
-                                                    <!-- Phase 10-06: Score badge — only when Diagnostics present (AppData rows). -->
+                                                    <!-- Score badge — ALWAYS visible across every category.
+                                                         Background colour = ScoreBand (raw score band) so the
+                                                         same number always renders the same colour.
+                                                         The 🛡 prefix in ScoreBadgeText signals when a safety
+                                                         floor (MinRiskFloor) overrode the band. -->
                                                     <Border Grid.Column="2"
-                                                            Background="{Binding Risk, Converter={StaticResource RiskLevelToBrushConverter}}"
+                                                            Background="{Binding ScoreBand, Converter={StaticResource RiskLevelToBrushConverter}}"
                                                             CornerRadius="8" Padding="8,2"
                                                             VerticalAlignment="Center" Margin="14,0,0,0"
-                                                            MinWidth="38"
-                                                            Visibility="{Binding HasDiagnostics, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            MinWidth="46">
                                                         <Border.ToolTip>
-                                                            <ToolTip MaxWidth="520">
+                                                            <ToolTip MaxWidth="560">
                                                                 <StackPanel>
                                                                     <TextBlock FontWeight="SemiBold">
                                                                         <Run Text="Score : " />
-                                                                        <Run Text="{Binding ConfidenceScore, Mode=OneWay}" />
+                                                                        <Run Text="{Binding Score, Mode=OneWay}" />
                                                                         <Run Text=" / 100  •  Risque : " />
                                                                         <Run Text="{Binding Risk, Mode=OneWay}" />
+                                                                        <Run Text="  •  " />
+                                                                        <Run Text="{Binding RecommendedAction, Mode=OneWay}" />
                                                                     </TextBlock>
-                                                                    <TextBlock Text="{Binding Diagnostics.Reason}"
+                                                                    <TextBlock Text="{Binding FloorNotice, Mode=OneWay}"
+                                                                               FontSize="11" Margin="0,4,0,0"
+                                                                               Foreground="#FFD9A0"
+                                                                               Visibility="{Binding HasFloorApplied, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                                    <TextBlock Text="{Binding Reason}"
                                                                                TextWrapping="Wrap" Margin="0,4,0,0" />
                                                                     <ItemsControl ItemsSource="{Binding Diagnostics.TriggeredRules}" Margin="0,4,0,0">
                                                                         <ItemsControl.ItemTemplate>
@@ -203,7 +234,7 @@
                                                                FontWeight="SemiBold" VerticalAlignment="Center"
                                                                Margin="14,0,0,0" />
 
-                                                    <!-- Phase 10-06: "Pourquoi ?" button — only when Diagnostics present. -->
+                                                    <!-- "Pourquoi ?" button — only when full pipeline diagnostics exist (AppData rows). -->
                                                     <Button Grid.Column="4" Content="Pourquoi ?"
                                                             Padding="8,2" FontSize="11" Margin="10,0,0,0"
                                                             VerticalAlignment="Center"

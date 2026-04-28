@@ -191,14 +191,17 @@ public class OrphanDiagnosticsViewModelTests
 
         row.HasDiagnostics.Should().BeTrue();
         row.Diagnostics.Should().BeSameAs(diag);
-        row.ConfidenceScore.Should().Be(50);
+        row.Score.Should().Be(50);
         row.Risk.Should().Be(RiskLevel.Moyen);
         row.ScoreBadgeText.Should().Be("50");
     }
 
     [Fact]
-    public void OrphanRow_NullDiagnostics_HasDiagnosticsFalse_AndAllFieldsNull()
+    public void OrphanRow_NullDiagnostics_StaleTemp_GetsSynthesizedAucunDefaults()
     {
+        // Phase 10 (post-launch tweak): non-AppData rows get a category-default
+        // (Score, Risk, Action) so the badge is consistent across every tab.
+        // StaleTemp = Aucun (very high confidence — these are old temp files).
         var candidate = new OrphanCandidate(
             NodeId: 7,
             FullPath: @"C:\Temp\foo",
@@ -209,10 +212,13 @@ public class OrphanDiagnosticsViewModelTests
 
         var row = new OrphanRow(candidate);
 
-        row.HasDiagnostics.Should().BeFalse();
+        row.HasDiagnostics.Should().BeFalse(); // gate for "Pourquoi ?" button
         row.Diagnostics.Should().BeNull();
-        row.ConfidenceScore.Should().BeNull();
-        row.Risk.Should().BeNull();
-        row.ScoreBadgeText.Should().BeNull();
+        row.Score.Should().Be(90);             // synthesized default for StaleTemp
+        row.Risk.Should().Be(RiskLevel.Aucun);
+        row.RecommendedAction.Should().Be(RecommendedAction.Supprimer);
+        row.ScoreBand.Should().Be(RiskLevel.Aucun);
+        row.HasFloorApplied.Should().BeFalse(); // no floor for non-AppData
+        row.ScoreBadgeText.Should().Be("90");   // no 🛡 prefix
     }
 }
